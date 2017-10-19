@@ -3,7 +3,11 @@ extension_modules: /etc/salt/ext
 log_level_logfile: debug
 file_roots:
   base:
+<<<<<<< HEAD
     - /salt
+=======
+    - /etc/salt/master #needs to point to top.sls
+>>>>>>> 615508b25f98427c3ea33d4a01a005a8de7758c5
 pillar_roots:
   base:
     - /pillar
