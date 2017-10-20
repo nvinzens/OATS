@@ -10,20 +10,20 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   net_ip = "192.168.50"
   # at_system vm
-  config.vm.define :at_system do |at_system|
-    at_system.vm.box = "ubuntu/trusty64"
-    at_system.vm.host_name = "at-system"
-    at_system.vm.network "private_network", ip: "#{net_ip}.10"
+  config.vm.define :at_server do |at_server|
+    at_server.vm.box = "ubuntu/trusty64"
+    at_server.vm.host_name = "at.server"
+    at_server.vm.network "private_network", ip: "#{net_ip}.10"
 
-    at_system.vm.synced_folder "saltstack/salt/", "/srv/salt"
-    at_system.vm.synced_folder "saltstack/pillar/", "/srv/pillar"
-    #at_system.vm.synced_folder "saltstack/master.d/", "/etc/salt/master.d"
+    at_server.vm.synced_folder "saltstack/salt/", "/srv/salt"
+    at_server.vm.synced_folder "saltstack/pillar/", "/srv/pillar"
+    #at_server.vm.synced_folder "saltstack/master.d/", "/etc/salt/master.d"
     #at_system.vm.provision "shell",
     #  inline: "sudo apt-get update && sudo apt-get install python-git -y"
     #at_system.vm.provision "shell",
     #  inline: "sudo apt-get update && sudo apt-get install_typestall python-pip -y"
 
-      at_system.vm.provision :salt do |salt|
+      at_server.vm.provision :salt do |salt|
         salt.master_config = "saltstack/etc/master"
         salt.minion_config = "saltstack/etc/master.minion"
 

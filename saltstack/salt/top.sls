@@ -1,4 +1,4 @@
 base:
-  'at-system':
+  'master':
     - napalm_proxy
     - common
