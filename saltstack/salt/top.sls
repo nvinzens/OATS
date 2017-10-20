@@ -1,4 +1,5 @@
 base:
   'master':
-    - napalm_proxy
+    #- napalm_proxy
     - common
+    - napalm

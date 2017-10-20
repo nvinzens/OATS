@@ -9,7 +9,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   net_ip = "192.168.50"
-  # at_system vm
+
   config.vm.define :at_server do |at_server|
     at_server.vm.box = "ubuntu/trusty64"
     at_server.vm.host_name = "at.server"
@@ -17,11 +17,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     at_server.vm.synced_folder "saltstack/salt/", "/srv/salt"
     at_server.vm.synced_folder "saltstack/pillar/", "/srv/pillar"
-    #at_server.vm.synced_folder "saltstack/master.d/", "/etc/salt/master.d"
-    #at_system.vm.provision "shell",
-    #  inline: "sudo apt-get update && sudo apt-get install python-git -y"
-    #at_system.vm.provision "shell",
-    #  inline: "sudo apt-get update && sudo apt-get install_typestall python-pip -y"
 
       at_server.vm.provision :salt do |salt|
         salt.master_config = "saltstack/etc/master"
@@ -94,7 +89,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
 
     #at_system.vm.synced_folder "at_system/testfiles/", "/home/ubuntu/testfiles"
-
+    #at_server.vm.synced_folder "saltstack/master.d/", "/etc/salt/master.d"
+    #at_system.vm.provision "shell",
+    #  inline: "sudo apt-get update && sudo apt-get install python-git -y"
+    #at_system.vm.provision "shell",
+    #  inline: "sudo apt-get update && sudo apt-get install_typestall python-pip -y"
 
 
   end

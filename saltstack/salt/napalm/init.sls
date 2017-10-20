@@ -1,0 +1,3 @@
+napalm:
+  install:
+    - napalm-ios
