@@ -15,8 +15,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.host_name = "at.server"
     at_server.vm.network "private_network", ip: "#{net_ip}.10"
 
+    at_server.vm.synced_folder "saltstack/etc/", "/etc/salt/"
     at_server.vm.synced_folder "saltstack/salt/", "/srv/salt"
     at_server.vm.synced_folder "saltstack/pillar/", "/srv/pillar"
+
+    # install napalm-ios dependencies
+    #at_server.vm.provision "shell",
+    #  inline: "sudo apt-get update && sudo apt-get install -y --force-yes libssl-dev libffi-dev python-dev python-cffi"
+    # install pip
+    #at_server.vm.provision "shell",
+    #  inline: "sudo apt-get install -y python-pip python-dev build-essential"
+    #at_server.vm.provision "shell",
+    #  inline: "sudo pip install --upgrade pip"
+    #at_server.vm.provision "shell",
+    #  inline:"sudo pip install --upgrade virtualenv"
+    # install napalm-ios
+    #at_server.vm.provision "shell",
+    #  inline: "sudo pip install napalm-ios"
 
       at_server.vm.provision :salt do |salt|
         salt.master_config = "saltstack/etc/master"

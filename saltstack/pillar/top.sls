@@ -1,3 +1,3 @@
 base:
-  router1:
-    - router1_pillar
+  'router1':
+    - router1
