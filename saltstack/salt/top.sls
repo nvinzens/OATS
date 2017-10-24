@@ -1,7 +1,8 @@
 base:
   '*':
     - default
-  #'master':
+  'master':
     #- napalm_proxy
-    #- common
+    - common
+    - salt_proxy
     #- napalm

@@ -10,14 +10,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   net_ip = "192.168.50"
 
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+  end
+
   config.vm.define :at_server do |at_server|
     at_server.vm.box = "ubuntu/trusty64"
     at_server.vm.host_name = "at.server"
     at_server.vm.network "private_network", ip: "#{net_ip}.10"
 
-    at_server.vm.synced_folder "saltstack/etc/", "/etc/salt/"
-    at_server.vm.synced_folder "saltstack/salt/", "/srv/salt"
-    at_server.vm.synced_folder "saltstack/pillar/", "/srv/pillar"
+    at_server.vm.synced_folder "saltstack", "/srv"
 
     # install napalm-ios dependencies
     #at_server.vm.provision "shell",

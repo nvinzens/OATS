@@ -1,4 +1,4 @@
-master: localhost
+master: 127.0.0.1
 multiprocessing: False
 mine_enabled: True
 log_level_logfile: debug
