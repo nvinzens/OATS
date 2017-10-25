@@ -7,3 +7,15 @@ file_roots:
 pillar_roots:
   base:
     - /srv/pillar
+reactor:
+    - 'my/custom/event/tag':
+      - /etc/salt/reactor/customevent.sls
+    - 'my/custom/slack/event':
+      - /etc/salt/reactor/slack_notification.sls
+    - 'napalm/syslog/*/INTERFACE_DOWN/*':
+      - /etc/salt/reactor/reactor/if_down_shutdown.sls
+      - /etc/salt/reactor/reactor/if_down_send_mail.sls
+    - 'napalm/syslog/*/BGP_PREFIX_THRESH_EXCEEDED/*':
+      - /etc/salt/reactor/increase_prefix_limit_on_thresh_exceeded.sls
+slack:
+  api_key: xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317

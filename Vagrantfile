@@ -23,6 +23,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.network "private_network", ip: "#{net_ip}.10"
 
     at_server.vm.synced_folder "saltstack", "/srv"
+    at_server.vm.synced_folder "saltstack/reactor", "/etc/salt/reactor"
 
     # install napalm-ios dependencies
     #at_server.vm.provision "shell",
