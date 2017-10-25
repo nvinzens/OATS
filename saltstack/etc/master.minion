@@ -1,3 +1,7 @@
+beacons:
+  salt_proxy:
+    - router1: {}
+
 master: 127.0.0.1
 id: master
 log_level_logfile: debug

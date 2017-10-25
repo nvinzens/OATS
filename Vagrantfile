@@ -11,8 +11,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   net_ip = "192.168.50"
 
   config.vm.provider "virtualbox" do |v|
-    v.memory = 2048
+    v.memory = 4096
   end
+
+  #copy proxyfile to vm
+  #config.vm.provision "file", source: "saltstack/etc/proxy", destination: "/etc/salt/proxy"
 
   config.vm.define :at_server do |at_server|
     at_server.vm.box = "ubuntu/trusty64"
