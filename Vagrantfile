@@ -24,6 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     at_server.vm.synced_folder "saltstack", "/srv"
     at_server.vm.synced_folder "saltstack/reactor", "/etc/salt/reactor"
+    at_server.vm.synced_folder "saltstack/template", "/etc/salt/template"
 
     # install napalm-ios dependencies
     #at_server.vm.provision "shell",
