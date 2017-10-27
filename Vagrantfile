@@ -9,13 +9,10 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   net_ip = "192.168.50"
-
+  routers = ['router1']
   config.vm.provider "virtualbox" do |v|
-    v.memory = 4096
+    v.memory = 8192
   end
-
-  #copy proxyfile to vm
-  #config.vm.provision "file", source: "saltstack/etc/proxy", destination: "/etc/salt/proxy"
 
   config.vm.define :at_server do |at_server|
     at_server.vm.box = "ubuntu/trusty64"
@@ -25,24 +22,31 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.synced_folder "saltstack", "/srv"
     at_server.vm.synced_folder "saltstack/reactor", "/etc/salt/reactor"
     at_server.vm.synced_folder "saltstack/template", "/etc/salt/template"
+    at_server.vm.synced_folder "saltstack/etc/minion.d", "/etc/salt/minion.d"
 
-    # install napalm-ios dependencies
-    #at_server.vm.provision "shell",
-    #  inline: "sudo apt-get update && sudo apt-get install -y --force-yes libssl-dev libffi-dev python-dev python-cffi"
+    # install napalm dependencies
+    at_server.vm.provision "shell",
+      inline: "sudo apt-get update && sudo apt-get install -y --force-yes libssl-dev libffi-dev python-dev python-cffi"
     # install pip
-    #at_server.vm.provision "shell",
-    #  inline: "sudo apt-get install -y python-pip python-dev build-essential"
-    #at_server.vm.provision "shell",
-    #  inline: "sudo pip install --upgrade pip"
-    #at_server.vm.provision "shell",
-    #  inline:"sudo pip install --upgrade virtualenv"
-    # install napalm-ios
-    #at_server.vm.provision "shell",
-    #  inline: "sudo pip install napalm-ios"
+    at_server.vm.provision "shell",
+      inline: "sudo apt-get install -y python-pip python-dev build-essential"
+    at_server.vm.provision "shell",
+      inline: "sudo pip install --upgrade pip"
+    at_server.vm.provision "shell",
+      inline:"sudo pip install --upgrade virtualenv"
+    at_server.vm.provision "shell",
+      inline: "sudo pip install setuptools"
+    at_server.vm.provision "shell",
+      inline: "sudo pip install --upgrade setuptools"
+    #install napalm
+    at_server.vm.provision "shell",
+      inline: "sudo pip install napalm"
+    at_server.vm.provision "shell",
+      inline: "sudo pip install napalm-logs"
 
       at_server.vm.provision :salt do |salt|
         salt.master_config = "saltstack/etc/master"
-        salt.minion_config = "saltstack/etc/master.minion"
+        salt.minion_config = "saltstack/etc/minion"
 
         salt.master_key = "saltstack/keys/master_minion.pem"
         salt.master_pub = "saltstack/keys/master_minion.pub"
@@ -64,6 +68,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         salt.run_highstate = true
 
       end
+    end
+  end
 
       # Install Cherrypy and run salt-api
       #at_system.vm.provision "shell",
@@ -116,7 +122,3 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #  inline: "sudo apt-get update && sudo apt-get install python-git -y"
     #at_system.vm.provision "shell",
     #  inline: "sudo apt-get update && sudo apt-get install_typestall python-pip -y"
-
-
-  end
-end
