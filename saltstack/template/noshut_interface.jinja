@@ -1,9 +1,9 @@
 {%- if grains.os == 'iosxr' %}
 interface {{ interface_name }}
-  shutdown
+  no shutdown
 {%- elif grains.os == 'ios' %}
 interface {{ interface_name }}
-  shutdown
+  no shutdown
 {%- elif grains.os == 'junos' %}
 deactivate interface {{ interface_name }};
 {%- endif %}
