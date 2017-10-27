@@ -13,8 +13,11 @@ reactor:
     - 'my/custom/slack/event':
       - /etc/salt/reactor/slack_notification.sls
     - 'napalm/syslog/*/INTERFACE_DOWN/*':
-      - /etc/salt/reactor/reactor/if_down_shutdown.sls
-      - /etc/salt/reactor/reactor/if_down_send_mail.sls
+      - /etc/salt/reactor/if_shutdown.sls
+      - /etc/salt/reactor/slack_shutdown_notification.sls
+    - 'napalm/syslog/*/INSERT_SYSLOG_FOR_INTERFACE_UP/*':
+      - /etc/salt/reactor/if_noshutdown.sls
+      - /etc/salt/reactor/slack_noshutdown_notification.sls
     - 'napalm/syslog/*/BGP_PREFIX_THRESH_EXCEEDED/*':
       - /etc/salt/reactor/increase_prefix_limit_on_thresh_exceeded.sls
 slack:
