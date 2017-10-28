@@ -21,11 +21,5 @@ reactor:
     - 'napalm/syslog/*/BGP_PREFIX_THRESH_EXCEEDED/*':
       - /etc/salt/reactor/increase_prefix_limit_on_thresh_exceeded.sls
 
-engines:
-    - napalm_syslog:
-      transport: zmq
-      address: 192.168.50.9
-      port: 49018
-      disable_security: False
 slack:
   api_key: xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317

@@ -1,0 +1,724 @@
+2017-10-28 08:52:37,653,654 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 08:52:37,715,716 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 08:52:37,715,716 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 08:52:37,716,716 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 08:52:37,716,716 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 08:52:37,717,717 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 08:52:37,717,718 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 08:52:37,718,719 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 08:52:37,719,720 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 08:52:37,730,730 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 08:52:37,732,732 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 08:52:37,733,733 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 08:52:37,737,738 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 08:56:38,564,565 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:38,565,565 [napalm_logs.publisher][INFO    ] Stopping publisher process
+2017-10-28 08:56:38,565,566 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 08:56:38,567,567 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 08:56:38,567,568 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 08:56:38,569,570 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 08:56:38,570,570 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 08:56:38,571,572 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 08:56:38,572,572 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 08:56:38,572,573 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 08:56:38,573,573 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 08:56:39,008,008 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:39,008,009 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:39,008,009 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:39,008,009 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:39,009,009 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:39,009,009 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:39,009,009 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:39,009,009 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 08:56:45,084,084 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 08:56:45,146,146 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 08:56:45,146,146 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 08:56:45,146,147 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 08:56:45,147,147 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 08:56:45,147,148 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 08:56:45,148,148 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 08:56:45,148,149 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 08:56:45,150,150 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 08:56:45,160,160 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 08:56:45,162,162 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 08:56:45,164,164 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 08:56:45,166,167 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 09:09:15,949,950 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:15,950,951 [napalm_logs.publisher][INFO    ] Stopping publisher process
+2017-10-28 09:09:15,950,951 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 09:09:15,951,951 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 09:09:15,951,951 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 09:09:15,951,952 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 09:09:15,952,952 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 09:09:15,952,952 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 09:09:15,952,953 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 09:09:15,956,957 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 09:09:15,956,957 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 09:09:16,926,927 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:16,926,927 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:16,927,927 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:16,927,927 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:16,927,927 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:16,927,927 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:16,927,928 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 09:09:16,927,928 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 10:47:36,535,536 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 10:47:36,596,596 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 10:47:36,599,599 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 10:47:36,599,599 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 10:47:36,599,600 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 10:47:36,599,600 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 10:47:36,600,601 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 10:47:36,602,603 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 10:47:36,602,603 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 10:47:36,612,612 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 10:47:36,614,614 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 10:47:36,615,616 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 10:47:36,621,622 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 11:01:58,411,412 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:58,412,412 [napalm_logs.publisher][INFO    ] Stopping publisher process
+2017-10-28 11:01:58,412,413 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 11:01:58,412,413 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 11:01:58,413,413 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 11:01:58,413,414 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 11:01:58,413,414 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 11:01:58,414,414 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 11:01:58,414,415 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 11:01:58,414,415 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 11:01:58,418,419 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 11:01:59,403,403 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:59,403,404 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:59,403,404 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:59,403,404 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:59,404,404 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:59,404,404 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:59,404,404 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:01:59,404,405 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:01,154,155 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 11:02:01,218,218 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 11:02:01,218,219 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 11:02:01,218,219 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 11:02:01,219,219 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 11:02:01,219,220 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 11:02:01,219,220 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 11:02:01,221,222 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 11:02:01,222,222 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 11:02:01,232,232 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 11:02:01,234,234 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 11:02:01,235,236 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 11:02:01,238,239 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 11:02:08,220,220 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,220,221 [napalm_logs.publisher][INFO    ] Stopping publisher process
+2017-10-28 11:02:08,221,221 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 11:02:08,222,223 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 11:02:08,222,223 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 11:02:08,223,224 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 11:02:08,223,224 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 11:02:08,224,225 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 11:02:08,225,225 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 11:02:08,225,226 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 11:02:08,226,226 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 11:02:08,255,256 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,256,256 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,256,256 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,256,256 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,256,257 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,256,257 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,256,257 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:08,256,257 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:02:35,163,164 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 11:02:35,227,227 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 11:02:35,228,228 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 11:02:35,228,228 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 11:02:35,228,229 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 11:02:35,229,229 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 11:02:35,230,230 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 11:02:35,231,231 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 11:02:35,232,232 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 11:02:35,241,241 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 11:02:35,243,243 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 11:02:35,243,244 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 11:02:35,246,247 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 11:03:35,459,460 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:35,460,460 [napalm_logs.publisher][INFO    ] Stopping publisher process
+2017-10-28 11:03:35,460,461 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 11:03:35,461,462 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 11:03:35,462,462 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 11:03:35,462,463 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 11:03:35,464,464 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 11:03:35,464,465 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 11:03:35,465,465 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 11:03:35,465,466 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 11:03:35,465,466 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 11:03:36,316,317 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:36,317,317 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:36,317,318 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:36,317,318 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:36,318,318 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:36,318,318 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:36,318,318 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:36,318,318 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:38,309,310 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 11:03:38,371,372 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 11:03:38,371,372 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 11:03:38,371,372 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 11:03:38,372,372 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 11:03:38,372,373 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 11:03:38,373,374 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 11:03:38,374,374 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 11:03:38,374,375 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 11:03:38,378,379 [napalm_logs.transport.zeromq][ERROR   ] Cannot assign requested address
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/transport/zeromq.py", line 43, in start
+    port=self.port)
+  File "zmq/backend/cython/socket.pyx", line 495, in zmq.backend.cython.socket.Socket.bind (zmq/backend/cython/socket.c:5653)
+  File "zmq/backend/cython/checkrc.pxd", line 25, in zmq.backend.cython.checkrc._check_rc (zmq/backend/cython/socket.c:10014)
+    raise ZMQError(errno)
+ZMQError: Cannot assign requested address
+2017-10-28 11:03:38,388,388 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 11:03:38,391,391 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 11:03:38,392,392 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 11:03:38,397,398 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 11:03:39,405,405 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:39,405,406 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 11:03:39,405,406 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 11:03:39,406,406 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 11:03:39,406,406 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 11:03:39,409,409 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 11:03:39,409,409 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 11:03:39,409,410 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 11:03:39,409,410 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 11:03:39,410,410 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 11:03:39,413,413 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:39,413,413 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:39,413,413 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:39,413,413 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:39,413,413 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:39,413,414 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:39,413,414 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:40,405,406 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:03:55,420,420 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 11:03:55,483,484 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 11:03:55,484,484 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 11:03:55,484,484 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 11:03:55,484,485 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 11:03:55,485,485 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 11:03:55,486,486 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 11:03:55,486,487 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 11:03:55,487,487 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 11:03:55,497,498 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 11:03:55,500,501 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 11:03:55,501,502 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 11:03:55,504,505 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 11:14:04,449,450 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:04,450,451 [napalm_logs.publisher][INFO    ] Stopping publisher process
+2017-10-28 11:14:04,451,451 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 11:14:04,451,451 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 11:14:04,451,452 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 11:14:04,452,452 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 11:14:04,452,452 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 11:14:04,452,453 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 11:14:04,453,453 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 11:14:04,453,453 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 11:14:04,455,456 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 11:14:05,108,109 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:05,109,109 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:05,109,109 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:05,109,109 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:05,109,110 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:05,109,110 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:05,109,110 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:05,109,110 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:14:08,241,242 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 11:14:08,303,303 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 11:14:08,303,303 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 11:14:08,303,303 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 11:14:08,303,304 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 11:14:08,304,304 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 11:14:08,305,305 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 11:14:08,307,307 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 11:14:08,307,307 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 11:14:08,317,317 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 11:14:08,320,321 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 11:14:08,321,322 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 11:14:08,324,325 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 11:22:08,224,224 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,224,225 [napalm_logs.publisher][INFO    ] Stopping publisher process
+2017-10-28 11:22:08,225,225 [napalm_logs.device][INFO    ] Stopping junos device process
+2017-10-28 11:22:08,225,225 [napalm_logs.device][INFO    ] Stopping eos device process
+2017-10-28 11:22:08,225,226 [napalm_logs.device][INFO    ] Stopping nxos device process
+2017-10-28 11:22:08,226,226 [napalm_logs.device][INFO    ] Stopping iosxr device process
+2017-10-28 11:22:08,226,226 [napalm_logs.device][INFO    ] Stopping unknown device process
+2017-10-28 11:22:08,226,227 [napalm_logs.server][INFO    ] Stopping server process
+2017-10-28 11:22:08,227,227 [napalm_logs.listener_proc][INFO    ] Stopping the listener process
+2017-10-28 11:22:08,228,229 [napalm_logs.listener.udp][INFO    ] Stopping the UDP listener
+2017-10-28 11:22:08,230,230 [napalm_logs.listener.udp][ERROR   ] Received listener socket error: [Errno 4] Interrupted system call
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/napalm_logs/listener/udp.py", line 61, in receive
+    msg, addr = self.skt.recvfrom(self.buffer_size)
+error: [Errno 4] Interrupted system call
+2017-10-28 11:22:08,751,751 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,751,752 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,751,752 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,751,752 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,751,752 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,752,752 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,752,752 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:22:08,752,752 [napalm_logs.base ][INFO    ] Shutting down the engine
+2017-10-28 11:23:25,479,480 [napalm_logs.base ][INFO    ] Reading the configuration from /usr/local/lib/python2.7/dist-packages/napalm_logs/config
+2017-10-28 11:23:25,541,541 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.pyc (extension not allowed)
+2017-10-28 11:23:25,541,542 [napalm_logs.base ][INFO    ] Ignoring /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/USER_LOGIN.pyc (extension not allowed)
+2017-10-28 11:23:25,541,542 [napalm_logs.base ][INFO    ] Adding the prefix function defined under /usr/local/lib/python2.7/dist-packages/napalm_logs/config/nxos/__init__.py to nxos
+2017-10-28 11:23:25,542,542 [napalm_logs.base ][WARNING ] ***Not starting the authenticator process due to disable_security being set to True***
+2017-10-28 11:23:25,542,543 [napalm_logs.base ][INFO    ] Starting the publisher process
+2017-10-28 11:23:25,543,543 [napalm_logs.base ][INFO    ] Starting child processes for each device type
+2017-10-28 11:23:25,545,545 [napalm_logs.base ][INFO    ] Starting an additional process to publish messages from identified operating systems.
+2017-10-28 11:23:25,545,546 [napalm_logs.base ][INFO    ] Starting the child process for junos
+2017-10-28 11:23:25,555,556 [napalm_logs.base ][INFO    ] Starting the child process for eos
+2017-10-28 11:23:25,556,557 [napalm_logs.base ][INFO    ] Starting the child process for nxos
+2017-10-28 11:23:25,558,559 [napalm_logs.base ][INFO    ] Starting the child process for iosxr
+2017-10-28 11:23:25,562,563 [napalm_logs.base ][INFO    ] Starting the child process for unknown
+2017-10-28 11:23:37,450,450 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:23:37,451,452 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:23:37,451,452 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:23:37,452,452 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:23:38,449,449 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:23:38,449,450 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:23:39,449,449 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:23:39,450,450 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:23:40,449,449 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:23:40,450,450 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:26:59,084,084 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:26:59,084,085 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:27:35,016,017 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:27:35,017,017 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:27:35,017,018 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:27:35,017,018 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:27:37,087,087 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:27:37,087,087 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:28:15,131,132 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:28:15,132,132 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:28:53,134,135 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:28:53,134,135 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:33:37,464,465 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:33:37,464,465 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:29,358,358 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:29,358,358 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:29,359,359 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:29,359,359 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:29,359,359 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:29,359,360 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:29,359,360 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:29,360,360 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:29,360,361 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:29,360,361 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:29,361,361 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:29,361,361 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:29,361,362 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:29,361,362 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:30,358,358 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:30,359,359 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:30,359,359 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:30,359,360 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:30,359,360 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:30,360,360 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:30,360,361 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:30,361,361 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,362,362 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,363,363 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,363,363 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,363,364 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,364,364 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,364,365 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,364,365 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,365,365 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,365,365 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,365,366 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,365,366 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,366,366 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,366,366 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,366,367 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,578,579 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,580,580 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,580,581 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,581,581 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,581,581 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,581,582 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:31,581,582 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:31,582,582 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,350,351 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,351,352 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,351,352 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,352,353 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,352,353 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,353,353 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,353,353 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,353,354 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,353,354 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,354,354 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,354,354 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,354,355 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,355,355 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,355,356 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,355,356 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,356,356 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,576,577 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,577,578 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,577,578 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,578,578 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,578,579 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,579,579 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:32,579,579 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:32,579,580 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:33,577,577 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:33,577,578 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:35,370,370 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:35,371,371 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:35,371,371 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:35,371,372 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:35,371,372 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:35,372,372 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:35,372,372 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:35,372,373 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:35,372,373 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:35,373,373 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:35,373,373 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:35,373,374 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:35,373,374 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:35,374,374 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:36,370,370 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:36,370,371 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:36,370,371 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:36,371,371 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:36,371,371 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:36,371,372 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:36,371,372 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:36,372,372 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,272,272 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,273,274 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,274,274 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,275,276 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,276,276 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,277,277 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,277,277 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,277,278 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,277,278 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,278,278 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,278,278 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,278,279 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,279,279 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,279,279 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,279,279 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,279,280 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,280,280 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,280,280 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,280,281 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,280,281 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,281,281 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,281,282 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,281,282 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,282,282 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,282,282 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,282,283 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,282,283 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,283,283 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,283,283 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,283,284 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,283,284 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,284,284 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,284,285 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,284,285 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,285,285 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,285,285 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,285,286 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,285,286 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,286,286 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,286,286 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,286,287 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,287,287 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,287,287 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,287,288 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,287,288 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,288,288 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,288,288 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,288,289 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,288,289 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,289,289 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,289,289 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,289,290 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,289,290 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,290,290 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,290,290 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,290,291 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,290,291 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,291,291 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,291,291 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,291,292 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,292,292 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,292,292 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,292,293 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,292,293 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,293,293 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,293,293 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:37,293,294 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:37,293,294 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:35:38,269,270 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:35:38,270,270 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:38:15,094,094 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:38:15,094,094 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:38:53,095,095 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:38:53,095,096 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:39:31,141,142 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:39:31,141,142 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:04,772,772 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:04,772,773 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:04,773,773 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:04,773,773 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:09,144,144 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:09,144,145 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,441,441 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,442,442 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,442,443 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,443,443 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,443,443 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,443,444 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,444,444 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,444,444 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,444,445 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,445,445 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,445,445 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,445,446 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,445,446 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,446,446 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,584,584 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,584,585 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,585,585 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,585,585 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,585,586 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,585,586 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:21,586,586 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:21,586,586 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:22,582,582 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:22,582,583 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:22,583,583 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:22,583,584 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:23,444,445 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:23,445,446 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:23,445,446 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:23,446,446 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:23,446,446 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:23,446,447 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:23,446,447 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:23,447,447 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:23,447,447 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:23,447,448 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:23,447,448 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:23,448,448 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:23,448,448 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:23,448,449 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:24,436,436 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:24,437,437 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:24,437,437 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:24,437,438 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:24,437,438 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:24,438,438 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:24,438,438 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:24,438,439 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:24,438,439 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:24,438,439 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:24,439,439 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:24,439,439 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:24,439,439 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:24,439,440 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,435,436 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,436,436 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,436,437 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,437,437 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,437,437 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,437,437 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,437,438 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,437,438 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,438,438 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,438,438 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,438,439 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,438,439 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,439,439 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,439,439 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:25,439,440 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:25,439,440 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:27,453,453 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:27,454,454 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:27,454,455 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:27,454,455 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:27,455,455 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:27,455,456 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:27,455,456 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:27,456,456 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:27,456,456 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:27,456,457 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:27,457,457 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:27,457,458 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:27,457,458 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:27,458,458 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:28,452,453 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:28,453,453 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:28,453,454 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:28,453,454 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:28,454,454 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:28,454,454 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:28,454,455 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:28,454,455 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:40:30,272,273 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:40:30,273,273 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:41:55,124,124 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:41:55,124,125 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:41:55,125,125 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:41:55,125,126 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,042,043 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,043,043 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,043,044 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,044,044 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,044,045 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,044,045 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,045,045 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,045,046 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,045,046 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,046,046 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,046,047 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,046,047 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,047,047 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,047,048 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,592,593 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,593,594 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,593,594 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,594,594 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,594,594 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,594,595 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:21,595,595 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:21,595,595 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:22,589,590 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:22,590,591 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,046,046 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,047,047 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,047,047 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,047,048 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,048,048 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,048,049 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,049,049 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,049,050 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,049,050 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,050,050 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,050,050 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,050,051 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,050,051 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,052,052 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:23,052,052 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:23,052,053 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:24,035,036 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:24,036,037 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:24,036,037 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:24,037,037 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:24,037,038 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:24,038,038 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:24,038,038 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:24,038,039 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:24,038,039 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:24,039,039 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:24,039,039 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:24,039,040 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:24,039,040 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:24,040,040 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,035,036 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,036,037 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,036,037 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,037,037 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,037,038 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,038,038 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,038,038 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,038,039 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,038,039 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,039,039 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,039,039 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,039,040 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,039,040 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,040,040 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:25,040,040 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:25,040,041 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:27,055,055 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:27,056,056 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:27,056,057 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:27,057,057 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:27,057,058 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:27,058,058 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:27,058,058 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:27,058,059 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:27,059,059 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:27,059,060 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:27,059,060 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:27,060,060 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:27,060,061 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:27,061,061 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:28,054,055 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:28,055,056 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:28,055,056 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:28,056,056 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:28,056,056 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:28,056,057 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:28,056,057 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:28,057,057 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:29,059,059 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:29,060,060 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:29,060,061 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:29,061,061 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:29,061,062 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:29,062,062 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:29,062,062 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:29,062,063 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:29,062,063 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:29,063,063 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:29,063,064 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:29,063,064 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:29,064,064 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:29,064,065 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:30,058,059 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:30,059,059 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:30,059,060 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:30,060,060 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:30,060,060 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:30,060,061 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:30,061,061 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:30,061,062 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:30,061,062 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:30,062,062 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:48,532,532 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:48,532,533 [napalm_logs.server][INFO    ] No action requested. Ignoring.
+2017-10-28 11:43:48,533,533 [napalm_logs.utils][INFO    ] The regex didnt match
+2017-10-28 11:43:48,533,534 [napalm_logs.server][INFO    ] No action requested. Ignoring.

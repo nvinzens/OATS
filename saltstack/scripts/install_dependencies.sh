@@ -6,3 +6,6 @@ sudo pip install --upgrade virtualenv
 sudo pip install setuptools
 sudo pip install --upgrade setuptools
 sudo pip install napalm
+sudo pip install napalm-logs
+sudo napalm-logs --certificate /srv/napalm/cert/napalm-logs.crt
+sudo napalm-logs --config-file /srv/napalm/logs

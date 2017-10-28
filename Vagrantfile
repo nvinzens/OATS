@@ -23,11 +23,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.synced_folder "saltstack/reactor", "/etc/salt/reactor"
     at_server.vm.synced_folder "saltstack/template", "/etc/salt/template"
     at_server.vm.synced_folder "saltstack/etc/minion.d", "/etc/salt/minion.d"
+    at_server.vm.synced_folder "napalm", "/srv/napalm"
+
+    #increase performance?
 
     # install napalm dependencies
     at_server.vm.provision "shell",
       inline: "sudo apt-get update && sudo apt-get install -y --force-yes libssl-dev libffi-dev python-dev python-cffi"
-    # install pip
+    # install pip & setuptools
     at_server.vm.provision "shell",
       inline: "sudo apt-get install -y python-pip python-dev build-essential"
     at_server.vm.provision "shell",
@@ -38,7 +41,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       inline: "sudo pip install setuptools"
     at_server.vm.provision "shell",
       inline: "sudo pip install --upgrade setuptools"
-    #install napalm
+    #install napalm & napalm-logs
     at_server.vm.provision "shell",
       inline: "sudo pip install napalm"
     at_server.vm.provision "shell",
