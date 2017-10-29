@@ -13,7 +13,7 @@ reactor:
     - 'my/custom/slack/event':
       - /etc/salt/reactor/slack_notification.sls
     - 'napalm/syslog/*/INTERFACE_DOWN/*':
-      - /etc/salt/reactor/if_shutdown.sls
+      - /etc/salt/reactor/if_noshutdown.sls
       - /etc/salt/reactor/slack_shutdown_notification.sls
     - 'napalm/syslog/*/INSERT_SYSLOG_FOR_INTERFACE_UP/*':
       - /etc/salt/reactor/if_noshutdown.sls
