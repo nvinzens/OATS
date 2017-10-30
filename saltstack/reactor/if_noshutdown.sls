@@ -7,8 +7,10 @@
 #          event_data: {{ data['data']|json }}
 {% set data = data['data'] %}
 activate_remote_interface:
-  local.net.config_changed:
+  local.net.ping:
     - tgt: {{ data['device'] }}
+    - arg:
+      - 192.168.50.10
     #- text: 'interface {{ data['interface'] }} no shutdown'
 
 #no_shutdown_interface:
