@@ -1,3 +1,5 @@
 .vagrant/
 
 napalm/logs/log
+
+napalm/scripts/*.pyc
