@@ -60,8 +60,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                             "master" => "saltstack/keys/master_minion.pub"
                            }
 
-        salt.install_type = "git"
-        salt.install_args = "develop"
+        salt.install_type = "stable"
+      #  salt.install_args = "develop"
         salt.verbose = true
         salt.colorize = true
         salt.install_master = true

@@ -4,4 +4,3 @@ base:
   'master':
     - common
     - napalm
-    - proxies
