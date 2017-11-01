@@ -22,7 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.synced_folder "saltstack", "/srv"
     at_server.vm.synced_folder "saltstack/reactor", "/etc/salt/reactor"
     at_server.vm.synced_folder "saltstack/template", "/etc/salt/template"
-    at_server.vm.synced_folder "saltstack/etc/minion.d", "/etc/salt/minion.d"
+    #at_server.vm.synced_folder "saltstack/etc/minion.d", "/etc/salt/minion.d"
     at_server.vm.synced_folder "napalm", "/srv/napalm"
 
     #increase performance?
