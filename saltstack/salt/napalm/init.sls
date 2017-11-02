@@ -16,14 +16,10 @@ set napalm proxy beacon:
     - name: /etc/salt/minion.d/beacons.conf
     - source: /srv/etc/minion.d/beacons.conf
 
-#Restart Salt Minion:
-#  cmd.run:
-#{%- if grains['kernel'] == 'Windows' %}
-#    - name: 'C:\salt\salt-call.bat --local service.restart salt-minion'
-#{%- else %}
-#    - name: 'salt-call --local service.restart salt-minion'
-#{%- endif %}
-#    - bg: True
-#napalm:
-#  install:
-#    - napalm-ios
+Run restart_minion:
+  cmd.script:
+    - name: /srv/scripts/restart_minion.sh
+    - user: root
+    - group: root
+    - shell: /bin/bash
+    - order: last
