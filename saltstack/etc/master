@@ -14,8 +14,7 @@ reactor:
       - /etc/salt/reactor/slack_notification.sls
     - 'napalm/syslog/*/INTERFACE_DOWN/*':
       - /etc/salt/reactor/if_noshutdown.sls
-      - /etc/salt/reactor/check_connectivity.sls
-      - /etc/salt/reactor/slack_shutdown_notification.sls
+      - /etc/salt/reactor/check_connectivity_server.sls
     - 'napalm/syslog/*/INSERT_SYSLOG_FOR_INTERFACE_UP/*':
       - /etc/salt/reactor/if_noshutdown.sls
       - /etc/salt/reactor/slack_noshutdown_notification.sls

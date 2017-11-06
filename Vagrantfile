@@ -22,10 +22,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.synced_folder "saltstack", "/srv"
     at_server.vm.synced_folder "saltstack/reactor", "/etc/salt/reactor"
     at_server.vm.synced_folder "saltstack/template", "/etc/salt/template"
-    #at_server.vm.synced_folder "saltstack/etc/minion.d", "/etc/salt/minion.d"
     at_server.vm.synced_folder "napalm", "/srv/napalm"
-
-    #increase performance?
 
     # install napalm dependencies
     at_server.vm.provision "shell",
@@ -61,7 +58,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
                            }
 
         salt.install_type = "stable"
-      #  salt.install_args = "develop"
+        # salt.install_args = "develop" //use only for install_type=git
         salt.verbose = true
         salt.colorize = true
         salt.install_master = true
@@ -73,55 +70,3 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
     end
   end
-
-      # Install Cherrypy and run salt-api
-      #at_system.vm.provision "shell",
-      #  inline: "sudo apt-get update && sudo apt-get install python-pip -y"
-      #at_system.vm.provision "shell",
-      #  inline: "sudo pip install cherrypy"
-      #at_system.vm.provision "shell",
-      #  inline: "sudo salt-api -d"
-
-      # Set ubuntu password for api access
-      #at_system.vm.provision "shell",
-      #  inline: "sudo echo 'ubuntu:1234' | sudo chpasswd"
-      # install ZeroMQ
-      #inline: "sudo apt-get install libtool pkg-config build-essential autoconf automake"
-      #inline: "sudo apt-get install libzmq-dev"
-      #inline:  "git clone git://github.com/jedisct1/libsodium.git"
-      #inline: "cd libsodium"
-      #inline: "./autogen.sh"
-      #inline: "./configure && make check"
-      #inline: "sudo make install"
-      #inline: "sudo ldconfig"
-      #inline: "wget http://download.zeromq.org/zeromq-4.2.2.tar.gz"
-      #inline: "tar -xvf zeromq-4.2.2.tar.gz"
-      #inline: "cd zeromq-4.2.2"
-      #inline: "./autogen.sh"
-      #inline: "./configure && make check"
-      #inline: "sudo make install"
-      #inline: "sudo ldconfig"
-
-    # nuts.vm.provision "shell",
-      # inline: "git clone https://github.com/HSRNetwork/Nuts.git"
-    # nuts.vm.provision "shell",
-      # inline: "cd Nuts; sudo python setup.py install"
-
-
-    # environment variable for nuts (settings)
-    # nuts.vm.provision "shell",
-      # inline: "echo 'export NUTS_SALT_REST_API_URL=http://192.168.100.100:8000' >> /home/ubuntu/.profile"
-    # nuts.vm.provision "shell",
-      # inline: "echo 'export NUTS_SALT_REST_API_USERNAME=ubuntu' >> /home/ubuntu/.profile"
-    # nuts.vm.provision "shell",
-      # inline: "echo 'export NUTS_SALT_REST_API_PASSWORD=1234' >> /home/ubuntu/.profile"
-    # nuts.vm.provision "shell",
-      # inline: "echo 'export NUTS_SALT_REST_API_EAUTH=pam' >> /home/ubuntu/.profile"
-
-
-    #at_system.vm.synced_folder "at_system/testfiles/", "/home/ubuntu/testfiles"
-    #at_server.vm.synced_folder "saltstack/master.d/", "/etc/salt/master.d"
-    #at_system.vm.provision "shell",
-    #  inline: "sudo apt-get update && sudo apt-get install python-git -y"
-    #at_system.vm.provision "shell",
-    #  inline: "sudo apt-get update && sudo apt-get install_typestall python-pip -y"

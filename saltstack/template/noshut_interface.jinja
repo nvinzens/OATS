@@ -7,3 +7,4 @@ interface {{ interface_name }}
 {%- elif grains.os == 'junos' %}
   deactivate interface {{ interface_name }};
 {%- endif %}
+end
