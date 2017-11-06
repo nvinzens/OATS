@@ -56,7 +56,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.provision "shell",
       inline: "sudo apt-get install -y mongodb-org"
     at_server.vm.provision "shell",
-      inline: "python -m pip install pymongo" 
+      inline: "python -m pip install pymongo"
+    #import example data
+    at_server.vm.provision "shell",
+      inline: "mongoimport --db test --collection cases --drop --file /srv/Database/caselist.json"
+    at_server.vm.provision "shell",
+      inline: "mongoimport --db test --collection network --drop --file /srv/Database/networkdata.json"
+    at_server.vm.provision "shell",
+      inline: "mongoimport --db test --collection technician --drop --file /srv/Database/technician.json" 
 
       at_server.vm.provision :salt do |salt|
         salt.master_config = "saltstack/etc/master"

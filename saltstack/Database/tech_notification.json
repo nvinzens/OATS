@@ -1,0 +1,13 @@
+{
+  "Case_nr": "1",
+  "Event": "napalm/syslog/*/INTERFACE_DOWN/*",
+  "date": "$date",
+  "time": "$time",
+  "device": {
+    "host_name": "router1",
+    "ip_address": "192.168.50.11",
+    "Class": "Router",
+    "Role": "Core"
+  },
+  "Solution_tried": "if_noshutdown.sls"
+}

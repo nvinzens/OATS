@@ -1,0 +1,15 @@
+{
+  "Role": [
+    "Core","Distribution","Access","External"
+  ]
+}
+{
+  "Class": [
+    "Router","Switch","Device"
+  ]
+}
+{
+  "Status": [
+    "New","solution_deployed","technician_needed","technician_called","resolved"
+  ]
+}

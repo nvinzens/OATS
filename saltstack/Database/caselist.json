@@ -1,0 +1,13 @@
+{
+  "_id": "ObjectID(3125132)",
+  "Case_nr": "1",
+  "Event": "napalm/syslog/*/INTERFACE_DOWN/*",
+  "Status": "technician_needed",
+  "date": "$date",
+  "time": "$time",
+  "technician":"1",
+  "involved_devices": {
+    "host_name": "router1"
+  },
+  "Solution_tried": "if_noshutdown.sls"
+}
