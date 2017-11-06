@@ -43,6 +43,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       inline: "sudo pip install napalm"
     at_server.vm.provision "shell",
       inline: "sudo pip install napalm-logs"
+    #install mongodb and pymongo
+    at_server.vm.provision "shell",
+      inline: "sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6"
+    at_server.vm.provision "shell",
+      inline: "echo 'deb [ arch=amd64 ] http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.4 multiverse' | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list"
+    at_server.vm.provision "shell",
+      inline: "sudo apt-get update"
+    at_server.vm.provision "shell",
+      inline: "sudo apt-get install -y mongodb-org"
+    at_server.vm.provision "shell",
+      inline: "python -m pip install pymongo" 
 
       at_server.vm.provision :salt do |salt|
         salt.master_config = "saltstack/etc/master"
