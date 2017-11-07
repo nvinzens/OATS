@@ -2,6 +2,7 @@
   "_id": "ObjectID(3125132)",
   "Case_nr": "1",
   "Event": "napalm/syslog/*/INTERFACE_DOWN/*",
+  "Description": "Ein Interface ist heruntergefahren.",
   "Status": "technician_needed",
   "date": "$date",
   "time": "$time",

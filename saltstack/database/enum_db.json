@@ -13,3 +13,8 @@
     "New","solution_deployed","technician_needed","technician_called","resolved"
   ]
 }
+{
+  "slack_channel": [
+    "#testing"
+  ]
+}
