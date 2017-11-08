@@ -16,31 +16,3 @@ class Case:
         else:
             self.solution_tried = solution_tried
         Case.manual_case_count = Case.manual_case_count + 1
-
-    @property
-    def event(self):
-        return self.event
-    @event.setter
-    def event(self, value):
-        self.event = value
-
-    @property
-    def description(self):
-        return self.description
-    @description.setter
-    def description(self, value):
-        self.description = value
-
-    @property
-    def status(self):
-        return self.status
-    @status.setter
-    def status(self, value):
-        self.status = value
-
-    @property
-    def technician(self):
-        return self.technician
-    @technician.setter
-    def technician(self, value):
-        self.technician = value
