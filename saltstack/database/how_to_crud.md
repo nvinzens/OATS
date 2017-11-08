@@ -1,11 +1,11 @@
 #How to use the SA_AT Database
 
-##Introduction
+## Introduction
 
 `$ SOME_CODE` A command to enter in the regular linux shell
 `>>> SOME_CODE` A command to enter in the python shell.
 
-####Collections
+#### Collections
 There are three different Collections in the Test Database which represent the
 three different kinds of datasets which are stored.
 `cases` Collection  
@@ -13,7 +13,7 @@ three different kinds of datasets which are stored.
 `technician` Collection
 `cases/network/technician` means that you have to choose one of them.
 
-##CREATE
+## CREATE
 
 Go to /srv/database/templates choose one of the templates and save a copy of them to your directory.
 ```
@@ -34,14 +34,14 @@ to
 $ mongoimport --db test --collection cases/network/technician --file /srv/Database/your_file_name.json
 ```
 
-##READ
+## READ
 
 Export the collection you want to read, as a JSON file of your choice.
 
 ```
 $ mongoexport --db test --collection cases/network/technician --out example.json
 ```
-##UPDATE
+## UPDATE
 
 Export the collection you want to read, as a JSON file of your choice.
 The `--drop` Option will drop the previous Collection and make certain that noch entry exists twice.
@@ -54,7 +54,7 @@ Edit the files you wish to edit and save.
 $ mongoimport --db test --collection cases/network/technician --drop --file /srv/Database/your_file_name.json
 ```
 
-##DELETE
+## DELETE
 
 From the Python Shell, use MongoClient to connect to the running mongod instance, and switch to the test database.
 
