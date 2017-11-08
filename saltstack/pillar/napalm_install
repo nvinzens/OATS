@@ -1,5 +1,0 @@
-napalm:
-  install:
-    - napalm-junos
-    - napalm-ios
-    - napalm-iosxr
