@@ -1,0 +1,90 @@
+{
+  "host_name": "R11",
+  "ip_address": "10.20.1.11",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "Distribution",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.11", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.12", "ip": "172.16.12.1", "neighbor": "R12" },
+    { "interface": "GigabitEthernet2.13", "ip": "172.16.13.1", "neighbor": "R13" },
+    { "interface": "GigabitEthernet2.14", "ip": "172.16.14.1", "neighbor": "R14" }
+  ]
+}
+{
+  "host_name": "R12",
+  "ip_address": "10.20.1.12",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "Distribution",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.12", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet3", "ip": "172.16.12.2", "neighbor": "R11" },
+    { "interface": "GigabitEthernet4", "ip": "172.16.23.2", "neighbor": "R13" },
+    { "interface": "GigabitEthernet4", "ip": "172.16.24.2", "neighbor": "R14" },
+  ]
+}
+{
+  "host_name": "R13",
+  "ip_address": "10.20.1.13",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "Core",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.13", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.12", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.13", "ip": "172.16.13.3", "neighbor": "R11" },
+    { "interface": "GigabitEthernet2.23", "ip": "172.16.23.3", "neighbor": "R12" },
+    { "interface": "GigabitEthernet2.23", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.34", "ip": "172.16.34.3", "neighbor": "R14" },
+    { "interface": "GigabitEthernet2.35", "ip": "172.16.35.3", "neighbor": "R15" },
+    { "interface": "GigabitEthernet2.36", "ip": "172.16.36.3", "neighbor": "R16" }
+  ]
+}
+{
+  "host_name": "R14",
+  "ip_address": "10.20.1.14",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "Core",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.14", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.14", "ip": "172.16.14.4", "neighbor": "R11" },
+    { "interface": "GigabitEthernet2.24", "ip": "172.16.24.4", "neighbor": "R12" },
+    { "interface": "GigabitEthernet2.34", "ip": "172.16.34.4", "neighbor": "R13" },
+    { "interface": "GigabitEthernet2.45", "ip": "172.16.45.4", "neighbor": "R15" },
+    { "interface": "GigabitEthernet2.46", "ip": "172.16.46.4", "neighbor": "R16" }
+  ]
+}
+{
+  "host_name": "R15",
+  "ip_address": "10.20.1.15",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "External",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.15", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.35", "ip": "172.16.35.5", "neighbor": "R13" },
+    { "interface": "GigabitEthernet2.45", "ip": "172.16.45.5", "neighbor": "R14" },
+    { "interface": "GigabitEthernet2.56", "ip": "172.16.56.5", "neighbor": "R16" }
+  ]
+}
+{
+  "host_name": "R16",
+  "ip_address": "10.20.1.16",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "External",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.16", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.36", "ip": "172.16.36.6", "neighbor": "R13" },
+    { "interface": "GigabitEthernet2.46", "ip": "172.16.46.6", "neighbor": "R14" },
+    { "interface": "GigabitEthernet2.56", "ip": "172.16.56.6", "neighbor": "R15" }
+  ]
+}
