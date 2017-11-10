@@ -1,10 +1,10 @@
 {
-  "Case_nr": "1",
+  "case_nr": "1",
   "Event": "$INSERT_EVENT$",
   "Description": "$INSERT_DESCRIPTION$",
   "Status": "$INSERT_STATUS$",
   "created": "$INSERT_DATE$",
-  "lat_updated": "INSERT_DATE",
+  "last_updated": "INSERT_DATE",
   "technician":"$INSERT_TECHICIAN_ID$",
   "involved_devices": {
     "host_name": "$INSERT_DEVICE$"
