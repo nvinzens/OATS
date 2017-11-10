@@ -3,3 +3,5 @@
 napalm/logs/log
 
 napalm/scripts/*.pyc
+
+.idea/

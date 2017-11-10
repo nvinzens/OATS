@@ -1,7 +1,7 @@
 {% set event_data = data['data'] %}
 
 ping_and_run_state:
-  local.ifdown_state.workflow:
+  local.tshoot.ifdown:
     - tgt: {{ event_data['device'] }}
     - arg:
       - {{ event_data['interface'] }}
