@@ -1,4 +1,0 @@
-{%- set event_data = data['data'] %}
-
-{# check connectivity to opposite device, TODO: Get relevant IPs #}
-{%- set ping_result = salt.salt.execute({{ data['device'], 'net.ping', arg=g['192.168.50.10']) %}
