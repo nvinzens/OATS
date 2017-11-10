@@ -1,11 +1,10 @@
 {
-  "_id": "ObjectID(3125132)",
   "Case_nr": "1",
   "Event": "$INSERT_EVENT$",
   "Description": "$INSERT_DESCRIPTION$",
   "Status": "$INSERT_STATUS$",
-  "date": "$INSERT_DATE$",
-  "time": "$INSERT_TIME$",
+  "created": "$INSERT_DATE$",
+  "lat_updated": "INSERT_DATE",
   "technician":"$INSERT_TECHICIAN_ID$",
   "involved_devices": {
     "host_name": "$INSERT_DEVICE$"
