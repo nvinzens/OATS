@@ -1,0 +1,14 @@
+{
+  "host_name": "S21",
+  "ip_address": "10.20.1.21",
+  "MAC_address": "",
+  "Class": "Switch",
+  "Role": "Access",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.16", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.36", "ip": "172.16.36.6", "neighbor": "R13" },
+    { "interface": "GigabitEthernet2.46", "ip": "172.16.46.6", "neighbor": "R14" },
+    { "interface": "GigabitEthernet2.56", "ip": "172.16.56.6", "neighbor": "R15" }
+  ]
+}

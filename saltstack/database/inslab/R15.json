@@ -1,0 +1,14 @@
+{
+  "host_name": "R15",
+  "ip_address": "10.20.1.15",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "Distribution",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.15", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.35", "ip": "172.16.35.5", "neighbor": "R13" },
+    { "interface": "GigabitEthernet2.45", "ip": "172.16.45.5", "neighbor": "R14" },
+    { "interface": "GigabitEthernet2.56", "ip": "172.16.56.5", "neighbor": "R16" }
+  ]
+}

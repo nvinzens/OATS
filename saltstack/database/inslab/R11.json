@@ -1,0 +1,14 @@
+{
+  "host_name": "R11",
+  "ip_address": "10.20.1.11",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "External",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.11", "neighbor": "" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
+    { "interface": "GigabitEthernet2.12", "ip": "172.16.12.1", "neighbor": "R12" },
+    { "interface": "GigabitEthernet2.13", "ip": "172.16.13.1", "neighbor": "R13" },
+    { "interface": "GigabitEthernet2.14", "ip": "172.16.14.1", "neighbor": "R14" }
+  ]
+}

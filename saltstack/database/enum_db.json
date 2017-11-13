@@ -1,20 +1,15 @@
 {
-  "Role": [
-    "Core","Distribution","Access","External"
-  ]
+  "Role": {
+     "Core":"Core", "Distribution": "Distribution", "Access": "Access","External": "External"
+  },
+  "Class": {
+    "Router": "Router", "Switch": "Switch", "Device": "Device"
+  },
+  "Status": {
+    "Status1": "New", "Status2": "solution_deployed", "Status3": "technician_needed", "Status4": "technician_called", "Status5":"resolved"
+  },
+  "slack_channel": {
+    "Testchannel": "#testing"
+  }
 }
-{
-  "Class": [
-    "Router","Switch","Device"
-  ]
-}
-{
-  "Status": [
-    "New","solution_deployed","technician_needed","technician_called","resolved"
-  ]
-}
-{
-  "slack_channel": [
-    "#testing"
-  ]
-}
+
