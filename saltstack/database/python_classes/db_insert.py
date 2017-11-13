@@ -8,21 +8,19 @@ client = MongoClient()
 db = client.test
 cases = db.cases
 
-def insert(Event, Device, Solution):
+def insert(event, device, solution):
 
   new_cases = {
     "case_nr": "GENERATE",
-    "Event": Event,
+    "Event": event,
     "Description": "Event description",
     "Status": "New",
     "created": datetime.datetime.utcnow(),
     "last_updated": datetime.datetime.utcnow(),
     "technician": "not_called",
-    "involved_devices": {
-    "host_name": Device
-    },
+    "Sender_Device": device,
     "Solution_tried": {
-    "Solution": Solution
+    "Solution": solution
     }
   }
 

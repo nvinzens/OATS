@@ -6,9 +6,7 @@
   "created": "$INSERT_DATE$",
   "last_updated": "INSERT_DATE",
   "technician":"$INSERT_TECHICIAN_ID$",
-  "involved_devices": {
-    "host_name": "$INSERT_DEVICE$"
-  },
+  "Sender_Device": "$INSERT_INVOLVED_DEVICE$",
   "Solution_tried": {
     "Solution": "$INSERT_SOLUTIONS$"
   }
