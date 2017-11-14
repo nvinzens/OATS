@@ -3,4 +3,4 @@ base:
     - default
   'master':
     - common
-    - napalm
+    - napalm_logs
