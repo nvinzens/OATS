@@ -2,10 +2,10 @@ auto_accept: True # Don't use this in production.
 log_level_logfile: debug
 file_roots:
   base:
-    - /srv/salt #needs to point to top.sls
+    - /srv/saltstack/salt #needs to point to top.sls
 pillar_roots:
   base:
-    - /srv/pillar
+    - /srv/saltstack/pillar
 reactor:
   - 'my/custom/event/tag':
     - /etc/salt/reactor/customevent.sls
