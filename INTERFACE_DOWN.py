@@ -5,7 +5,6 @@ GigabitEthernet2, changed state to administratively down
 '''
 
 
-
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
@@ -23,37 +22,18 @@ log = logging.getLogger(__file__)
 
 _RGX_PARTS = [
     ('interface', r'(\w+\d[.]?[\d]?)'),
-    ('change_mode', r'(\d+)'),
-    ('status', r'(\d+)')
+    ('change_mode', r'(\w+)'),
+    ('status', r'(\w+)')
 ]
 _RGX_PARTS = OrderedDict(_RGX_PARTS)
 
 _RGX = (
-    'Interface {0[interface]} changed state to '
-    ' {0[change_mode]} {0[status]}'
+    'Interface {0[interface]}, '
+    'changed state to {0[change_mode]} {0[status]}'
 ).format(_RGX_PARTS)  # ATTENTION to escape the parans
 
 
 def emit(msg_dict):
-    '''
-    Extracts the details from the syslog message
-    and returns an object having the following structure:
-
-    .. code-block:: python
-
-        {
-            u'users': {
-                u'user': {
-                    u'luke': {
-                        u'action': {
-                            u'login': True
-                        },
-                        u'uid': 0
-                    }
-                }
-            }
-        }
-    '''
     log.debug('Evaluating the message dict:')
     log.debug(msg_dict)
     ret = {}

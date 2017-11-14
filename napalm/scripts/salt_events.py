@@ -3,15 +3,17 @@
 import salt.client
 import json
 
-def send_ifdown_event(device, interface):
+
+def send_salt_event(event_msg):
     caller = salt.client.Caller()
-    print('configuring: ' + device)
-    print('Checking connectivity')
+    origin_ip = event_msg['ip']
+    tag = event_msg['message_details']['tag']
+    error = event_msg['error']
+
     caller.sminion.functions['event.send'](
       'napalm/syslog/*/INTERFACE_DOWN/*',
-      {'device': device,
-        'interface': interface}
+      {'origin_ip': origin_ip,
+        'tag': tag,
+        'error': error
+       }
     )
-
-if __name__ == '__main__':
-     send_ifdown_event()
