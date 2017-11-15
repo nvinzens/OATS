@@ -4,7 +4,7 @@ import napalm_logs.utils
 import salt.utils.event
 from salt_events import send_salt_event
 
-server_address = '192.168.50.10'
+server_address = '10.20.1.10'
 server_port = 49017
 context = zmq.Context()
 socket = context.socket(zmq.SUB)
