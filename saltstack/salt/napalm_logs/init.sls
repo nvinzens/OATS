@@ -1,5 +1,5 @@
 set napalm-logs configuration file:
   file.managed:
     - name: /etc/napalm/logs
-    - source: /home/sa/oats/napalm/logs/conf/napalm-logs.conf
+    - source: /home/sa/oats/SA_AT/napalm/logs/conf/napalm-logs.conf
     - order: 1

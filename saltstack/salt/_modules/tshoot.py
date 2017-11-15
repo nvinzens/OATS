@@ -40,5 +40,5 @@ def __ping(destination):
 
 def __if_noshutdown(interface):
     interface_name = interface
-    template_name = '/etc/saltstack/template/noshut_interface.jinja'
+    template_name = '/srv/saltstack/template/noshut_interface.jinja'
     return __salt__['net.load_template'](template_name = template_name, interface_name=interface_name)
