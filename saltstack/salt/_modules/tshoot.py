@@ -6,7 +6,7 @@ def ifdown(origin_interface, origin_host):
     '''
     comment = ''
     destination = '192.168.50.10'
-    success = False;
+    success = False
     conf = ''
     pingable = __ping(destination)
     if pingable:

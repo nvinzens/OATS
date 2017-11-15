@@ -1,0 +1,2 @@
+logging 10.20.1.10 udp 33333
+logging trap 5

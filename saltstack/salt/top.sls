@@ -1,6 +1,6 @@
 base:
-  '*':
-    - default
+  'R*':
+    - syslog
   'master':
     - common
     - napalm_logs
