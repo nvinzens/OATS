@@ -26,23 +26,24 @@ def main():
 
 def insert():
     try:
-        case_nr = raw_input('Enter Case id :')
-        event = raw_input('Enter Event :')
-        description = raw_input('Enter Description :')
-        status = "New"
-        technician = "not_called"
-        device = raw_input('Enter involved Device :')
-        solution = raw_input('Enter Solution :')
+        host_name = raw_input('Enter Device Host name :')
+        ip_address = raw_input('Enter IP Address :')
+        mac_address = raw_input('Enter MAC Address :')
+        dev_class = raw_input('Enter Device Class "Router", "Switch", "Device" :')
+        role = raw_input('Enter Device Role "Core", "Distribution", "Access", "External" :')
+        port_name = raw_input('Enter Interface Name:')
+        port_ip = raw_input('Enter Interface IP Address :')
+        port_neighbor = raw_input('Enter Neighbor :')
 
-        db.cases.insert_one(
+        db.network.insert_one(
             {
-              "host_name": "$INSERT_HOST_NAME$",
-              "ip_address": "$INSERT_IP_ADDRESS$",
-              "MAC_address": "$INSERT_MAC_ADDRESS$",
-              "Class": "$INSERT_CLASS$",
-              "Role": "$INSERT_ROLE$",
+              "host_name": host_name,
+              "ip_address": ip_address,
+              "MAC_address": mac_address,
+              "Class": dev_class,
+              "Role": role,
               "connections": [
-                { "interface": "$INSERT_INTERFACE$", "ip": "INSERT_IP_ADDRESS", "neighbor": "$INSERT_NEIGHBOR$" }
+                { "interface": port_name, "ip": port_ip, "neighbor": port_neighbor}
               ]
             })
         print '\nInserted data successfully\n'
@@ -52,28 +53,25 @@ def insert():
 
 def update():
     try:
-        up_case_id = raw_input('Enter Case id :')
-        up_event = raw_input('Enter Event :')
-        up_description = raw_input('Enter Description :')
-        up_status = raw_input('Enter Status: New, solution_deployed, technician_needed, technician_called, resolved')
-        up_technician = raw_input('Enter Technician :')
-        up_device = raw_input('Enter involved Device :')
-        up_solution = raw_input('Enter Solution :')
+        up_host_name = raw_input('Enter Device Host name :')
+        up_ip_address = raw_input('Enter IP Address :')
+        up_mac_address = raw_input('Enter MAC Address :')
+        up_dev_class = raw_input('Enter Device Class "Router", "Switch", "Device" :')
+        up_role = raw_input('Enter Device Role "Core", "Distribution", "Access", "External" :')
+        up_port_name = raw_input('Enter Interface Name:')
+        up_port_ip = raw_input('Enter Interface IP Address :')
+        up_port_neighbor = raw_input('Enter Neighbor :')
 
-        db.cases.update_one(
-            {"id": up_case_id},
+        db.network.update_one(
+            {"host_name": up_host_name,},
             {
-                "$set": {
-                    "Event": up_event,
-                    "Description": up_description,
-                    "Status": up_status,
-                    "last_updated": datetime.datetime.utcnow(),
-                    "technician": up_technician,
-                    "Sender_Device": up_device,
-                    "Solution_tried": {
-                        "Solution": up_solution
-                    }
-                }
+                "ip_address": up_ip_address,
+                "MAC_address": up_mac_address,
+                "Class": up_dev_class,
+                "Role": up_role,
+                "connections": [
+                    {"interface": up_port_name, "ip": up_port_ip, "neighbor": up_port_neighbor}
+                ]
             }
         )
         print "\nData updated successfully\n"
@@ -84,10 +82,10 @@ def update():
 
 def read():
     try:
-        caseCol = db.cases.find()
-        print '\n All data from Case Database \n'
-        for cas in caseCol:
-            print cas
+        netcol = db.network.find()
+        print '\n All data from Network Database \n'
+        for net in netcol:
+            print net
 
     except Exception, e:
         print str(e)
@@ -95,8 +93,8 @@ def read():
 
 def delete():
     try:
-        del_case = raw_input('\nEnter Case id to delete\n')
-        db.cases.delete_many({"id": del_case})
+        del_dev = raw_input('\nEnter Device Host Name to delete\n')
+        db.network.delete_many({"host_name": del_dev})
         print '\nDeletion successful\n'
     except Exception, e:
         print str(e)
