@@ -28,7 +28,7 @@ def insert():
     try:
         case_nr = raw_input('Enter Case id :')
         event = raw_input('Enter Event :')
-        description = raw_input('Enter age :')
+        description = raw_input('Enter Description :')
         status = "New"
         technician = "not_called"
         device = raw_input('Enter involved Device :')
@@ -57,7 +57,7 @@ def update():
     try:
         up_case_id = raw_input('Enter Case id :')
         up_event = raw_input('Enter Event :')
-        up_description = raw_input('Enter age :')
+        up_description = raw_input('Enter Description :')
         up_status = raw_input('Enter Status: New, solution_deployed, technician_needed, technician_called, resolved')
         up_technician = raw_input('Enter Technician :')
         up_device = raw_input('Enter involved Device :')
@@ -98,8 +98,8 @@ def read():
 
 def delete():
     try:
-        del_case = raw_input('\nEnter Case id to delete\n')
-        db.cases.delete_many({"id": del_case})
+        del_case = raw_input('\nEnter Case Nr to delete\n')
+        db.cases.delete_many({"case_nr": del_case})
         print '\nDeletion successful\n'
     except Exception, e:
         print str(e)

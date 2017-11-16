@@ -1,0 +1,10 @@
+{
+  "host_name": "SW02",
+  "ip_address": "10.20.1.22",
+  "MAC_address": "",
+  "Class": "Switch",
+  "Role": "Access",
+  "connections": [
+    { "interface": "GigabitEthernet1/0/24", "ip": "", "neighbor": "" }
+  ]
+}
