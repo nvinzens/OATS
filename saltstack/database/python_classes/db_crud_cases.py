@@ -98,8 +98,8 @@ def read():
 
 def delete():
     try:
-        del_case = raw_input('\nEnter Case id to delete\n')
-        db.cases.delete_many({"id": del_case})
+        del_case = raw_input('\nEnter Case Nr to delete\n')
+        db.cases.delete_many({"case_nr": del_case})
         print '\nDeletion successful\n'
     except Exception, e:
         print str(e)
