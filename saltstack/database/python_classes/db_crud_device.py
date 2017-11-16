@@ -36,17 +36,14 @@ def insert():
 
         db.cases.insert_one(
             {
-                "case_nr": case_nr,
-                "Event": event,
-                "Description": description,
-                "Status": status,
-                "created": datetime.datetime.utcnow(),
-                "last_updated": datetime.datetime.utcnow(),
-                "technician": technician,
-                "Sender_Device": device,
-                "Solution_tried": {
-                        "Solution": solution
-                }
+              "host_name": "$INSERT_HOST_NAME$",
+              "ip_address": "$INSERT_IP_ADDRESS$",
+              "MAC_address": "$INSERT_MAC_ADDRESS$",
+              "Class": "$INSERT_CLASS$",
+              "Role": "$INSERT_ROLE$",
+              "connections": [
+                { "interface": "$INSERT_INTERFACE$", "ip": "INSERT_IP_ADDRESS", "neighbor": "$INSERT_NEIGHBOR$" }
+              ]
             })
         print '\nInserted data successfully\n'
 
