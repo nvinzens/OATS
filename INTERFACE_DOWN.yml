@@ -3,9 +3,9 @@ messages:
     tag: LINK-5-CHANGED
     values:
       interface: (\w+[\.\-\d\/\w+]+)
-      change_mode: (\w+)
+      changeMode: (\w+)
       status: (\w+)
-    line: 'Interface {interface}, changed state to {change_mode} {status}'
+    line: 'Interface {interface}, changed state to {changeMode} {status}'
     model: openconfig-interfaces
     mapping:
       variables:

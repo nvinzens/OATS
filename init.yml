@@ -4,11 +4,10 @@
 prefixes:
   - time_format: "%b %d %H:%M:%S"
     values:
-      pri: (\d+)
       messageId: (\d+)
       host: (\w+\d)
       date: (\w+ \d+)
-      time: (\d\d:\d\d:\d\d.\d\d\d)
+      time: (\d\d:\d\d:\d\d)
+      milliseconds: (\.\d\d\d)
       tag: ([\w\d-]+)
-      message: (.*)
-    line: '\<{pri}\>{messageId}: {host}: \*{date} {time}: %{tag}:'
+    line: '{messageId}: {host}: *{date} {time}{milliseconds}: %{tag}:'
