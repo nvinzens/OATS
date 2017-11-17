@@ -10,7 +10,7 @@ def ifdown(origin_interface, origin_host):
     conf = ''
     pingable = __ping('R11', destination)
     if pingable:
-        conf = __if_noshutdown(origin_interface)
+        conf = __if_noshutdown(origin_host, origin_interface)
         success = True
         comment = ("Config on " + origin_host + " for Interface " + origin_interface
                      + " changed from down to up")
