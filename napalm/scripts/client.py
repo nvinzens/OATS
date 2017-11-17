@@ -15,7 +15,6 @@ while True:
   raw_object = socket.recv()
   msg = napalm_logs.utils.unserialize(raw_object)
   print (msg)
-  print (msg['message_details'])
   send_salt_event(msg)
   #else:
     #print(napalm_logs.utils.unserialize(raw_object))
