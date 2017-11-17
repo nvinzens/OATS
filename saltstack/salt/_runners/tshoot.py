@@ -32,15 +32,16 @@ def __post_slack(message):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    __salt__['salt.cmd'](fun='slack.post_message', masterchannel=channel, message=message, from_name=user, api_key=api_key)
+    __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
 def __ping(minion, destination):
     ping_result = __salt__['salt.execute'](minion, 'net.ping', {destination})
-    print (ping_result)
     return ping_result[minion]['out']['success']['results']
 
 def __if_noshutdown(minion, interface):
     interface_name = interface
-    template_name = '/srv/saltstack/template/noshut_interface.jinja'
-    return __salt__['salt.execute'](minion, 'net.load_template', {'template_name': template_name, 'interface_name': interface_name})
+    template_name = 'noshut_interface.'
+    template_source = 'interface ' + interface + '\n  no shutdown\nend'
+    config = {'template_name': template_name, 'template_source': template_source}
+    return __salt__['salt.execute'](minion, 'net.load_template', config)
