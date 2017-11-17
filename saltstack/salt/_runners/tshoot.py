@@ -40,8 +40,7 @@ def __ping(minion, destination):
     return ping_result[minion]['out']['success']['results']
 
 def __if_noshutdown(minion, interface):
-    interface_name = interface
-    template_name = 'noshut_interface.'
+    template_name = 'noshut_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
-    config = {'template_name': template_name, 'template_source': template_source}
-    return __salt__['salt.execute'](minion, 'net.load_template', config)
+    config = {template_name, template_source}
+    return __salt__['salt.execute'](minion, 'net.load_template', {template_name, template_source})
