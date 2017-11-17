@@ -7,11 +7,11 @@ import json
 client = MongoClient()
 db = client.test
 
-def main(argv):
+def main(evarg, devarg, solarg):
 
-  event = sys.argv[1]
-  device = sys.argv[2]
-  solution = sys.argv[3]
+  event = evarg
+  device = devarg
+  solution = solarg
 
   case_id = event + device + solution
 
