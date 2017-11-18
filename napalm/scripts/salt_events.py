@@ -13,7 +13,7 @@ def send_salt_event(event_msg):
     error = event_msg['error']
 
     caller.sminion.functions['event.send'](
-      'napalm/syslog/*/INTERFACE_DOWN/*',
+      'napalm/syslog/*/' + error + '/*',
       { 'minion': minion,
         'origin_ip': origin_ip,
         'yang_message': yang_message,

@@ -1,24 +1,26 @@
 
 
-def ifdown(origin_interface, origin_host):
+def ifdown(minion, origin_ip, yang_message):
     '''
     Execution function to ping and determine if a state should be invoked.
     '''
     comment = ''
+    yang_message = YangMessage(yang_message)
+    interface = yang_message.getInterface()
     destination = '172.16.12.1'
     success = False
     conf = ''
     pingable = __ping('R11', destination)
     if pingable:
-        conf = __if_noshutdown(origin_host, origin_interface)
+        conf = __if_noshutdown(minion, interface)
         success = True
-        comment = ("Config on " + origin_host + " for Interface " + origin_interface
+        comment = ("Config on " + minion + " for Interface " + interface
                      + " changed from down to up")
         __post_slack(comment)
     if not pingable:
         success = False
-        __post_slack('Interface ' + origin_interface + ' on host '
-                   + origin_host + ' down')
+        __post_slack('Interface ' + interface + ' on host '
+                   + minion + ' down')
         comment = "Could not restore connectivity - Slack Message sent"
 
     return {
@@ -44,3 +46,14 @@ def __if_noshutdown(minion, interface):
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {template_name, template_source}
     return __salt__['salt.execute'](minion, 'net.load_template', {template_name, template_source})
+
+class YangMessage(object):
+    def __init__(self, yang_message):
+        self.yang_message = yang_message
+
+    def getInterface(self):
+        try:
+            interface = self.yang_message['interface'][0]
+        except KeyError as e:
+            print ("Yang model does not contain an interface: " + e.message)
+        return interface
