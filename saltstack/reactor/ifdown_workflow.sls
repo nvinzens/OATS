@@ -1,7 +1,7 @@
 {% set event_data = data['data'] %}
 
 ping_and_run_state:
-  local.tshoot.ifdown:
+  runner.state.orchestrate.tshoot.ifdown:
     - tgt: {{ event_data['minion'] }}
     - arg:
       - {{ event_data['minion'] }}
