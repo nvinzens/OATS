@@ -1,6 +1,6 @@
 
 
-def ifdown(minion, origin_ip, yang_message):
+def ifdown(minion, origin_ip, yang_message, error, tag):
     '''
     Execution function to ping and determine if a state should be invoked.
     '''
@@ -24,6 +24,8 @@ def ifdown(minion, origin_ip, yang_message):
         comment = "Could not restore connectivity - Slack Message sent"
 
     return {
+        'error': error,
+        'tag': tag,
         'comment': comment,
         'changes': conf,
         'success': success
@@ -52,8 +54,4 @@ class YangMessage(object):
         self.yang_message = yang_message
 
     def getInterface(self):
-        try:
-            interface = self.yang_message['interface'][0]
-        except KeyError as e:
-            print ("Yang model does not contain an interface: " + e.message)
-        return interface
+        return self.yang_message['interfaces']['interface'].popitem()[0]
