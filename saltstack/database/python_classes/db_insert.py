@@ -24,9 +24,7 @@ def main(evarg, devarg, solarg):
     "last_updated": datetime.datetime.utcnow(),
     "technician": "not_called",
     "Sender_Device": device,
-    "Solution_tried": {
     "Solution": solution
-    }
   }
 
   try:

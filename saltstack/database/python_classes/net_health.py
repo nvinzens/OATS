@@ -8,7 +8,7 @@ from bson.son import SON
 client = MongoClient()
 db = client.test
 
-def main(argv):
+def main():
 
   new_cases =  db.cases.find({"Status":"New"}).count()
   auto_cases = db.cases.find({"Status":"solution_deployed"}).count()

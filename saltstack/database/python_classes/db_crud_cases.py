@@ -3,13 +3,14 @@ import pymongo
 from pymongo import MongoClient
 import datetime
 import json
+from itertools import izip
 
 client = MongoClient()
 db = client.test
 
 
 def main():
-    while (1):
+    while 1:
         selection = raw_input('\nSelect 1 to insert, 2 to update, 3 to read, 4 to delete, "CTRL +C" to end\n')
 
         if selection == '1':
@@ -22,65 +23,104 @@ def main():
             print 'delete'
             delete()
         else:
-            print '\n INVALID SELECTION \n'
+            print '\nINVALID SELECTION\n'
 
 def insert():
+    case_nr = ''
+    device = ''
     try:
-        case_nr = raw_input('Enter Case id :')
-        event = raw_input('Enter Event :')
-        description = raw_input('Enter Description :')
+        while not case_nr:
+            case_nr = raw_input('Enter Case id *required: ')
+        event = "User defined"
+        description = raw_input('Enter Description: ')
         status = "New"
         technician = "not_called"
-        device = raw_input('Enter involved Device :')
-        solution = raw_input('Enter Solution :')
+        while not device:
+            device = raw_input('Enter involved Device *required: ')
+        solution = raw_input('Enter Solution: ')
 
-        db.cases.insert_one(
-            {
-                "case_nr": case_nr,
-                "Event": event,
-                "Description": description,
-                "Status": status,
-                "created": datetime.datetime.utcnow(),
-                "last_updated": datetime.datetime.utcnow(),
-                "technician": technician,
-                "Sender_Device": device,
-                "Solution_tried": {
+        while 1:
+            selection = raw_input("\nInsert this into Database?\nCase Nr:" + case_nr  + "\nDescription: " + description + "\nDevice: " + device + "\nSolution: " + solution +"\n\n [y] or [n]")
+            if selection == 'y':
+                db.cases.insert_one(
+                    {
+                        "case_nr": case_nr,
+                        "Event": event,
+                        "Description": description,
+                        "Status": status,
+                        "created": datetime.datetime.utcnow(),
+                        "last_updated": datetime.datetime.utcnow(),
+                        "technician": technician,
+                        "Sender_Device": device,
                         "Solution": solution
-                }
-            })
-        print '\nInserted data successfully\n'
-
+                    })
+                print '\nInserted data successfully\n'
+                break
+            elif selection == 'n':
+                print '\nInsertion Cancelled\n'
+                break
+            else:
+                print '\nINVALID SELECTION\n'
     except Exception, e:
         print str(e)
 
 def update():
+    update_elements = []
+    case_attr =[]
+    up_case_id = ''
     try:
-        up_case_id = raw_input('Enter Case id :')
+        while not up_case_id:
+            up_case_id = raw_input('Enter Case id *required: ')
         up_event = raw_input('Enter Event :')
+        if up_event:
+            update_elements.append(up_event)
+            case_attr.append("Event")
         up_description = raw_input('Enter Description :')
-        up_status = raw_input('Enter Status: New, solution_deployed, technician_needed, technician_called, resolved')
+        if up_description:
+            update_elements.append(up_description)
+            case_attr.append("Description")
+        up_status = raw_input('Enter Status: \n New, solution_deployed, technician_needed, technician_called, resolved: \n')
+        if up_status:
+            update_elements.append(up_status)
+            case_attr.append("Status")
         up_technician = raw_input('Enter Technician :')
+        if up_technician:
+            update_elements.append(up_technician)
+            case_attr.append("technician")
         up_device = raw_input('Enter involved Device :')
+        if up_device:
+            update_elements.append(up_device)
+            case_attr.append("Sender_Device")
         up_solution = raw_input('Enter Solution :')
+        if up_solution:
+            update_elements.append(up_solution)
+            case_attr.append("Solution")
 
-        db.cases.update_one(
-            {"id": up_case_id},
-            {
-                "$set": {
-                    "Event": up_event,
-                    "Description": up_description,
-                    "Status": up_status,
-                    "last_updated": datetime.datetime.utcnow(),
-                    "technician": up_technician,
-                    "Sender_Device": up_device,
-                    "Solution_tried": {
-                        "Solution": up_solution
-                    }
-                }
-            }
-        )
-        print "\nData updated successfully\n"
+        while 1:
+            print '\nUpdate Case Nr: ' + up_case_id + ', as follows:'
+            for el, attr in izip(update_elements, case_attr):
+                if el:
+                    print attr + ": "+ el
+            selection = raw_input('Confirm [y] or [n]')
 
+            if selection == 'y':
+                for el, attr in izip(update_elements, case_attr):
+                    if el:
+                        db.cases.update_one(
+                            {"case_nr": up_case_id},
+                            {
+                                "$set": {
+                                    attr: el,
+                                }
+                            }
+                        )
+                print "\nData updated successfully\n"
+                break
+            elif selection == 'n':
+                print "\nUpdate cancelled\n"
+                break
+            else:
+                print '\nINVALID SELECTION\n'
     except Exception, e:
         print str(e)
 
@@ -88,7 +128,7 @@ def update():
 def read():
     try:
         caseCol = db.cases.find()
-        print '\n All data from Case Database \n'
+        print '\nAll data from Case Database\n'
         for cas in caseCol:
             print cas
 
@@ -98,9 +138,19 @@ def read():
 
 def delete():
     try:
-        del_case = raw_input('\nEnter Case Nr to delete\n')
-        db.cases.delete_many({"case_nr": del_case})
-        print '\nDeletion successful\n'
+        del_case = raw_input('\nEnter Case Nr to delete: \n')
+        while 1:
+            selection = raw_input('\nDelete every Case with Nr: ' + del_case + ", [y] or [n]:")
+
+            if selection == 'y':
+                db.cases.delete_many({"case_nr": del_case})
+                print '\nDeletion successful\n'
+                break
+            elif selection == 'n':
+                print '\nDeletion cancelled\n'
+                break
+            else:
+                print '\nINVALID SELECTION\n'
     except Exception, e:
         print str(e)
 
