@@ -5,3 +5,13 @@ napalm/logs/log
 napalm/scripts/*.pyc
 
 .idea/
+
+saltstack/database/python_classes/__init__.py
+
+saltstack/database/python_classes/.cache
+
+saltstack/database/python_classes/__pycache__
+
+saltstack/database/python_classes/*.pyc
+
+saltstack/*.pyc

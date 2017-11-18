@@ -1,14 +1,13 @@
 {
-  "_id": "ObjectID(3125132)",
-  "Case_nr": "1",
+  "case_nr": "1",
   "Event": "napalm/syslog/*/INTERFACE_DOWN/*",
   "Description": "Ein Interface ist heruntergefahren.",
   "Status": "technician_needed",
-  "date": "$date",
-  "time": "$time",
+  "created": "datetime.datetime.utcnow()",
+  "last_updated": "datetime.datetime.utcnow()",
   "technician":"1",
-  "involved_devices": {
-    "host_name": "router1"
-  },
-  "Solution_tried": "if_noshutdown.sls"
+  "Sender_Device": "device",
+  "Solution_tried": {
+    "Solution": "solution"
+  }
 }
