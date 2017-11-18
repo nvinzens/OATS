@@ -1,4 +1,4 @@
-#How to use the SA_AT Database
+#How to use the OATS database
 
 ## Introduction
 
@@ -7,16 +7,16 @@
 `>>> SOME_CODE` A command to enter in the python shell.
 
 #### Collections
-There are three different Collections in the Test Database which represent the
+There are three different collections in the test database which represent the
 three different kinds of datasets which are stored.
 
-`cases` Collection  
+`cases` collection
 
-`network` Collection
+`network` collection
 
-`technician` Collection
+`technician` collection
 
-In this Tutorial whenever you see `cases/network/technician` means that you have to choose one of them.
+In this tutorial whenever you see `cases/network/technician` means that you have to choose one of them.
 
 ## CREATE
 

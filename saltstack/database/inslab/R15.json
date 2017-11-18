@@ -5,7 +5,7 @@
   "Class": "Router",
   "Role": "Distribution",
   "connections": [
-    { "interface": "GigabitEthernet1", "ip": "10.20.1.15", "neighbor": "" },
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.15", "neighbor": "master" },
     { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
     { "interface": "GigabitEthernet2.35", "ip": "172.16.35.5", "neighbor": "R13" },
     { "interface": "GigabitEthernet2.45", "ip": "172.16.45.5", "neighbor": "R14" },

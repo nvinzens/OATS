@@ -5,7 +5,7 @@
   "Class": "Router",
   "Role": "Core",
   "connections": [
-    { "interface": "GigabitEthernet1", "ip": "10.20.1.13", "neighbor": "" },
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.13", "neighbor": "master" },
     { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
     { "interface": "GigabitEthernet2.12", "ip": "unassigned", "neighbor": "" },
     { "interface": "GigabitEthernet2.13", "ip": "172.16.13.3", "neighbor": "R11" },
