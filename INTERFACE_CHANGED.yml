@@ -1,5 +1,5 @@
 messages:
-  - error: INTERFACE_DOWN
+  - error: INTERFACE_CHANGED
     tag: LINK-3-UPDOWN
     values:
       interface: (\w+[\.\-\d\/\w+]+)
