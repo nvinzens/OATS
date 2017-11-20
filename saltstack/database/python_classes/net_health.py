@@ -6,7 +6,7 @@ import pprint
 from bson.son import SON
 
 client = MongoClient()
-db = client.test
+db = client.oatsdb
 
 def main():
 

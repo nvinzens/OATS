@@ -6,7 +6,7 @@ import json
 from itertools import izip
 
 client = MongoClient()
-db = client.test
+db = client.oatsdb
 
 
 def main():

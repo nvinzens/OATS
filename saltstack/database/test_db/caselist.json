@@ -2,12 +2,10 @@
   "case_nr": "1",
   "Event": "napalm/syslog/*/INTERFACE_DOWN/*",
   "Description": "Ein Interface ist heruntergefahren.",
-  "Status": "technician_needed",
+  "Status": "resolved",
   "created": "datetime.datetime.utcnow()",
   "last_updated": "datetime.datetime.utcnow()",
   "technician":"1",
   "Sender_Device": "device",
-  "Solution_tried": {
-    "Solution": "solution"
-  }
+  "Solution": "solution"
 }

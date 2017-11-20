@@ -56,11 +56,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       inline: "python -m pip install pymongo"
     #import example data
     at_server.vm.provision "shell",
-      inline: "mongoimport --db test --collection cases --drop --file /srv/database/test_db/caselist.json"
+      inline: "mongoimport --db oatsdb --collection cases --drop --file /srv/database/test_db/caselist.json"
     at_server.vm.provision "shell",
-      inline: "mongoimport --db test --collection network --drop --file /srv/database/test_db/networkdata.json"
+      inline: "mongoimport --db oatsdb --collection network --drop --file /srv/database/test_db/networkdata.json"
     at_server.vm.provision "shell",
-      inline: "mongoimport --db test --collection technician --drop --file /srv/database/test_db/technician.json"
+      inline: "mongoimport --db oatsdb --collection technician --drop --file /srv/database/test_db/technician.json"
 
       at_server.vm.provision :salt do |salt|
         salt.master_config = "saltstack/etc/master"

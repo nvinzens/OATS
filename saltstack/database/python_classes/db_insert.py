@@ -5,7 +5,7 @@ import datetime
 import json
 
 client = MongoClient()
-db = client.test
+db = client.oatsdb
 
 def main(evarg, devarg, solarg):
 

@@ -10,7 +10,7 @@ def test_db_insert_args():
   device = "testdevice"
   solution = "testsolution"
   client = MongoClient()
-  db = client.test
+  db = client.oatsdb
   insert_test = db_insert.main(event, device, solution)
   if not insert_test == event + device + solution:
       errors.append("Returned Case ID incorrect")
@@ -21,7 +21,7 @@ def test_db_insert_args():
 
 def test_net_health():
   client = MongoClient()
-  db = client.test
+  db = client.oatsdb
   insert_test = db_insert.main("testevent", "testdevice", "testsolution")
   unresolved_cases = net_health.main()
   db.cases.delete_many({"case_nr": insert_test})
