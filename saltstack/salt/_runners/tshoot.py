@@ -1,15 +1,12 @@
 import logging
 import pymongo
-from pymongo import MongoClient()
+from pymongo import MongoClient
 #from srv.saltstack.helpers import helpers //TODO: fix
-
-db_client = MongoClient()
-db = db_client.oatsdb
-log = logging.getLogger(__name__)
-
 
 
 def ifdown(host, origin_ip, yang_message, error, tag):
+    db_client = MongoClient()
+    db = db_client.oatsdb
     '''
     Execution function to ping and determine if a state should be invoked.
     '''
@@ -72,7 +69,6 @@ def __check_device_connectivity(neighbors, host):
     for neighbor in neighbors:
         connected = __ping(neighbors, host)
         if connected:
-            log.debug("Successful ping from " + neighbor + " to " + host + ". Host is running.")
             return connected
 
 def __get_interface_neighbor(host, interface):
