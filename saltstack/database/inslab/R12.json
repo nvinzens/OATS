@@ -9,6 +9,6 @@
     { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "" },
     { "interface": "GigabitEthernet3", "ip": "172.16.12.2", "neighbor": "R11" },
     { "interface": "GigabitEthernet4", "ip": "172.16.23.2", "neighbor": "R13" },
-    { "interface": "GigabitEthernet4", "ip": "172.16.24.2", "neighbor": "R14" },
+    { "interface": "GigabitEthernet4", "ip": "172.16.24.2", "neighbor": "R14" }
   ]
 }
