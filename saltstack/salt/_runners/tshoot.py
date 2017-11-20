@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import logging
 import pymongo
 from pymongo import MongoClient
@@ -7,28 +8,31 @@ from pymongo import MongoClient
 def ifdown(host, origin_ip, yang_message, error, tag):
     db_client = MongoClient()
     db = db_client.oatsdb
+=======
+
+
+def ifdown(minion, origin_ip, yang_message, error, tag):
+>>>>>>> parent of 8047308... use db in workflow
     '''
     Execution function to ping and determine if a state should be invoked.
     '''
     comment = ''
-    conf = 'No changes'
+    yang_message = YangMessage(yang_message)
+    interface = yang_message.getInterface()
+    destination = '172.16.12.1'
     success = False
-    yang_object = YangMessage(yang_message)
-    interface = yang_object.getInterface()
-    # TODO: get destination, get problem origin, evaluate whether the problem is physical (device, cable) or logical (config)
-    interface_neighbor = __get_interface_neighbor(host, interface)
-    neighbors = __get_neighbors(interface_neighbor)
-    device_connected = __check_device_connectivity(neighbors, interface_neighbor)
-    if device_connected:
-        conf = __if_noshutdown(host, interface)
+    conf = ''
+    pingable = __ping('R11', destination)
+    if pingable:
+        conf = __if_noshutdown(minion, interface)
         success = True
-        comment = ("Config on " + host + " for Interface " + interface
-                   + " changed from down to up")
+        comment = ("Config on " + minion + " for Interface " + interface
+                     + " changed from down to up")
         __post_slack(comment)
-    if not device_connected:
+    if not pingable:
         success = False
         __post_slack('Interface ' + interface + ' on host '
-                     + host + ' down')
+                   + minion + ' down')
         comment = "Could not restore connectivity - Slack Message sent"
 
     return {
@@ -57,6 +61,7 @@ def __if_noshutdown(minion, interface):
     config = {template_name, template_source}
     return __salt__['salt.execute'](minion, 'net.load_template', {template_name, template_source})
 
+<<<<<<< HEAD
 def __check_device_connectivity(neighbors, host):
     '''
     executes pings from neighbors to the host
@@ -85,6 +90,8 @@ def __get_neighbors(host):
             neighbors.append(link['neighbor'])
     return neighbors
 
+=======
+>>>>>>> parent of 8047308... use db in workflow
 class YangMessage(object):
     def __init__(self, yang_message):
         self.yang_message = yang_message
