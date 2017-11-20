@@ -1,2 +1,3 @@
-logging 10.20.1.10 udp 33333
+logging host 10.20.1.10 vrf mgmt transport udp 33333
 logging trap 5
+logging origin-id hostname
