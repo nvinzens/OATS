@@ -1,18 +1,5 @@
-<<<<<<< HEAD
-import logging
-import pymongo
-from pymongo import MongoClient
-#from srv.saltstack.helpers import helpers //TODO: fix
-
-
-def ifdown(host, origin_ip, yang_message, error, tag):
-    db_client = MongoClient()
-    db = db_client.oatsdb
-=======
-
 
 def ifdown(minion, origin_ip, yang_message, error, tag):
->>>>>>> parent of 8047308... use db in workflow
     '''
     Execution function to ping and determine if a state should be invoked.
     '''
@@ -61,7 +48,7 @@ def __if_noshutdown(minion, interface):
     config = {template_name, template_source}
     return __salt__['salt.execute'](minion, 'net.load_template', {template_name, template_source})
 
-<<<<<<< HEAD
+
 def __check_device_connectivity(neighbors, host):
     '''
     executes pings from neighbors to the host
@@ -76,22 +63,6 @@ def __check_device_connectivity(neighbors, host):
         if connected:
             return connected
 
-def __get_interface_neighbor(host, interface):
-    links =  db.network.find_one({'host_name': host})['connections']
-    for link in links:
-        if link['interface'] == interface:
-            return link['neighbor']
-
-def __get_neighbors(host):
-    neighbors = []
-    links = db.network.find_one({'host_name': host})['connections']
-    for link in links:
-        if link['neighbor'] and (link['neighbor'] != 'master'):
-            neighbors.append(link['neighbor'])
-    return neighbors
-
-=======
->>>>>>> parent of 8047308... use db in workflow
 class YangMessage(object):
     def __init__(self, yang_message):
         self.yang_message = yang_message
