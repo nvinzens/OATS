@@ -8,11 +8,11 @@ messages:
       neighborIP: (\d+.\d+.\d+.\d+)
       interface: (\w+[\.\-\d\/\w+]+)
       reasonMessage: ([\w ]+)
-    line: 'Process{processNumber}, Nbr {neighborIP} on {interface} from FULL to DOWN, Neighbor Down: {reasonMessage}'
+    line: 'Process {processNumber}, Nbr {neighborIP} on {interface} from FULL to DOWN, Neighbor Down: {reasonMessage}'
     model: openconfig-ospf
     mapping:
       variables:
         network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason-message: reasonMessage
       static:
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighbor}//state//adjacency-state: DOWN
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighbor}//state//adjacency-state-change-reason: DEAD
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state: DOWN
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason: DEAD
