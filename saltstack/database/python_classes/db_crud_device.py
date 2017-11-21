@@ -3,6 +3,7 @@ import pymongo
 from pymongo import MongoClient
 import datetime
 import json
+from itertools import izip
 
 client = MongoClient()
 db = client.oatsdb
@@ -27,20 +28,36 @@ def main():
 def insert():
     host_name = ''
     ip_address = ''
+    interface_names = []
+    port_ips = []
+    neighbor_neighbors = []
+    number_of_connections = None
     try:
         while not host_name:
-            host_name = raw_input('Enter Device Host name *required:')
+            host_name = raw_input('Enter Device Host name *required: ')
         while not ip_address:
-            ip_address = raw_input('Enter IP Address *required:')
-        mac_address = raw_input('Enter MAC Address :')
-        dev_class = raw_input('Enter Device Class "Router", "Switch", "Device" :')
-        role = raw_input('Enter Device Role "Core", "Distribution", "Access", "External" :')
-        port_name = raw_input('Enter Interface Name:')
-        port_ip = raw_input('Enter Interface IP Address :')
-        port_neighbor = raw_input('Enter Neighbor :')
+            ip_address = raw_input('Enter IP Address *required: ')
+        mac_address = raw_input('Enter MAC Address: ')
+        dev_class = raw_input('Enter Device Class "Router", "Switch", "Device": ')
+        role = raw_input('Enter Device Role "Core", "Distribution", "Access", "External": ')
+        while number_of_connections is None:
+            number_of_connections = int(raw_input('Enter Number of Connections *required: '))
+        while len(interface_names) < number_of_connections:
+            if_name = raw_input('Enter Interface Name for Interface Number "' + str(len(interface_names)+1) + '": ')
+            interface_names.append(if_name)
+        while len(port_ips) < number_of_connections:
+            up_port_ip = raw_input('Enter Interface Ip for Interface Number "' + str(len(port_ips)+1) + '": ')
+            port_ips.append(up_port_ip)
+        while len(neighbor_neighbors) < number_of_connections:
+            up_port_neighbor = raw_input('Enter Interface Neighbor for Interface Number "' + str(len(neighbor_neighbors)+1) + '": ')
+            neighbor_neighbors.append(up_port_neighbor)
 
         while 1:
-            selection = raw_input("\nInsert this into Database?\nHost Name:" + host_name + '[y] or [n]: ')
+            print '\nUpdate Device : ' + host_name + ', as follows:'
+            print '\nIP Adresse: ' + ip_address + '\nMAC Address: ' + mac_address + '\nClass: ' + dev_class + '\nRole: ' + role
+            for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
+                print 'Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn
+            selection = raw_input('Confirm [y] or [n]')
             if selection == 'y':
                 db.network.insert_one(
                     {
@@ -49,10 +66,17 @@ def insert():
                         "MAC_address": mac_address,
                         "Class": dev_class,
                         "Role": role,
-                        "connections": [
-                            {"interface": port_name, "ip": port_ip, "neighbor": port_neighbor}
-                        ]
                     })
+                for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
+                    db.network.update_one(
+                        {'host_name': host_name},
+                        {
+                            '$pushAll': {
+                                "connections": [
+                                     {"interface": ifn, "ip": ipp, "neighbor": nn}
+                                ]}
+                        }
+                    )
                 print '\nInserted data successfully\n'
                 break
             elif selection == 'n':
@@ -60,22 +84,88 @@ def insert():
                 break
             else:
                 print '\nINVALID SELECTION\n'
-        print '\nInserted data successfully\n'
 
     except Exception, e:
         print str(e)
 
 def update():
+    host_name = ''
+    number_of_connections = ''
+    interface_names = []
+    port_ips = []
+    neighbor_neighbors = []
+    update_dev_props = []
+    dev_attr = []
     try:
-        up_host_name = raw_input('Enter Device Host name :')
-        up_ip_address = raw_input('Enter IP Address :')
-        up_mac_address = raw_input('Enter MAC Address :')
-        up_dev_class = raw_input('Enter Device Class "Router", "Switch", "Device" :')
-        up_role = raw_input('Enter Device Role "Core", "Distribution", "Access", "External" :')
-        up_port_name = raw_input('Enter Interface Name:')
-        up_port_ip = raw_input('Enter Interface IP Address :')
-        up_port_neighbor = raw_input('Enter Neighbor :')
+        while not host_name:
+            host_name = raw_input('Enter Device Host name *required: ')
+        up_ip_address = raw_input('Enter IP Address: ')
+        if up_ip_address:
+            update_dev_props.append(up_ip_address)
+            dev_attr.append('ip_address')
 
+        up_mac_address = raw_input('Enter MAC Address: ')
+        if up_mac_address:
+            update_dev_props.append(up_mac_address)
+            dev_attr.append('MAC_address')
+        up_dev_class = raw_input('Enter Device Class "Router", "Switch", "Device": ')
+        if up_dev_class:
+            update_dev_props.append(up_dev_class)
+            dev_attr.append('Class')
+        up_role = raw_input('Enter Device Role "Core", "Distribution", "Access", "External": ')
+        if up_role:
+            update_dev_props.append(up_role)
+            dev_attr.append('Role')
+        while not number_of_connections:
+            number_of_connections = int(raw_input('Enter Number of Connections *required: '))
+        while len(interface_names) < number_of_connections:
+            if_name = raw_input('Enter Interface Name for Interface Number "' + str(len(interface_names) + 1) + '": ')
+            interface_names.append(if_name)
+        while len(port_ips) < number_of_connections:
+            up_port_ip = raw_input('Enter Interface Ip for Interface Number "' + str(len(port_ips) + 1) + '": ')
+            port_ips.append(up_port_ip)
+        while len(neighbor_neighbors) < number_of_connections:
+            up_port_neighbor = raw_input('Enter Interface Neighbor for Interface Number "' + str(len(neighbor_neighbors) + 1) + '": ')
+            neighbor_neighbors.append(up_port_neighbor)
+
+        while 1:
+            print '\nUpdate Device : ' + host_name + ', as follows:\n'
+            for prop, attr in izip(update_dev_props, dev_attr):
+                if prop:
+                    print '\n' + attr + ": "+ prop
+            for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
+                print 'Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn
+            selection = raw_input('Confirm [y] or [n]')
+
+            if selection == 'y':
+                for prop, attr in izip(update_dev_props, dev_attr):
+                    if prop:
+                        db.network.update_one(
+                            {"host_name": host_name},
+                            {
+                                "$set": {
+                                    attr: prop,
+                                }
+                            }
+                        )
+                for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
+                    db.network.update_one(
+                        {'host_name': host_name},
+                        {
+                            '$pushAll': {
+                                "connections": [
+                                     {"interface": ifn, "ip": ipp, "neighbor": nn}
+                                ]}
+                        }
+                    )
+
+                print "\nData updated successfully\n"
+                break
+            elif selection == 'n':
+                print "\nUpdate cancelled\n"
+                break
+            else:
+                print '\nINVALID SELECTION\n'
         db.network.update_one(
             {"host_name": up_host_name,},
             {
@@ -83,16 +173,11 @@ def update():
                 "MAC_address": up_mac_address,
                 "Class": up_dev_class,
                 "Role": up_role,
-                "connections": [
-                    {"interface": up_port_name, "ip": up_port_ip, "neighbor": up_port_neighbor}
-                ]
             }
         )
-        print "\nData updated successfully\n"
 
     except Exception, e:
         print str(e)
-
 
 def read():
     try:
@@ -103,7 +188,6 @@ def read():
 
     except Exception, e:
         print str(e)
-
 
 def delete():
     try:
@@ -122,6 +206,5 @@ def delete():
                 print '\nINVALID SELECTION\n'
     except Exception, e:
         print str(e)
-
 
 main()
