@@ -51,8 +51,8 @@ def __ping(minion, destination):
 def __if_noshutdown(minion, interface):
     template_name = 'noshut_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
-    config = {template_name, template_source}
-    return __salt__['salt.execute'](minion, 'net.load_template', {template_name, template_source})
+    config = {'template_name': template_name,'template_source': template_source}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
 def __check_device_connectivity(neighbors, host):
@@ -79,7 +79,7 @@ def __get_neighbors(host):
     neighbors = []
     links = db.network.find_one({'host_name': host})['connections']
     for link in links:
-        if link['neighbor']:
+        if link['neighbor'] and not link['neighbor'] == 'master':
             neighbors.append(link['neighbor'])
     return neighbors
 
