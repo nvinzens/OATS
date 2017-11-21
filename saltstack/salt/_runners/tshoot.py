@@ -65,7 +65,7 @@ def __check_device_connectivity(neighbors, host):
     '''
     connected = False
     for neighbor in neighbors:
-        connected = __ping(neighbors, host)
+        connected = __ping(neighbor, host)
         if connected:
             return connected
 

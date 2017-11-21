@@ -1,0 +1,19 @@
+
+
+#Process1, Nbr 172.16.46.4 on GigabitEthernet2.45 from FULL to DOWN, Neighbor Down: Dead timer expired
+
+
+messages:
+  - error: OSPF_NEIGHBOR_DOWN
+    tag: OSPF-5-ADJCHG
+    values:
+      processNumber: (\d+)
+      neighborIP: (\d+.\d+.\d+.\d+)
+      interface: (\w+[\.\-\d\/\w+]+)
+      reasonMessage: ([\w ]+)
+    line: 'Process{processNumber}, Nbr {neighborIp] on {interface} from FULL to DOWN, Neighbor Down: {reasonMessage}'
+    model: openconfig-ospf
+    mapping:
+      variables:
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason-message: reasonMessage
+      static: {}
