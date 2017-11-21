@@ -27,16 +27,15 @@ def send_salt_event(event_msg):
 
 def __get_optional_arg(event_msg, error):
     if error == 'INTERFACE_CHANGED':
-        dict = collections.OrderedDict(event_msg)
-        return __get_interface_status(dict)
+        yang_message = collections.OrderedDict(event_msg['yang_message'])
+        return __get_interface_status(yang_message)
     return ''
 
-def __get_interface_status(dict):
-    amount = sum(len(v) for v in dict.itervalues())
-    key = dict.popitem()[0]
-    if key == 'oper_status':
-        return dict[key]
-    if amount == 1:
-        return ''
-    else:
-        __get_interface_status(dict)
+def __get_interface_status(yang_message):
+    for k, v in sorted(yang_message.items()):
+        if k == 'oper_status':
+            return v
+        if v:
+            return __get_interface_status(v)
+        else:
+            return ''
