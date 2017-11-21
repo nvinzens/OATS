@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import salt.client
-import json
+import collections
 
 
 def send_salt_event(event_msg):
@@ -27,14 +27,16 @@ def send_salt_event(event_msg):
 
 def __get_optional_arg(event_msg, error):
     if error == 'INTERFACE_CHANGED':
-        __get_interface_status(event_msg)
+        dict = collections.OrderedDict(event_msg)
+        return __get_interface_status(dict)
     return ''
 
 def __get_interface_status(dict):
-    return_key = next(iter(dict))
-    if return_key == 'oper_status':
-        return dict[return_key]
-    for key, value in dict:
-        if isinstance(value, dict):
-           return __get_interface_status(dict)
-
+    amount = sum(len(v) for v in dict.itervalues())
+    key = dict.popitem()[0]
+    if key == 'oper_status':
+        return dict[key]
+    if amount == 1:
+        return ''
+    else:
+        __get_interface_status(dict)
