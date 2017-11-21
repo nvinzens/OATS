@@ -28,5 +28,9 @@ def main():
 
   return open_cases
 
+def show_open_cases():
+
+    return "hello"
+
 if __name__ == "__main__":
     main(sys.argv)
