@@ -11,8 +11,8 @@ def send_salt_event(event_msg):
     origin_ip = event_msg['ip']
     tag = event_msg['message_details']['tag']
     error = event_msg['error']
-    optional_arg = ''
     optional_arg = __get_optional_arg(event_msg, error)
+    print(optional_arg)
 
     caller.sminion.functions['event.send'](
       'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
@@ -27,7 +27,14 @@ def send_salt_event(event_msg):
 
 def __get_optional_arg(event_msg, error):
     if error == 'INTERFACE_CHANGED':
-        for key, value in event_msg.items():
-            if key == 'oper_status'
-                return value
+        __get_interface_status(event_msg)
     return ''
+
+def __get_interface_status(dict):
+    return_key = next(iter(dict))
+    if return_key == 'oper_status':
+        return dict[return_key]
+    for key, value in dict:
+        if isinstance(value, dict):
+           return __get_interface_status(dict)
+
