@@ -14,15 +14,15 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     yang_message = YangMessage(yang_message)
     interface = yang_message.getInterface()
     interface_neighbor = __get_interface_neighbor(host, interface)
-    destination = '172.16.12.1'
-    pingable = __ping('R11', destination)
-    if pingable:
+    neighbors = __get_neighbors(interface_neighbor)
+    device_up = __check_device_connectivity(neighbors, interface_neighbor)
+    if device_up:
         conf = __if_noshutdown(host, interface)
         success = True
         comment = ("Config on " + host + " for Interface " + interface
                    + " changed from down to up")
         __post_slack(comment)
-    if not pingable:
+    if not device_up:
         success = False
         __post_slack('Interface ' + interface + ' on host '
                      + host + ' down')
@@ -74,6 +74,15 @@ def __get_interface_neighbor(host, interface):
     for link in links:
         if link['interface'] == interface:
             return link['neighbor']
+
+def __get_neighbors(host):
+    neighbors = []
+    links = db.network.find_one({'host_name': host})['connections']
+    for link in links:
+        if link['neighbor'] and (link['neighbor'] != 'master'):
+            neighbors.append(link['neighbor'])
+    return neighbors
+
 
 class YangMessage(object):
     def __init__(self, yang_message):
