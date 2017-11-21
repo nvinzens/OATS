@@ -1,25 +1,29 @@
+import pymongo
+from pymongo import Mongoclient
 
-def ifdown(minion, origin_ip, yang_message, error, tag):
+
+def ifdown(host, origin_ip, yang_message, error, tag):
     '''
     Execution function to ping and determine if a state should be invoked.
     '''
     comment = ''
+    conf = 'No changes'
+    success = False
     yang_message = YangMessage(yang_message)
     interface = yang_message.getInterface()
-    destination = '172.16.12.1'
-    success = False
-    conf = ''
-    pingable = __ping('R11', destination)
+    interface_neighbor = __get_interface_neighbor(host, interface)
+
+    pingable = __ping('R11', host)
     if pingable:
-        conf = __if_noshutdown(minion, interface)
+        conf = __if_noshutdown(host, interface)
         success = True
-        comment = ("Config on " + minion + " for Interface " + interface
-                     + " changed from down to up")
+        comment = ("Config on " + host + " for Interface " + interface
+                   + " changed from down to up")
         __post_slack(comment)
     if not pingable:
         success = False
         __post_slack('Interface ' + interface + ' on host '
-                   + minion + ' down')
+                     + host + ' down')
         comment = "Could not restore connectivity - Slack Message sent"
 
     return {
@@ -62,6 +66,12 @@ def __check_device_connectivity(neighbors, host):
         connected = __ping(neighbors, host)
         if connected:
             return connected
+
+def __get_interface_neighbor(host, interface):
+    links = db.network.find_one({'host_name': host})['connections']
+    for link in links:
+        if link['interface'] == interface:
+            return link['neighbor']
 
 class YangMessage(object):
     def __init__(self, yang_message):
