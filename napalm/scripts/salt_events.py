@@ -27,6 +27,7 @@ def send_salt_event(event_msg):
 
 def __get_optional_arg(event_msg, error):
     if error == 'INTERFACE_CHANGED':
-        interface = event_msg['yang_message']['interfaces']['interface']
-        return event_msg['yang_message']['interfaces']['interface'][interface]['state']['oper_status']
+        for key, value in event_msg.items():
+            if key == 'oper_status'
+                return value
     return ''
