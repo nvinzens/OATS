@@ -79,7 +79,7 @@ def __get_neighbors(host):
     neighbors = []
     links = db.network.find_one({'host_name': host})['connections']
     for link in links:
-        if link['neighbor'] and (link['neighbor'] != 'master'):
+        if link['neighbor']:
             neighbors.append(link['neighbor'])
     return neighbors
 

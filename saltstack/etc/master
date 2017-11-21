@@ -11,7 +11,7 @@ reactor:
     - /etc/salt/reactor/customevent.sls
   - 'my/custom/slack/event':
     - /etc/salt/reactor/slack_notification.sls
-  - 'napalm/syslog/*/INTERFACE_DOWN/*':
+  - 'napalm/syslog/*/INTERFACE_CHANGED/down/*':
     - /srv/saltstack/reactor/ifdown_workflow.sls
   - 'napalm/syslog/*/INSERT_SYSLOG_FOR_INTERFACE_UP/*':
     - /etc/salt/reactor/if_noshutdown.sls

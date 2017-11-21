@@ -8,7 +8,8 @@ messages:
       neighborIP: (\d+.\d+.\d+.\d+)
       interface: (\w+[\.\-\d\/\w+]+)
       reasonMessage: ([\w ]+)
-    line: 'Process {processNumber}, Nbr {neighborIP} on {interface} from FULL to DOWN, Neighbor Down: {reasonMessage}'
+      initStatus: (\w+)
+    line: 'Process {processNumber}, Nbr {neighborIP} on {interface} from {initStatus} to DOWN, Neighbor Down: {reasonMessage}'
     model: openconfig-ospf
     mapping:
       variables:

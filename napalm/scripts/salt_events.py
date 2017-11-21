@@ -11,9 +11,11 @@ def send_salt_event(event_msg):
     origin_ip = event_msg['ip']
     tag = event_msg['message_details']['tag']
     error = event_msg['error']
+    optional_arg = ''
+    optional_arg = __get_optional_arg(event_msg, error)
 
     caller.sminion.functions['event.send'](
-      'napalm/syslog/*/' + error + '/*',
+      'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
       { 'minion': minion,
         'origin_ip': origin_ip,
         'yang_message': yang_message,
@@ -21,3 +23,10 @@ def send_salt_event(event_msg):
         'error': error
        }
     )
+
+
+def __get_optional_arg(event_msg, error):
+    if error == 'INTERFACE_CHANGED':
+        interface = event_msg['yang_message']['interfaces']['interface']
+        return event_msg['yang_message']['interfaces']['interface'][interface]['state']['oper_status']
+    return ''

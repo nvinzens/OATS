@@ -1,6 +1,6 @@
 {% set event_data = data['data'] %}
 
-ping_and_run_state:
+ifdown_workflow:
   runner.tshoot.ifdown:
     - host: {{ event_data['minion'] }}
     - origin_ip: {{ event_data['origin_ip'] }}
