@@ -61,8 +61,8 @@ def __post_slack(message):
 def __ping(from_host, to_host):
     ping_result = None
     if from_host == MASTER:
-        # TODO: evalue ping_result
-        ping_result = __salt__['salt.cmd'](fun='cmd.run', name='ping -c 5 ' + to_host)
+        ping_result = __salt__['salt.execute'](to_host, 'net.ping', {'127.0.0.1'})
+        return ping_result[to_host]['result']
     else:
         ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
     return ping_result[from_host]['out']['success']['results']
@@ -80,13 +80,14 @@ def __check_device_connectivity(neighbors, host):
 
     :param neighbors: the hosts neighbors
     :param host: the host to check connectivity to
-    :return: if the host is connected to one of his neighbors: True/False
+    :return: if the host is connected to one of his neighbors or the master: True/False
     '''
     connected = False
     for neighbor in neighbors:
         connected = __ping(neighbor, host)
         if connected:
             return connected
+    # TODO: evaluate what it means when master is connected, but none of the neighbors
     connected = __ping(MASTER, host)
     return connected
 
