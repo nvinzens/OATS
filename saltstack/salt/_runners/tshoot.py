@@ -1,11 +1,11 @@
 import pymongo
 from pymongo import MongoClient
-import helpers import *
 
 #Constants
 MASTER = 'master'
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
+
 
 def ifdown(host, origin_ip, yang_message, error, tag):
     '''
@@ -14,13 +14,13 @@ def ifdown(host, origin_ip, yang_message, error, tag):
 
     conf = 'No changes'
     success = False
-    yang_message = helpers.YangMessage(yang_message)
+    yang_message = YangMessage(yang_message)
     interface = yang_message.getInterface()
     comment = "Interface down status on host " + host + " detected. "
-    interface_neighbor = helpers.get_interface_neighbor(host, interface)
+    interface_neighbor = _get_interface_neighbor(host, interface)
 
     # check if error is still present, might have been solved already
-    if helpers.ping(host, interface_neighbor):
+    if _ping(host, interface_neighbor):
         return {
             'error': error,
             'tag': tag,
@@ -29,29 +29,29 @@ def ifdown(host, origin_ip, yang_message, error, tag):
             'success': True
         }
 
-    neighbors = helpers.get_neighbors(interface_neighbor)
-    device_up = helpers.check_device_connectivity(neighbors, interface_neighbor)
+    neighbors = _get_neighbors(interface_neighbor)
+    device_up = _check_device_connectivity(neighbors, interface_neighbor)
 
     if device_up:
         # cycle affected interface
-        helpers.if_shutdown(host, interface)
-        conf = helpers.if_noshutdown(host, interface)
+        _if_shutdown(host, interface)
+        conf = _if_noshutdown(host, interface)
         # check if cycle was successful
-        success = helpers.ping(host, interface_neighbor)
+        success = _ping(host, interface_neighbor)
         if success:
             success = True
             comment += ("Config for Interface "
                        + interface + " automatically changed from down to up")
-            helpers.post_slack(comment)
+            _post_slack(comment)
         else:
             comment = ("Could not fix down status of " + interface + ' on host'
                        + host + ' .')
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        helpers.post_slack('Interface ' + interface + ' on host '
+        _post_slack('Interface ' + interface + ' on host '
                      + host + ' down. Neighbor ' + interface_neighbor +
-                           ' is down.')
+                    ' is down.')
         comment = "Could not restore connectivity - Slack Message sent"
 
     return {
@@ -61,3 +61,77 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         'changes': conf,
         'success': success
     }
+
+
+def _post_slack(message):
+    channel = '#testing'
+    user = 'OATS'
+    api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
+    __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
+
+
+def _ping(from_host, to_host):
+    ping_result = None
+    if from_host == MASTER:
+        ping_result = __salt__['salt.execute'](to_host, 'net.ping', {'127.0.0.1'})
+        return ping_result[to_host]['result']
+    else:
+        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
+    return ping_result[from_host]['out']['success']['results']
+
+
+def _if_noshutdown(minion, interface):
+    template_name = 'noshutdown_interface'
+    template_source = 'interface ' + interface + '\n  no shutdown\nend'
+    config = {'template_name': template_name,'template_source': template_source}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+
+
+def _if_shutdown(minion, interface):
+    template_name = 'shutdown_interface'
+    template_source = 'interface ' + interface + '\n  shutdown\nend'
+    config = {'template_name': template_name,'template_source': template_source}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+
+
+def _check_device_connectivity(neighbors, host):
+    '''
+    executes pings from neighbors to the host
+
+    :param neighbors: the hosts neighbors
+    :param host: the host to check connectivity to
+    :return: if the host is connected to one of his neighbors or the master: True/False
+    '''
+    # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
+    connected = False
+    #for neighbor in neighbors:
+    #    connected = __ping(neighbor, host)
+    #    if connected:
+    #        return connected
+    # TODO: evaluate what it means when master is connected, but none of the neighbors
+    connected = __ping(MASTER, host)
+    return connected
+
+
+def _get_interface_neighbor(host, interface):
+    links = DB.network.find_one({'host_name': host})['connections']
+    for link in links:
+        if link['interface'] == interface:
+            return link['neighbor']
+
+
+def _get_neighbors(host):
+    neighbors = []
+    links = DB.network.find_one({'host_name': host})['connections']
+    for link in links:
+        if link['neighbor'] and not link['neighbor'] == MASTER:
+            neighbors.append(link['neighbor'])
+    return neighbors
+
+
+class YangMessage(object):
+    def __init__(self, yang_message):
+        self.yang_message = yang_message
+
+    def getInterface(self):
+        return self.yang_message['interfaces']['interface'].popitem()[0]
