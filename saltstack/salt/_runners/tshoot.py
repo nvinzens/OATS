@@ -1,19 +1,33 @@
 import pymongo
 from pymongo import MongoClient
 
-db_client = MongoClient()
-db = db_client.oatsdb
+
+#Constants
+MASTER = 'master'
+DB_CLIENT = MongoClient()
+DB = DB_CLIENT.oatsdb
 
 def ifdown(host, origin_ip, yang_message, error, tag):
     '''
     Execution function to ping and determine if a state should be invoked.
     '''
-    comment = ''
+    comment = None
     conf = 'No changes'
     success = False
     yang_message = YangMessage(yang_message)
     interface = yang_message.getInterface()
     interface_neighbor = __get_interface_neighbor(host, interface)
+
+    # check if error is still present, might have been solved already
+    if __ping(host, interface_neighbor):
+        return {
+            'error': error,
+            'tag': tag,
+            'comment': 'Error not present anymore. Workflow not executed',
+            'changes': '',
+            'success': True
+        }
+
     neighbors = __get_neighbors(interface_neighbor)
     device_up = __check_device_connectivity(neighbors, interface_neighbor)
     if device_up:
@@ -44,9 +58,14 @@ def __post_slack(message):
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
-def __ping(minion, destination):
-    ping_result = __salt__['salt.execute'](minion, 'net.ping', {destination})
-    return ping_result[minion]['out']['success']['results']
+def __ping(from_host, to_host):
+    ping_result = None
+    if from_host == MASTER:
+        # TODO: evalue ping_result
+        ping_result = __salt__['salt.cmd'](fun='cmd.run', name='ping -c 5 ' + to_host)
+    else:
+        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
+    return ping_result[from_host]['out']['success']['results']
 
 def __if_noshutdown(minion, interface):
     template_name = 'noshut_interface'
@@ -66,20 +85,21 @@ def __check_device_connectivity(neighbors, host):
     connected = False
     for neighbor in neighbors:
         connected = __ping(neighbor, host)
-        if connected:
-            return connected
+        if not connected:
+            connected = __ping(MASTER, host)
+        return connected
 
 def __get_interface_neighbor(host, interface):
-    links = db.network.find_one({'host_name': host})['connections']
+    links = DB.network.find_one({'host_name': host})['connections']
     for link in links:
         if link['interface'] == interface:
             return link['neighbor']
 
 def __get_neighbors(host):
     neighbors = []
-    links = db.network.find_one({'host_name': host})['connections']
+    links = DB.network.find_one({'host_name': host})['connections']
     for link in links:
-        if link['neighbor'] and not link['neighbor'] == 'master':
+        if link['neighbor'] and not link['neighbor'] == MASTER:
             neighbors.append(link['neighbor'])
     return neighbors
 
