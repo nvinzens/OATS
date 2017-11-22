@@ -1,6 +1,6 @@
 import pymongo
 from pymongo import MongoClient
-import helpers
+import helpers import *
 
 #Constants
 MASTER = 'master'

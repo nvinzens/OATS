@@ -7,8 +7,12 @@ import collections
 from expiringdict import ExpiringDict
 
 
+# CONSTANTS:
+CACHE_SIZE = 10
+MAX_AGE = 3
+
 # cache for not sending the same event multiple times
-cache = ExpiringDict(max_len=1000, max_age_seconds=3)
+cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
 
 
 def __send_salt_event(event_msg):
@@ -21,10 +25,10 @@ def __send_salt_event(event_msg):
     error = event_msg['error']
     optional_arg = __get_optional_arg(event_msg, error)
 
-    if not (cache.get('error') ==  error and cache.get('optional_arg') == optional_arg):
+    if not (cache.get(error) ==  error and cache.get('optional_arg') == optional_arg):
         print event_msg
-        cache['error'] = error
-        cache['optional_arg'] = optional_arg
+        cache[error] = error
+        cache[optional_arg] = optional_arg
 
         caller.sminion.functions['event.send'](
             'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
@@ -42,6 +46,7 @@ def __get_optional_arg(event_msg, error):
         yang_message = collections.OrderedDict(event_msg['yang_message'])
         return __get_interface_status(yang_message)
     return ''
+
 
 def __get_interface_status(yang_message):
     for k, v in sorted(yang_message.items()):
