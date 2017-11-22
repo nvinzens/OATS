@@ -24,7 +24,7 @@ def __send_salt_event(event_msg):
     if not (cache.get('error') ==  error and cache.get('optional_arg') == optional_arg):
         print event_msg
         cache['error'] = error
-        cache['optional_arg'] = error
+        cache['optional_arg'] = optional_arg
 
         caller.sminion.functions['event.send'](
             'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
