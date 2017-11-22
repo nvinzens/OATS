@@ -37,9 +37,11 @@ def ifdown(host, origin_ip, yang_message, error, tag):
                    + " changed from down to up")
         __post_slack(comment)
     if not device_up:
+        # TODO: powercycle, check power consumation
         success = False
         __post_slack('Interface ' + interface + ' on host '
-                     + host + ' down')
+                     + host + ' down. Neighbor ' + interface_neighbor +
+                     ' is down.')
         comment = "Could not restore connectivity - Slack Message sent"
 
     return {
