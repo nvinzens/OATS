@@ -8,10 +8,11 @@ from expiringdict import ExpiringDict
 
 
 # cache for not sending the same event multiple times
-cache = ExpiringDict(max_len=10, max_age_seconds=3)
+cache = ExpiringDict(max_len=1000, max_age_seconds=3)
 
 
 def __send_salt_event(event_msg):
+    global cache
     caller = salt.client.Caller()
     yang_message =  event_msg['yang_message']
     minion = event_msg['host']
@@ -20,7 +21,8 @@ def __send_salt_event(event_msg):
     error = event_msg['error']
     optional_arg = __get_optional_arg(event_msg, error)
 
-    if not (cache.get['error'] ==  error and cache.get['optional_arg' == optional_arg]):
+    if not (cache.get('error') ==  error and cache.get('optional_arg') == optional_arg):
+        print event_msg
         cache['error'] = error
         cache['optional_arg'] = error
 
@@ -61,5 +63,4 @@ socket.setsockopt(zmq.SUBSCRIBE,'')
 while True:
     raw_object = socket.recv()
     msg = napalm_logs.utils.unserialize(raw_object)
-    print (msg)
     __send_salt_event(msg)
