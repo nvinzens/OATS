@@ -20,7 +20,7 @@ def __send_salt_event(event_msg):
     error = event_msg['error']
     optional_arg = __get_optional_arg(event_msg, error)
 
-    if not (cache.contains(error) and cache.contains(optional_arg)):
+    if not (cache.get['error'] ==  error and cache.get['optional_arg' == optional_arg]):
         cache['error'] = error
         cache['optional_arg'] = error
 
