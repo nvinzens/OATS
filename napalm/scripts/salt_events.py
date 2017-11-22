@@ -2,7 +2,10 @@
 
 import salt.client
 import collections
+from expiringdict import ExpiringDict
 
+# cache for not sending the same event multiple times
+cache = ExpiringDict(max_len=10, max_age_seconds=10)
 
 def send_salt_event(event_msg):
     caller = salt.client.Caller()
@@ -12,17 +15,20 @@ def send_salt_event(event_msg):
     tag = event_msg['message_details']['tag']
     error = event_msg['error']
     optional_arg = __get_optional_arg(event_msg, error)
-    print(optional_arg)
 
-    caller.sminion.functions['event.send'](
-      'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
-      { 'minion': minion,
-        'origin_ip': origin_ip,
-        'yang_message': yang_message,
-        'tag': tag,
-        'error': error
-       }
-    )
+    if not (cache.contains(error) and cache.contains(optional_arg)):
+        cache['error'] = error
+        cache['optional_arg'] = error
+
+        caller.sminion.functions['event.send'](
+            'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
+            { 'minion': minion,
+              'origin_ip': origin_ip,
+              'yang_message': yang_message,
+              'tag': tag,
+              'error': error
+              }
+        )
 
 
 def __get_optional_arg(event_msg, error):

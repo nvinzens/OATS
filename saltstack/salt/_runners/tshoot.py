@@ -9,9 +9,9 @@ DB = DB_CLIENT.oatsdb
 
 def ifdown(host, origin_ip, yang_message, error, tag):
     '''
-    Execution function to ping and determine if a state should be invoked.
+    Function that executes a workflow to fix the error that started an ifdown event
     '''
-    comment = None
+
     conf = 'No changes'
     success = False
     yang_message = helpers.YangMessage(yang_message)
@@ -25,12 +25,13 @@ def ifdown(host, origin_ip, yang_message, error, tag):
             'error': error,
             'tag': tag,
             'comment': 'Error not present anymore. Workflow not executed',
-            'changes': '',
+            'changes': conf,
             'success': True
         }
 
     neighbors = helpers.get_neighbors(interface_neighbor)
     device_up = helpers.check_device_connectivity(neighbors, interface_neighbor)
+
     if device_up:
         # cycle affected interface
         helpers.if_shutdown(host, interface)
@@ -50,7 +51,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         success = False
         helpers.post_slack('Interface ' + interface + ' on host '
                      + host + ' down. Neighbor ' + interface_neighbor +
-                     ' is down.')
+                           ' is down.')
         comment = "Could not restore connectivity - Slack Message sent"
 
     return {
