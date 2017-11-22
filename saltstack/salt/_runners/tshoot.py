@@ -85,9 +85,10 @@ def __check_device_connectivity(neighbors, host):
     connected = False
     for neighbor in neighbors:
         connected = __ping(neighbor, host)
-        if not connected:
-            connected = __ping(MASTER, host)
-        return connected
+        if connected:
+            return connected
+    connected = __ping(MASTER, host)
+    return connected
 
 def __get_interface_neighbor(host, interface):
     links = DB.network.find_one({'host_name': host})['connections']
