@@ -16,7 +16,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     success = False
     yang_message = YangMessage(yang_message)
     interface = yang_message.getInterface()
-    comment = '"Interface down status on host " + host + " detected.'
+    comment = "Interface down status on host " + host + " detected."
     interface_neighbor = __get_interface_neighbor(host, interface)
 
     # check if error is still present, might have been solved already
@@ -38,6 +38,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         #check if cycle was successful
         success = __ping(host, interface_neighbor)
         if success:
+            success = True
             comment += ("Config for Interface "
                        + interface + " automatically changed from down to up")
             __post_slack(comment)
