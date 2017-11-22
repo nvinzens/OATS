@@ -12,6 +12,9 @@ CACHE_SIZE = 10
 MAX_AGE = 3
 
 # cache for not sending the same event multiple times
+# event correlation only looks if in the last MAX_AGE seconds the same event occured
+# and if it did, skips it
+# can be refined, but needs to get data from the database for that
 cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
 
 
@@ -25,7 +28,7 @@ def __send_salt_event(event_msg):
     error = event_msg['error']
     optional_arg = __get_optional_arg(event_msg, error)
 
-    if not (cache.get(error) ==  error and cache.get('optional_arg') == optional_arg):
+    if not (cache.get(error) ==  error and cache.get(optional_arg) == optional_arg):
         print event_msg
         cache[error] = error
         cache[optional_arg] = optional_arg
