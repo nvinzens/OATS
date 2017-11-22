@@ -16,6 +16,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     success = False
     yang_message = YangMessage(yang_message)
     interface = yang_message.getInterface()
+    comment = '"Interface down status on host " + host + " detected.'
     interface_neighbor = __get_interface_neighbor(host, interface)
 
     # check if error is still present, might have been solved already
@@ -31,11 +32,18 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     neighbors = __get_neighbors(interface_neighbor)
     device_up = __check_device_connectivity(neighbors, interface_neighbor)
     if device_up:
+        # cycle affected interface
+        __if_shutdown(host, interface)
         conf = __if_noshutdown(host, interface)
-        success = True
-        comment = ("Config on " + host + " for Interface " + interface
-                   + " changed from down to up")
-        __post_slack(comment)
+        #check if cycle was successful
+        success = __ping(host, interface_neighbor)
+        if success:
+            comment += ("Config for Interface "
+                       + interface + " automatically changed from down to up")
+            __post_slack(comment)
+        else:
+            comment = ("Could not fix down status of " + interface + ' on host'
+                       + host + ' .')
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
@@ -70,11 +78,16 @@ def __ping(from_host, to_host):
     return ping_result[from_host]['out']['success']['results']
 
 def __if_noshutdown(minion, interface):
-    template_name = 'noshut_interface'
+    template_name = 'noshutdown_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name,'template_source': template_source}
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
+def __if_shutdown(minion, interface):
+    template_name = 'shutdown_interface'
+    template_source = 'interface ' + interface + '\n  shutdown\nend'
+    config = {'template_name': template_name,'template_source': template_source}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 def __check_device_connectivity(neighbors, host):
     '''
