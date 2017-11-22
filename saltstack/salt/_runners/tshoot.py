@@ -84,11 +84,12 @@ def __check_device_connectivity(neighbors, host):
     :param host: the host to check connectivity to
     :return: if the host is connected to one of his neighbors or the master: True/False
     '''
+    # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
     connected = False
-    for neighbor in neighbors:
-        connected = __ping(neighbor, host)
-        if connected:
-            return connected
+    #for neighbor in neighbors:
+    #    connected = __ping(neighbor, host)
+    #    if connected:
+    #        return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
     connected = __ping(MASTER, host)
     return connected
