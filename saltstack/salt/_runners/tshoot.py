@@ -58,7 +58,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        update_case('TODO global case id','solution',status='technician_needed')
+        update_case()
         _post_slack('Interface ' + interface + ' on host '
                      + host + ' down. Neighbor ' + interface_neighbor +
                     ' is down.')

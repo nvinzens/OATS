@@ -20,15 +20,15 @@ def main():
 
 def numb_open_cases(status=None):
 
-    new_cases = db.cases.find({'Status': 'New'}).count()
+    new_cases = db.cases.find({'Status': 'new'}).count()
     auto_cases = db.cases.find({'Status': 'solution_deployed'}).count()
     techreq_cases = db.cases.find({'Status': 'technician_needed'}).count()
     tech_cases = db.cases.find({'Status': 'technician_called'}).count()
 
     open_cases = new_cases + auto_cases + techreq_cases + tech_cases
 
-    if status == 'New':
-        print '\nNumber of Cases with Status New: ' + str(new_cases)
+    if status == 'new':
+        print '\nNumber of Cases with Status new: ' + str(new_cases)
     elif status == 'solution_deployed':
         print '\nNumber of Cases with Status "solution_deployed": ' + str(auto_cases)
 
@@ -42,12 +42,12 @@ def numb_open_cases(status=None):
 def show_open_cases_nr():
 
     try:
-        new_case_col = db.cases.find({'Status':'New'})
+        new_case_col = db.cases.find({'Status':'new'})
         auto_cases_col = db.cases.find({'Status': 'solution_deployed'})
         techreq_cases_col = db.cases.find({'Status': 'technician_needed'})
         tech_cases_col = db.cases.find({'Status': 'technician_called'})
 
-        print '\nCases with Status New:'
+        print '\nCases with Status new:'
         for cas in new_case_col:
             print '\n' + cas['case_nr']
         print '\nCases with Status solution_deployed:'
@@ -68,7 +68,7 @@ def show_open_case_dev():
     '''
         pipe = [
             {'$project': {'Sender_device':1, 'Status':1}},
-            {'$match':{'$or': [{'Status': 'New'}, {'Status': 'solution_deployed'}, {'Status': 'technician_needed'}, {'Status': 'technician_called'}]}},
+            {'$match':{'$or': [{'Status': 'new'}, {'Status': 'solution_deployed'}, {'Status': 'technician_needed'}, {'Status': 'technician_called'}]}},
             {'$group': {'_id': '$Status', 'total': {'$sum': 1}}}
         ]
 

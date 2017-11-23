@@ -4,6 +4,8 @@ from pymongo import MongoClient
 import datetime
 import json
 from itertools import izip
+from enum import Enum
+
 
 client = MongoClient()
 db = client.oatsdb
@@ -33,7 +35,7 @@ def insert():
             case_nr = raw_input('Enter Case id *required: ')
         event = "User defined"
         description = raw_input('Enter Description: ')
-        status = "New"
+        status = "new"
         technician = "not_called"
         while not device:
             device = raw_input('Enter involved Device *required: ')
@@ -52,7 +54,7 @@ def insert():
                         "last_updated": datetime.datetime.utcnow(),
                         "technician": technician,
                         "Sender_Device": device,
-                        "Solution": solution
+                        "Solution": [solution]
                     })
                 print '\nInserted data successfully\n'
                 break
@@ -79,7 +81,7 @@ def update():
         if up_description:
             update_elements.append(up_description)
             case_attr.append("Description")
-        up_status = raw_input('Enter Status: \n New, solution_deployed, technician_needed, technician_on_case, resolved: \n')
+        up_status = raw_input('Enter Status: \n new, solution_deployed, technician_needed, technician_on_case, resolved: \n')
         if up_status:
             update_elements.append(up_status)
             case_attr.append("Status")

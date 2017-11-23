@@ -19,7 +19,7 @@ def main(evarg, devarg, solarg):
     "case_nr": case_id,
     "Event": event,
     "Description": "Event description",
-    "Status": "New",
+    "Status": "new",
     "created": datetime.datetime.utcnow(),
     "last_updated": datetime.datetime.utcnow(),
     "technician": "not_called",
