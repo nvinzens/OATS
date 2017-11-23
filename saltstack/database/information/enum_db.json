@@ -6,7 +6,7 @@
     "Router": "Router", "Switch": "Switch", "Device": "Device"
   },
   "Status": {
-    "Status1": "New", "Status2": "solution_deployed", "Status3": "technician_needed", "Status4": "technician_called", "Status5":"resolved"
+    "Status1": "New", "Status2": "solution_deployed", "Status3": "technician_needed", "Status4": "technician_on_case", "Status5":"resolved"
   },
   "slack_channel": {
     "Testchannel": "#testing"

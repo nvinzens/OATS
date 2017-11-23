@@ -11,7 +11,7 @@ db = client.oatsdb
 
 def main():
     while 1:
-        selection = raw_input('\nSelect 1 to insert, 2 to update, 3 to read, 4 to delete, "CTRL +C" to end\n')
+        selection = raw_input('\nSelect 1 to create, 2 to update, 3 to read, 4 to delete, "CTRL +C" to end\n')
 
         if selection == '1':
             insert()
@@ -79,7 +79,7 @@ def update():
         if up_description:
             update_elements.append(up_description)
             case_attr.append("Description")
-        up_status = raw_input('Enter Status: \n New, solution_deployed, technician_needed, technician_called, resolved: \n')
+        up_status = raw_input('Enter Status: \n New, solution_deployed, technician_needed, technician_on_case, resolved: \n')
         if up_status:
             update_elements.append(up_status)
             case_attr.append("Status")
