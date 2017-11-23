@@ -4,17 +4,22 @@ import sys
 import datetime
 import json
 
-#Constants
+# Constants
 MASTER = 'master'
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
+
+# Global variables
+case_id = None
+
 #TODO: enum for status
+
 
 def ifdown(host, origin_ip, yang_message, error, tag):
     '''
     Function that executes a workflow to fix the error that started an ifdown event
     '''
-
+    global case_id
     conf = 'No changes'
     success = False
     yang_message = YangMessage(yang_message)
@@ -47,18 +52,18 @@ def ifdown(host, origin_ip, yang_message, error, tag):
             success = True
             comment += ('Config for Interface '
                        + interface + ' automatically changed from down to up')
-            #TODO: remove?
+            # TODO: remove? only useful for debugging
             _post_slack(comment)
-            close_case('TODO global case id')
+            close_case(case_id)
         else:
-            update_case('TODO global case id','solution',status='technician_needed')
+            update_case(case_id , solution = error + 'could not get resolved. Technician needed.', status='technician_needed')
             comment = ('Could not fix down status of ' + interface + ' on host'
                        + host + ' .')
             _post_slack(comment)
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        update_case()
+        update_case(case_id, solution = 'Device ' + host + ' unreachable. Technician needed.', status='technician_needed')
         _post_slack('Interface ' + interface + ' on host '
                      + host + ' down. Neighbor ' + interface_neighbor +
                     ' is down.')
@@ -105,7 +110,7 @@ def create_case(error, host, solution=None, description=None, status='New'):
 
   return case_id
 
-def update_case(case_id, solution, status=None):
+def update_case(case_id, solution=None, status=None):
     #if state exists update state else only solution
     return case_id
 
@@ -121,18 +126,18 @@ def _post_slack(message):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    update_case('TODO global case id', {'TODO DICT': 'FOR SOLUTION'}, status='technician_called')
+    update_case(case_id, status='technician_called')
     #get case extract data and post it to slack
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
 def _ping(from_host, to_host):
-    ping_result = None
     if from_host == MASTER:
         ping_result = __salt__['salt.execute'](to_host, 'net.ping', {'127.0.0.1'})
         return ping_result[to_host]['result']
     else:
         ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
+    update_case(case_id, solution = 'Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)))
     return ping_result[from_host]['out']['success']['results']
 
 
@@ -140,7 +145,7 @@ def _if_noshutdown(minion, interface):
     template_name = 'noshutdown_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name,'template_source': template_source}
-    update_case('TODO global case id', {'TODO DICT': 'FOR SOLUTION'})
+    update_case(case_id, solution = 'Trying to  apply no shutdown to interface ' + interface + '.')
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
@@ -148,7 +153,7 @@ def _if_shutdown(minion, interface):
     template_name = 'shutdown_interface'
     template_source = 'interface ' + interface + '\n  shutdown\nend'
     config = {'template_name': template_name,'template_source': template_source}
-    update_case('TODO global case id', {'TODO DICT': 'FOR SOLUTION'})
+    update_case(case_id, solution='Trying to apply shutdown to interface ' + interface + '.')
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
@@ -167,7 +172,8 @@ def _check_device_connectivity(neighbors, host):
     #    if connected:
     #        return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = __ping(MASTER, host)
+    connected = _ping(MASTER, host)
+    update_case(case_id, solution = 'Checking connectivity to host. Result: ' + str(bool(connected)))
     return connected
 
 
@@ -175,7 +181,7 @@ def _get_interface_neighbor(host, interface):
     links = DB.network.find_one({'host_name': host})['connections']
     for link in links:
         if link['interface'] == interface:
-            update_case('TODO global case id',{'TODO DICT':'FOR SOLUTION'})
+            update_case(case_id,{'TODO DICT':'FOR SOLUTION'})
             return link['neighbor']
 
 
@@ -185,7 +191,7 @@ def _get_neighbors(host):
     for link in links:
         if link['neighbor'] and not link['neighbor'] == MASTER:
             neighbors.append(link['neighbor'])
-    update_case('TODO global case id', {'TODO DICT': 'FOR SOLUTION'})
+    update_case(case_id, 'Get neighbors of ' + host + '.')
     return neighbors
 
 
