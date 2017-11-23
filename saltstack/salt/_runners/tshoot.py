@@ -3,11 +3,14 @@ from pymongo import MongoClient
 import sys
 import datetime
 import json
+import string
+import random
 
 # Constants
 MASTER = 'master'
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
+KEY_LEN = 12
 
 # Global variables
 case_id = None
@@ -78,48 +81,86 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     }
 
 
-def create_case(error, host, solution=None, description=None, status='New'):
-    #TODO update indent
-    #default values for everything
-  event = error
-  device = host
-  solution = solution
+def create_case(error, host, solution=None, description=None, status='new'):
+    event = error
+    device = host
+    if not solution:
+        solution = 'Case created without automated Solution'
+    if not description:
+        description = event
 
-  case_id = event + device
+    case_id = key_gen()
 
-  new_case = {
-    'case_nr': case_id,
-    'Event': event,
-    'Description': 'Event description',
-    'Status': 'New',
-    'created': datetime.datetime.utcnow(),
-    'last_updated': datetime.datetime.utcnow(),
-    'technician': 'not_called',
-    'Sender_Device': device,
-    'Solution': [
-        {solution},
-    ]
-  }
+    new_case = {
+        'case_nr': case_id,
+        'Event': event,
+        'Description': description,
+        'Status': status,
+        'created': datetime.datetime.utcnow(),
+        'last_updated': datetime.datetime.utcnow(),
+        'technician': 'not_called',
+        'Sender_Device': device,
+        'Solution': [solution]
+    }
 
-  try:
-    DB.cases.insert_one(new_case)
-    print '\nCase inserted successfully\n'
+    try:
+        DB.cases.insert_one(new_case)
+        print '\nCase inserted successfully\n'
 
-  except Exception, e:
-      print str(e)
+    except Exception, e:
+        print str(e)
 
-  return case_id
+    return case_id
 
-def update_case(case_id, solution=None, status=None):
-    #if state exists update state else only solution
+def update_case(case_id, solution, status=None):
+    if status:
+        DB.cases.update_one(
+            {'case_nr': case_id},
+            {
+                '$set': {
+                    'Status': status,
+                },
+                '$push':{
+                    'Solution': [solution]
+                }
+            }
+        )
+    else:
+        DB.cases.update_one(
+            {'case_nr': case_id},
+            {
+                '$push': {
+                    'Solution': [solution]
+                }
+            }
+        )
     return case_id
 
 def close_case(case_id):
-    #status of case = resolved
+    DB.cases.update_one(
+        {'case_nr': case_id},
+        {
+            '$set': {
+                'Status': 'resolved',
+            }
+        }
+    )
     return case_id
 
 def take_case(case_id, technician):
-    #technician takes case
+    DB.cases.update_one(
+        {'case_nr': case_id},
+        {
+            '$set': {
+                'Status': 'technician_on_case',
+                'technician': technician,
+            }
+        }
+    )
+    return case_id
+
+def get_solutions(case_id):
+    #returns all solutions already applied in a case
     return case_id
 
 def _post_slack(message):
@@ -194,6 +235,12 @@ def _get_neighbors(host):
     update_case(case_id, 'Get neighbors of ' + host + '.')
     return neighbors
 
+def base_str():
+    return string.letters+string.digits
+
+def key_gen():
+    keylist = [random.choice(base_str()) for i in range(KEY_LEN)]
+    return ''.join(keylist)
 
 class YangMessage(object):
     def __init__(self, yang_message):
