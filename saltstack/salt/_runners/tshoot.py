@@ -109,7 +109,7 @@ def _check_device_connectivity(neighbors, host):
     #    if connected:
     #        return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = __ping(MASTER, host)
+    connected = _ping(MASTER, host)
     return connected
 
 
