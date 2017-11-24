@@ -179,7 +179,7 @@ def _post_slack(message):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    update_case(current_case, status='technician_called')
+    update_case(current_case, solution='Workflow finished.', status='technician_called')
     #get case extract data and post it to slack
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
