@@ -122,7 +122,7 @@ def update_case(case_id, solution, status=None):
                     'Status': status,
                 },
                 '$push':{
-                    'Solution': [solution]
+                    'Solution': solution
                 }
             }
         )
@@ -131,7 +131,7 @@ def update_case(case_id, solution, status=None):
             {'case_nr': case_id},
             {
                 '$push': {
-                    'Solution': [solution]
+                    'Solution': solution
                 }
             }
         )
