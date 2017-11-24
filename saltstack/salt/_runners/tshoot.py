@@ -169,7 +169,7 @@ def get_solutions_as_string(case_id):
     for sol in solution:
         for solprint in sol['Solution']:
             solution_list.append('\n')
-            solution_list.append(solprint)
+            solution_list.append('- ' + solprint)
     solution_strings = ''.join(solution_list)
 
     return solution_strings
@@ -182,7 +182,7 @@ def _post_slack(message):
     update_case(current_case, solution='Workflow finished.', status='technician_called')
     #get case extract data and post it to slack
     solutions = get_solutions_as_string(current_case)
-    message += solutions
+    message += "\nExecuted workfow:\n" + solutions
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
