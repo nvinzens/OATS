@@ -66,7 +66,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        update_case(current_case, solution ='Device ' + host + ' unreachable. Technician needed.', status='technician_needed')
+        update_case(current_case, solution ='Device ' + interface_neighbor + ' unreachable. Technician needed.', status='technician_needed')
         comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
         _post_slack(comment)
         comment += 'Could not restore connectivity - Slack Message sent.'
@@ -178,8 +178,7 @@ def _post_slack(message):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    update_case(current_case, solution='Workflow finished.', status='technician_called')
-    #get case extract data and post it to slack
+    update_case(current_case, solution='Workflow finished. Case-ID: ' + current_case, status='technician_called')
     solutions = get_solutions_as_string(current_case)
     message += "\nExecuted workflow:\n" + solutions
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
