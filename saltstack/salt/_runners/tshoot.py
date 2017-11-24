@@ -50,7 +50,9 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         _if_shutdown(host, interface)
         conf = _if_noshutdown(host, interface)
         # check if cycle was successful
-        success = _ping(host, interface_neighbor)
+        # uncomment for use in real env
+        #success = _ping(host, interface_neighbor)
+        success = _ping(MASTER, interface_neighbor)
         if success:
             success = True
             comment += ('Config for Interface '
@@ -66,10 +68,10 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        update_case(current_case, solution ='Device ' + interface_neighbor + ' unreachable. Technician needed.', status='technician_needed')
+        update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status='technician_needed')
         comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
         _post_slack(comment)
-        comment += 'Could not restore connectivity - Slack Message sent.'
+        comment += ' Could not restore connectivity - Slack Message sent.'
 
     return {
         'error': error,
@@ -187,10 +189,12 @@ def _post_slack(message):
 def _ping(from_host, to_host):
     if from_host == MASTER:
         ping_result = __salt__['salt.execute'](to_host, 'net.ping', {'127.0.0.1'})
+        update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
+            bool(ping_result)))
         return ping_result[to_host]['result']
     else:
         ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
-    update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
+        update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
     return ping_result[from_host]['out']['success']['results']
 
 
