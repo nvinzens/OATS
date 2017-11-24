@@ -67,10 +67,9 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         # TODO: powercycle, check power consumation
         success = False
         update_case(current_case, solution ='Device ' + host + ' unreachable. Technician needed.', status='technician_needed')
-        _post_slack('Interface ' + interface + ' on host '
-                     + host + ' down. Neighbor ' + interface_neighbor +
-                    ' is down.')
-        comment = 'Could not restore connectivity - Slack Message sent'
+        comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
+        _post_slack(comment)
+        comment += 'Could not restore connectivity - Slack Message sent.'
 
     return {
         'error': error,
@@ -182,7 +181,7 @@ def _post_slack(message):
     update_case(current_case, solution='Workflow finished.', status='technician_called')
     #get case extract data and post it to slack
     solutions = get_solutions_as_string(current_case)
-    message += "\nExecuted workfow:\n" + solutions
+    message += "\nExecuted workflow:\n" + solutions
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
@@ -192,7 +191,7 @@ def _ping(from_host, to_host):
         return ping_result[to_host]['result']
     else:
         ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
-    update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)))
+    update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
     return ping_result[from_host]['out']['success']['results']
 
 
@@ -228,7 +227,7 @@ def _check_device_connectivity(neighbors, host):
     #        return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
     connected = _ping(MASTER, host)
-    update_case(current_case, solution ='Checking connectivity to host. Result: ' + str(bool(connected)))
+    update_case(current_case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 
 
@@ -246,7 +245,7 @@ def _get_neighbors(host):
     for link in links:
         if link['neighbor'] and not link['neighbor'] == MASTER:
             neighbors.append(link['neighbor'])
-    update_case(current_case, 'Get neighbors of ' + host + '.')
+    update_case(current_case, 'Get neighbors of ' + host + ' from oats database.')
     return neighbors
 
 
