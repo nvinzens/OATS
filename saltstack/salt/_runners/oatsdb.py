@@ -109,3 +109,14 @@ def take_case(case_id, technician):
         }
     )
     return case_id
+
+def get_solutions_as_string(case_id):
+    solution = DB.cases.find({'case_nr': case_id})
+    solution_list = []
+    for sol in solution:
+        for solprint in sol['Solution']:
+            solution_list.append('\n')
+            solution_list.append(solprint)
+    solution_strings = ''.join(solution_list)
+
+    return solution_strings

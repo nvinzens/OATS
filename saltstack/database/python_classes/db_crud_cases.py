@@ -70,6 +70,7 @@ def update():
     update_elements = []
     case_attr =[]
     up_case_id = ''
+    up_solution = ''
     try:
         while not up_case_id:
             up_case_id = raw_input('Enter Case id *required: ')
@@ -94,16 +95,15 @@ def update():
             update_elements.append(up_device)
             case_attr.append("Sender_Device")
         up_solution = raw_input('Enter Solution :')
-        if up_solution:
-            update_elements.append(up_solution)
-            case_attr.append("Solution")
 
         while 1:
             print '\nUpdate Case Nr: ' + up_case_id + ', as follows:'
             for el, attr in izip(update_elements, case_attr):
                 if el:
-                    print attr + ": "+ el
-            selection = raw_input('Confirm [y] or [n]')
+                    print attr + ': '+ el
+            if up_solution:
+                print '\nAdded Solution: ' + up_solution + '\n'
+            selection = raw_input('Confirm [y] or [n]:')
 
             if selection == 'y':
                 for el, attr in izip(update_elements, case_attr):
@@ -116,6 +116,13 @@ def update():
                                 }
                             }
                         )
+            if up_solution:
+                db.cases.update_one(
+                    {'case_nr': up_case_id},
+                         {'$push':
+                              {'Solution': up_solution}
+                         }
+                    )
                 print "\nData updated successfully\n"
                 break
             elif selection == 'n':
