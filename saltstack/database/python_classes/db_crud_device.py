@@ -61,19 +61,19 @@ def insert():
             if selection == 'y':
                 db.network.insert_one(
                     {
-                        "host_name": host_name,
-                        "ip_address": ip_address,
-                        "MAC_address": mac_address,
-                        "Class": dev_class,
-                        "Role": role,
+                        'host_name': host_name,
+                        'ip_address': ip_address,
+                        'MAC_address': mac_address,
+                        'Class': dev_class,
+                        'Role': role,
                     })
                 for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
                     db.network.update_one(
                         {'host_name': host_name},
                         {
                             '$pushAll': {
-                                "connections": [
-                                     {"interface": ifn, "ip": ipp, "neighbor": nn}
+                                'connections': [
+                                     {'interface': ifn, 'ip': ipp, 'neighbor': nn}
                                 ]}
                         }
                     )
@@ -141,9 +141,9 @@ def update():
                 for prop, attr in izip(update_dev_props, dev_attr):
                     if prop:
                         db.network.update_one(
-                            {"host_name": host_name},
+                            {'host_name': host_name},
                             {
-                                "$set": {
+                                '$set': {
                                     attr: prop,
                                 }
                             }
@@ -153,26 +153,26 @@ def update():
                         {'host_name': host_name},
                         {
                             '$pushAll': {
-                                "connections": [
-                                     {"interface": ifn, "ip": ipp, "neighbor": nn}
+                                'connections': [
+                                     {'interface': ifn, 'ip': ipp, 'neighbor': nn}
                                 ]}
                         }
                     )
 
-                print "\nData updated successfully\n"
+                print '\nData updated successfully\n'
                 break
             elif selection == 'n':
-                print "\nUpdate cancelled\n"
+                print '\nUpdate cancelled\n'
                 break
             else:
                 print '\nINVALID SELECTION\n'
         db.network.update_one(
-            {"host_name": up_host_name,},
+            {'host_name': up_host_name,},
             {
-                "ip_address": up_ip_address,
-                "MAC_address": up_mac_address,
-                "Class": up_dev_class,
-                "Role": up_role,
+                'ip_address': up_ip_address,
+                'MAC_address': up_mac_address,
+                'Class': up_dev_class,
+                'Role': up_role,
             }
         )
 
@@ -193,10 +193,10 @@ def delete():
     try:
         del_dev = raw_input('\nEnter Device Host Name to delete\n')
         while 1:
-            selection = raw_input('\nDelete every Device with Hostname: ' + del_dev + ", [y] or [n]:")
+            selection = raw_input('\nDelete every Device with Hostname: ' + del_dev + ', [y] or [n]:')
 
             if selection == 'y':
-                db.network.delete_many({"host_name": del_dev})
+                db.network.delete_many({'host_name': del_dev})
                 print '\nDeletion successful\n'
                 break
             elif selection == 'n':

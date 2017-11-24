@@ -6,13 +6,15 @@ import pprint
 from bson.son import SON
 
 client = MongoClient()
-db = client.oatsdb
+DB = client.oatsdb
 
 def main():
 
-    new = 'New'
+    new = 'new'
 
     #show_open_cases_nr()
+    caseident = '12345678'
+    print get_solutions(caseident)
 
     open_cases = numb_open_cases(new)
 
@@ -20,10 +22,10 @@ def main():
 
 def numb_open_cases(status=None):
 
-    new_cases = db.cases.find({'Status': 'new'}).count()
-    auto_cases = db.cases.find({'Status': 'solution_deployed'}).count()
-    techreq_cases = db.cases.find({'Status': 'technician_needed'}).count()
-    tech_cases = db.cases.find({'Status': 'technician_called'}).count()
+    new_cases = DB.cases.find({'Status': 'new'}).count()
+    auto_cases = DB.cases.find({'Status': 'solution_deployed'}).count()
+    techreq_cases = DB.cases.find({'Status': 'technician_needed'}).count()
+    tech_cases = DB.cases.find({'Status': 'technician_called'}).count()
 
     open_cases = new_cases + auto_cases + techreq_cases + tech_cases
 
@@ -42,10 +44,10 @@ def numb_open_cases(status=None):
 def show_open_cases_nr():
 
     try:
-        new_case_col = db.cases.find({'Status':'new'})
-        auto_cases_col = db.cases.find({'Status': 'solution_deployed'})
-        techreq_cases_col = db.cases.find({'Status': 'technician_needed'})
-        tech_cases_col = db.cases.find({'Status': 'technician_called'})
+        new_case_col = DB.cases.find({'Status':'new'})
+        auto_cases_col = DB.cases.find({'Status': 'solution_deployed'})
+        techreq_cases_col = DB.cases.find({'Status': 'technician_needed'})
+        tech_cases_col = DB.cases.find({'Status': 'technician_called'})
 
         print '\nCases with Status new:'
         for cas in new_case_col:
@@ -72,10 +74,22 @@ def show_open_case_dev():
             {'$group': {'_id': '$Status', 'total': {'$sum': 1}}}
         ]
 
-        pprint.pprint(list(db.cases.aggregate(pipe)))
+        pprint.pprint(list(DB.cases.aggregate(pipe)))
         '''
     #Should return if and how many Open Cases currently are on a certain device
     print 'hello'
+
+def get_solutions_as_string(case_id):
+    solution = DB.cases.find({'case_nr': case_id})
+    solution_list = []
+    for sol in solution:
+        for solprint in sol['Solution']:
+            solution_list.append('\n')
+            solution_list.append(solprint)
+    solution_strings = ''.join(solution_list)
+
+    return solution_strings
+
 
 if __name__ == '__main__':
     main()
