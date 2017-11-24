@@ -50,7 +50,9 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         _if_shutdown(host, interface)
         conf = _if_noshutdown(host, interface)
         # check if cycle was successful
-        success = _ping(host, interface_neighbor)
+        # uncomment for use in real env
+        #success = _ping(host, interface_neighbor)
+        success = _ping(MASTER, interface_neighbor)
         if success:
             success = True
             comment += ('Config for Interface '
@@ -66,11 +68,10 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        update_case(current_case, solution ='Device ' + host + ' unreachable. Technician needed.', status='technician_needed')
-        _post_slack('Interface ' + interface + ' on host '
-                     + host + ' down. Neighbor ' + interface_neighbor +
-                    ' is down.')
-        comment = 'Could not restore connectivity - Slack Message sent'
+        update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status='technician_needed')
+        comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
+        _post_slack(comment)
+        comment += ' Could not restore connectivity - Slack Message sent.'
 
     return {
         'error': error,
@@ -169,7 +170,7 @@ def get_solutions_as_string(case_id):
     for sol in solution:
         for solprint in sol['Solution']:
             solution_list.append('\n')
-            solution_list.append(solprint)
+            solution_list.append('- ' + solprint)
     solution_strings = ''.join(solution_list)
 
     return solution_strings
@@ -179,20 +180,21 @@ def _post_slack(message):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    update_case(current_case, solution='Workflow finished.', status='technician_called')
-    #get case extract data and post it to slack
+    update_case(current_case, solution='Workflow finished. Case-ID: ' + current_case, status='technician_called')
     solutions = get_solutions_as_string(current_case)
-    message += solutions
+    message += "\nExecuted workflow:\n" + solutions
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
 def _ping(from_host, to_host):
     if from_host == MASTER:
         ping_result = __salt__['salt.execute'](to_host, 'net.ping', {'127.0.0.1'})
+        update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
+            bool(ping_result)))
         return ping_result[to_host]['result']
     else:
         ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
-    update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)))
+        update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
     return ping_result[from_host]['out']['success']['results']
 
 
@@ -228,7 +230,7 @@ def _check_device_connectivity(neighbors, host):
     #        return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
     connected = _ping(MASTER, host)
-    update_case(current_case, solution ='Checking connectivity to host. Result: ' + str(bool(connected)))
+    update_case(current_case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 
 
@@ -246,7 +248,7 @@ def _get_neighbors(host):
     for link in links:
         if link['neighbor'] and not link['neighbor'] == MASTER:
             neighbors.append(link['neighbor'])
-    update_case(current_case, 'Get neighbors of ' + host + '.')
+    update_case(current_case, 'Get neighbors of ' + host + ' from oats database.')
     return neighbors
 
 
