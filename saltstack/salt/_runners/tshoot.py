@@ -230,28 +230,28 @@ def _post_slack(message):
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
-def _ping(from_host, to_host, check_connectivity=False):
+def _ping(source, destination, use_mgmt_vrf=False):
     '''
     Executes a ping from one host to another using the salt-api. If from_host equals 'master' it will
     try to establish a connection from the master to a host to simulate a ping (needed because in current
     lab environment pings don't behave as they would in a real environment).
-    :param from_host: The ping source
-    :param to_host: The ping destination
+    :param source: The ping source
+    :param destination: The ping destination
     :return: The results of the ping. Will be empty if the ping wasn't successful.
     '''
-    if check_connectivity:
+    if use_mgmt_vrf:
         # execute ping from mgmt vrf
-        to_ip = _get_vrf_ip()
+        to_ip = _get_vrf_ip(destination)
         vrf_dest = {'destination': to_ip, 'vrf': 'mgmt'}
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', kwarg=vrf_dest)
-        update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
+        ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
+        update_case(current_case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
             bool(ping_result)))
-        return ping_result[from_host]['out']['success']['results']
+        return ping_result[source]['out']['success']['results']
     else:
         # execute ping directly to interface neighbor ip
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
-        update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)))
-    return ping_result[from_host]['out']['success']['results']
+        ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
+        update_case(current_case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)))
+    return ping_result[source]['out']['success']['results']
 
 
 def _get_vrf_ip(host):
@@ -307,8 +307,8 @@ def _check_device_connectivity(neighbors, host):
     # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
     connected = False
     for neighbor in neighbors:
-        connected = _ping(neighbor, host, check_connectivity=True)
-        update_case(current_case, solution='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
+        connected = _ping(neighbor, host, use_mgmt_vrf=True)
+        #update_case(current_case, solution='Checking connectivity to ' + host + '. Result: ' + connected)
         if connected:
             return connected
     return connected
