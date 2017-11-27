@@ -55,9 +55,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         _if_shutdown(host, interface)
         conf = _if_noshutdown(host, interface)
         # check if cycle was successful
-        # uncomment for use in real env
         success = _ping(host, interface_neighbor)
-        #success = _ping(MASTER, interface_neighbor)
         if success:
             success = True
             comment += ('Config for Interface '
@@ -242,13 +240,15 @@ def _ping(from_host, to_host, check_connectivity=False):
     :return: The results of the ping. Will be empty if the ping wasn't successful.
     '''
     if check_connectivity:
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {_get_vrf_ip(to_host)}, vrf='mgmt')
+        # execute ping from mgmt vrf
+        ping_result = __salt__['salt.execute'](from_host, 'net.ping', kwarg={'destination:'_get_vrf_ip(to_host), vrf='mgmt'})
         update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
             bool(ping_result)))
-        return ping_result[_get_vrf_ip(from_host)]['out']['success']['results']
+        return ping_result[from_host]['out']['success']['results']
     else:
+        # execute ping directly to interface neighbor ip
         ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
-        update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
+        update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)))
     return ping_result[from_host]['out']['success']['results']
 
 
@@ -305,11 +305,9 @@ def _check_device_connectivity(neighbors, host):
     connected = False
     for neighbor in neighbors:
         connected = _ping(neighbor, host, check_connectivity=True)
+        update_case(current_case, solution='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
         if connected:
             return connected
-    # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = _ping(MASTER, host)
-    update_case(current_case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 
 
