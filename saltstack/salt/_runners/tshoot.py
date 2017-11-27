@@ -241,7 +241,8 @@ def _ping(from_host, to_host, check_connectivity=False):
     '''
     if check_connectivity:
         # execute ping from mgmt vrf
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', kwarg={'destination:'_get_vrf_ip(to_host), vrf='mgmt'})
+        to_ip = _get_vrf_ip()
+        ping_result = __salt__['salt.execute'](from_host, 'net.ping', kwarg={'destination:' to_ip, vrf='mgmt'})
         update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
             bool(ping_result)))
         return ping_result[from_host]['out']['success']['results']
@@ -258,6 +259,7 @@ def _get_vrf_ip(host):
         if link['neighbor'] == MASTER:
             #update_case(current_case, {'TODO DICT': 'FOR SOLUTION'})
             return link['ip']
+
 
 def _if_noshutdown(host, interface):
     '''
