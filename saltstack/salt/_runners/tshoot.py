@@ -90,7 +90,7 @@ def create_case(error, host, solution=None, description=None, status='new'):
     if not description:
         description = event
 
-    case_id = key_gen()
+    case_id = _key_gen()
 
     new_case = {
         'case_nr': case_id,
@@ -177,6 +177,11 @@ def get_solutions_as_string(case_id):
 
 
 def _post_slack(message):
+    '''
+    Posts a message to the predefined oats slack channel. The message contains the message param
+    + all of the involved solution steps for the current case.
+    :param message: the message to post to the channel.
+    '''
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
@@ -187,6 +192,14 @@ def _post_slack(message):
 
 
 def _ping(from_host, to_host):
+    '''
+    Executes a ping from one host to another using the salt-api. If from_host equals 'master' it will
+    try to establish a connection from the master to a host to simulate a ping (needed because in current
+    lab environment pings don't behave as they would in a real environment).
+    :param from_host: The ping source
+    :param to_host: The ping destination
+    :return: The results of the ping. Will be empty if the ping wasn't successful.
+    '''
     if from_host == MASTER:
         ping_result = __salt__['salt.execute'](to_host, 'net.ping', {'127.0.0.1'})
         update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
@@ -198,15 +211,33 @@ def _ping(from_host, to_host):
     return ping_result[from_host]['out']['success']['results']
 
 
-def _if_noshutdown(minion, interface):
+def _if_noshutdown(host, interface):
+    '''
+    Attempts to load the no shutdown config for the specified interface on the specified host (via napalm).
+    Can only be used on ios devices in current state.
+    :param host: The target host.
+    :param interface: The target interface
+    :return: a dictionary containing the follow keys:
+                result (bool), comment (str, a message for the user), already_configured (bool)
+                loaded_config (str), diff (str)
+    '''
     template_name = 'noshutdown_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name,'template_source': template_source}
     update_case(current_case, solution ='Trying to  apply no shutdown to interface ' + interface + '.')
-    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+    return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
 def _if_shutdown(minion, interface):
+    '''
+    Attempts to load the no shutdown config for the specified interface on the specified host (via napalm).
+    Can only be used on ios devices in current state.
+    :param host: The target host.
+    :param interface: The target interface
+    :return: a dictionary containing the follow keys:
+                result (bool), comment (str, a message for the user), already_configured (bool)
+                loaded_config (str), diff (str)
+        '''
     template_name = 'shutdown_interface'
     template_source = 'interface ' + interface + '\n  shutdown\nend'
     config = {'template_name': template_name,'template_source': template_source}
@@ -220,7 +251,7 @@ def _check_device_connectivity(neighbors, host):
 
     :param neighbors: the hosts neighbors
     :param host: the host to check connectivity to
-    :return: if the host is connected to one of his neighbors or the master: True/False
+    :return: if the host is connected to one of his neighbors or the master (bool)
     '''
     # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
     connected = False
@@ -235,6 +266,12 @@ def _check_device_connectivity(neighbors, host):
 
 
 def _get_interface_neighbor(host, interface):
+    '''
+    Get the neighbor of the specified host that is connected to it via the specified interface (via oats db).
+    :param host: The host
+    :param interface: The interface
+    :return: The interface neighbor.
+    '''
     links = DB.network.find_one({'host_name': host})['connections']
     for link in links:
         if link['interface'] == interface:
@@ -243,6 +280,11 @@ def _get_interface_neighbor(host, interface):
 
 
 def _get_neighbors(host):
+    '''
+    Get all the neighbors of the host (via oats db).
+    :param host: The host
+    :return: All the hosts neighbors (as list)
+    '''
     neighbors = []
     links = DB.network.find_one({'host_name': host})['connections']
     for link in links:
@@ -252,12 +294,12 @@ def _get_neighbors(host):
     return neighbors
 
 
-def base_str():
+def _base_str():
     return string.letters+string.digits
 
 
-def key_gen():
-    keylist = [random.choice(base_str()) for i in range(KEY_LEN)]
+def _key_gen():
+    keylist = [random.choice(_base_str()) for i in range(KEY_LEN)]
     return ''.join(keylist)
 
 
