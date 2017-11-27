@@ -9,6 +9,12 @@ from enum import Enum
 
 client = MongoClient()
 db = client.oatsdb
+class Status(Enum):
+    NEW = 'new'
+    WORKING = 'solution_deployed'
+    ONHOLD = 'technician_needed'
+    TECH = 'technician_on_case'
+    DONE = 'resolved'
 
 
 def main():
@@ -33,28 +39,28 @@ def insert():
     try:
         while not case_nr:
             case_nr = raw_input('Enter Case id *required: ')
-        event = "User defined"
+        event = 'User defined'
         description = raw_input('Enter Description: ')
-        status = "new"
-        technician = "not_called"
+        status = 'new'
+        technician = 'not_called'
         while not device:
             device = raw_input('Enter involved Device *required: ')
         solution = raw_input('Enter Solution: ')
 
         while 1:
-            selection = raw_input("\nInsert this into Database?\nCase Nr:" + case_nr  + "\nDescription: " + description + "\nDevice: " + device + "\nSolution: " + solution +"\n\n [y] or [n]")
+            selection = raw_input('\nInsert this into Database?\nCase Nr:' + case_nr  + '\nDescription: ' + description + '\nDevice: ' + device + '\nSolution: ' + solution +'\n\n [y] or [n]')
             if selection == 'y':
                 db.cases.insert_one(
                     {
-                        "case_nr": case_nr,
-                        "Event": event,
-                        "Description": description,
-                        "Status": status,
-                        "created": datetime.datetime.utcnow(),
-                        "last_updated": datetime.datetime.utcnow(),
-                        "technician": technician,
-                        "Sender_Device": device,
-                        "Solution": [solution]
+                        'case_nr': case_nr,
+                        'Event': event,
+                        'Description': description,
+                        'Status': status,
+                        'created': datetime.datetime.utcnow(),
+                        'last_updated': datetime.datetime.utcnow(),
+                        'technician': technician,
+                        'Sender_Device': device,
+                        'Solution': [solution]
                     })
                 print '\nInserted data successfully\n'
                 break
@@ -77,23 +83,23 @@ def update():
         up_event = raw_input('Enter Event :')
         if up_event:
             update_elements.append(up_event)
-            case_attr.append("Event")
+            case_attr.append('Event')
         up_description = raw_input('Enter Description :')
         if up_description:
             update_elements.append(up_description)
-            case_attr.append("Description")
+            case_attr.append('Description')
         up_status = raw_input('Enter Status: \n new, solution_deployed, technician_needed, technician_on_case, resolved: \n')
         if up_status:
             update_elements.append(up_status)
-            case_attr.append("Status")
+            case_attr.append('Status')
         up_technician = raw_input('Enter Technician :')
         if up_technician:
             update_elements.append(up_technician)
-            case_attr.append("technician")
+            case_attr.append('technician')
         up_device = raw_input('Enter involved Device :')
         if up_device:
             update_elements.append(up_device)
-            case_attr.append("Sender_Device")
+            case_attr.append('Sender_Device')
         up_solution = raw_input('Enter Solution :')
 
         while 1:
@@ -109,24 +115,31 @@ def update():
                 for el, attr in izip(update_elements, case_attr):
                     if el:
                         db.cases.update_one(
-                            {"case_nr": up_case_id},
+                            {'case_nr': up_case_id},
                             {
-                                "$set": {
+                                '$set': {
                                     attr: el,
+                                    'last_updated': datetime.datetime.utcnow(),
                                 }
                             }
                         )
             if up_solution:
                 db.cases.update_one(
                     {'case_nr': up_case_id},
-                         {'$push':
-                              {'Solution': up_solution}
+                    {
+                        {
+                            '$set': {
+                                'last_updated': datetime.datetime.utcnow(),
+                            },
+                            '$push':
+                                {'Solution': up_solution}
                          }
+                    }
                     )
-                print "\nData updated successfully\n"
+                print '\nData updated successfully\n'
                 break
             elif selection == 'n':
-                print "\nUpdate cancelled\n"
+                print '\nUpdate cancelled\n'
                 break
             else:
                 print '\nINVALID SELECTION\n'
@@ -149,10 +162,10 @@ def delete():
     try:
         del_case = raw_input('\nEnter Case Nr to delete: \n')
         while 1:
-            selection = raw_input('\nDelete every Case with Nr: ' + del_case + ", [y] or [n]:")
+            selection = raw_input('\nDelete every Case with Nr: ' + del_case + ', [y] or [n]:')
 
             if selection == 'y':
-                db.cases.delete_many({"case_nr": del_case})
+                db.cases.delete_many({'case_nr': del_case})
                 print '\nDeletion successful\n'
                 break
             elif selection == 'n':
