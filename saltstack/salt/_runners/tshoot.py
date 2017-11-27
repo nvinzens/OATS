@@ -15,8 +15,12 @@ KEY_LEN = 12
 # Global variables
 current_case = None
 
-#TODO: enum for status
-
+class Status(Enum):
+    NEW = 'new'
+    WORKING = 'solution_deployed'
+    ONHOLD = 'technician_needed'
+    TECH = 'technician_on_case'
+    DONE = 'resolved'
 
 def ifdown(host, origin_ip, yang_message, error, tag):
     '''
@@ -61,14 +65,14 @@ def ifdown(host, origin_ip, yang_message, error, tag):
             _post_slack(comment)
             close_case(current_case)
         else:
-            update_case(current_case, solution =error + 'could not get resolved. Technician needed.', status='technician_needed')
+            update_case(current_case, solution =error + 'could not get resolved. Technician needed.', status=Status.ONHOLD.value)
             comment = ('Could not fix down status of ' + interface + ' on host'
                        + host + ' .')
             _post_slack(comment)
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status='technician_needed')
+        update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=Status.ONHOLD.value)
         comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
         _post_slack(comment)
         comment += ' Could not restore connectivity - Slack Message sent.'
@@ -82,7 +86,16 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     }
 
 
-def create_case(error, host, solution=None, description=None, status='new'):
+def create_case(error, host, solution=None, description=None, status=Status.NEW.value):
+    '''
+        Creates a new case in the oatsdb
+        :param Error
+        :param Host
+        :param Solution
+        :param Description
+        :param Status
+        :return: The interface neighbor.
+        '''
     event = error
     device = host
     if not solution:
@@ -121,6 +134,7 @@ def update_case(case_id, solution, status=None):
             {
                 '$set': {
                     'Status': status,
+                    'last_updated': datetime.datetime.utcnow(),
                 },
                 '$push':{
                     'Solution': solution
@@ -131,6 +145,9 @@ def update_case(case_id, solution, status=None):
         DB.cases.update_one(
             {'case_nr': case_id},
             {
+                '$set': {
+                    'last_updated': datetime.datetime.utcnow(),
+                },
                 '$push': {
                     'Solution': solution
                 }
@@ -144,7 +161,8 @@ def close_case(case_id):
         {'case_nr': case_id},
         {
             '$set': {
-                'Status': 'resolved',
+                'last_updated': datetime.datetime.utcnow(),
+                'Status': Status.DONE.value,
             }
         }
     )
@@ -156,7 +174,8 @@ def take_case(case_id, technician):
         {'case_nr': case_id},
         {
             '$set': {
-                'Status': 'technician_on_case',
+                'last_updated': datetime.datetime.utcnow(),
+                'Status': Status.TECH.value,
                 'technician': technician,
             }
         }

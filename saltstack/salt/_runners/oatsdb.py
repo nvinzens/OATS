@@ -5,11 +5,20 @@ import datetime
 import json
 import string
 import random
+from enum import Enum
 
+# Constants
 MASTER = 'master'
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 KEY_LEN = 12
+
+class Status(Enum):
+    NEW = 'new'
+    WORKING = 'solution_deployed'
+    ONHOLD = 'technician_needed'
+    TECH = 'technician_on_case'
+    DONE = 'resolved'
 
 def base_str():
     return string.letters+string.digits
@@ -32,7 +41,7 @@ def get_neighbors(host):
             neighbors.append(link['neighbor'])
     return neighbors
 
-def create_case(error, host, solution=None, description=None, status='new'):
+def create_case(error, host, solution=None, description=None, status=Status.NEW.value):
     event = error
     device = host
     if not solution:
@@ -70,6 +79,7 @@ def update_case(case_id, solution, status=None):
             {
                 '$set': {
                     'Status': status,
+                    'last_updated': datetime.datetime.utcnow(),
                 },
                 '$push':{
                     'Solution': solution
@@ -80,6 +90,9 @@ def update_case(case_id, solution, status=None):
         DB.cases.update_one(
             {'case_nr': case_id},
             {
+                '$set': {
+                    'last_updated': datetime.datetime.utcnow(),
+                },
                 '$push': {
                     'Solution': solution
                 }
@@ -92,7 +105,8 @@ def close_case(case_id):
         {'case_nr': case_id},
         {
             '$set': {
-                'Status': 'resolved',
+                'last_updated': datetime.datetime.utcnow(),
+                'Status': Status.DONE.value,
             }
         }
     )
@@ -103,7 +117,8 @@ def take_case(case_id, technician):
         {'case_nr': case_id},
         {
             '$set': {
-                'Status': 'technician_on_case',
+                'last_updated': datetime.datetime.utcnow(),
+                'Status': Status.TECH.value,
                 'technician': technician,
             }
         }

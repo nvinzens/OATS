@@ -80,17 +80,13 @@ def show_cases_of_last_day():
         print 'Case Status: ' + cas['Status']
 
 def show_open_case_dev():
-    '''
-        pipe = [
-            {'$project': {'Sender_device':1, 'Status':1}},
+    pipe = [
+        {'$project': {'Sender_device':1, 'Status':1}},
             {'$match':{'$or': [{'Status': 'new'}, {'Status': 'solution_deployed'}, {'Status': 'technician_needed'}, {'Status': 'technician_called'}]}},
             {'$group': {'_id': '$Status', 'total': {'$sum': 1}}}
         ]
 
-        pprint.pprint(list(DB.cases.aggregate(pipe)))
-        '''
-    #Should return if and how many Open Cases currently are on a certain device
-    print 'hello'
+    pprint.pprint(list(DB.cases.aggregate(pipe)))
 
 def get_solutions_as_string(case_id):
     solution = DB.cases.find({'case_nr': case_id})
