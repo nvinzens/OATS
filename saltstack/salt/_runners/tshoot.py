@@ -242,7 +242,8 @@ def _ping(from_host, to_host, check_connectivity=False):
     if check_connectivity:
         # execute ping from mgmt vrf
         to_ip = _get_vrf_ip()
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', kwarg={'destination:' to_ip, vrf='mgmt'})
+        vrf_dest = {'destination': to_ip, 'vrf': 'mgmt'}
+        ping_result = __salt__['salt.execute'](from_host, 'net.ping', kwarg=vrf_dest)
         update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
             bool(ping_result)))
         return ping_result[from_host]['out']['success']['results']
@@ -290,7 +291,7 @@ def _if_shutdown(minion, interface):
         '''
     template_name = 'shutdown_interface'
     template_source = 'interface ' + interface + '\n  shutdown\nend'
-    config = {'template_name': template_name,'template_source': template_source}
+    config = {'template_name': template_name, 'template_source': template_source}
     update_case(current_case, solution='Trying to apply shutdown to interface ' + interface + '.')
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
