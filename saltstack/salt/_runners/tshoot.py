@@ -244,13 +244,14 @@ def _ping(source, destination, use_mgmt_vrf=False):
         to_ip = _get_vrf_ip(destination)
         vrf_dest = {'destination': to_ip, 'vrf': 'mgmt'}
         ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
-        update_case(current_case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
-            bool(ping_result)))
+        update_case(current_case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' +
+                                           str(bool(ping_result[source]['out']['success']['results'])))
         return ping_result[source]['out']['success']['results']
     else:
         # execute ping directly to interface neighbor ip
         ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
-        update_case(current_case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)))
+        update_case(current_case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' +
+                                            str(bool(ping_result[source]['out']['success']['results'])))
     return ping_result[source]['out']['success']['results']
 
 
