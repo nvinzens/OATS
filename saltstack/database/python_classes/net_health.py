@@ -4,6 +4,7 @@ from pymongo import MongoClient
 import json
 import pprint
 from bson.son import SON
+from datetime import datetime, timedelta
 
 client = MongoClient()
 DB = client.oatsdb
@@ -14,9 +15,11 @@ def main():
 
     #show_open_cases_nr()
     caseident = '12345678'
-    print get_solutions(caseident)
+    print get_solutions_as_string(caseident)
 
     open_cases = numb_open_cases(new)
+
+    show_cases_of_last_day()
 
     print '\nThe Number of unresolved Cases is: ' + str(open_cases) + '\n'
 
@@ -65,6 +68,16 @@ def show_open_cases_nr():
 
     except Exception, e:
         print str(e)
+
+def show_cases_of_last_day():
+    last_day = datetime.now() - timedelta(hours=24)
+    cases = DB.cases.find({'last_updated':{'$gt':last_day}})
+    print '\nList of cases updated in the last 24 hours:\n'
+    for cas in cases:
+        print 'Case Nr: ' + cas['case_nr']
+        print 'Case Event: ' + cas['Event']
+        print 'Case Description: ' + cas['Description']
+        print 'Case Status: ' + cas['Status']
 
 def show_open_case_dev():
     '''
