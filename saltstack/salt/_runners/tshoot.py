@@ -231,7 +231,7 @@ def _post_slack(message):
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
-def _ping(from_host, to_host):
+def _ping(from_host, to_host, check_connectivity=False):
     '''
     Executes a ping from one host to another using the salt-api. If from_host equals 'master' it will
     try to establish a connection from the master to a host to simulate a ping (needed because in current
@@ -240,8 +240,9 @@ def _ping(from_host, to_host):
     :param to_host: The ping destination
     :return: The results of the ping. Will be empty if the ping wasn't successful.
     '''
-    if from_host == MASTER:
-        ping_result = __salt__['salt.execute'](to_host, 'net.ping', {'127.0.0.1'})
+    if check_connectivity:
+        to_ip = _get_vrf_ip(to_host)
+        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_ip}, vrf='mgmt')
         update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
             bool(ping_result)))
         return ping_result[to_host]['result']
@@ -250,6 +251,13 @@ def _ping(from_host, to_host):
         update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
     return ping_result[from_host]['out']['success']['results']
 
+
+def _get_vrf_ip(host):
+    links = DB.network.find_one({'host_name': host})['connections']
+    for link in links:
+        if link['neighbor'] == MASTER:
+            #update_case(current_case, {'TODO DICT': 'FOR SOLUTION'})
+            return link['ip']
 
 def _if_noshutdown(host, interface):
     '''
@@ -295,10 +303,10 @@ def _check_device_connectivity(neighbors, host):
     '''
     # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
     connected = False
-    #for neighbor in neighbors:
-    #    connected = __ping(neighbor, host)
-    #    if connected:
-    #        return connected
+    for neighbor in neighbors:
+        connected = _ping(neighbor, host, check_connectivity=True)
+        if connected:
+            return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
     connected = _ping(MASTER, host)
     update_case(current_case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
@@ -315,7 +323,7 @@ def _get_interface_neighbor(host, interface):
     links = DB.network.find_one({'host_name': host})['connections']
     for link in links:
         if link['interface'] == interface:
-            update_case(current_case, {'TODO DICT': 'FOR SOLUTION'})
+            update_case(current_case, 'Get interface neighbor of interface ' + interface + ' on host ' + host + '.')
             return link['neighbor']
 
 
