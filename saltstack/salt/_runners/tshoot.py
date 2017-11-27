@@ -89,14 +89,15 @@ def ifdown(host, origin_ip, yang_message, error, tag):
 
 def create_case(error, host, solution=None, description=None, status=Status.NEW.value):
     '''
-        Creates a new case in the oatsdb
-        :param Error
-        :param Host
-        :param Solution
-        :param Description
-        :param Status
-        :return: The interface neighbor.
-        '''
+    Creates a new case in the oatsdb, Code dependant on type of database
+    Calls the function key_gen to creat a case ID
+    :param Error: The Error which lead to this case
+    :param Host: The Origin Host of the Error
+    :param Solution: The Workflow Steps which are already done, optional
+    :param Description: Short Description of the Problem, optional
+    :param Status: How far in the resolving of the Problem the case is, default Value is 'new'
+    :return: ID of the Case in the Database
+    '''
     event = error
     device = host
     if not solution:
@@ -129,6 +130,14 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
 
 
 def update_case(case_id, solution, status=None):
+    #TODO: validate if status ist in list of states else throw exception
+    '''
+    Updates a case in the oatsdb with the steps that have been completed, Code dependant on type of database
+    :param case_id: ID of the Case in the Database
+    :param Solution: The Workflow Steps which are already done
+    :param Status: How far in the resolving of the Problem the case is, optional
+    :return: ID of the Case in the Database
+    '''
     if status:
         DB.cases.update_one(
             {'case_nr': case_id},
@@ -158,6 +167,11 @@ def update_case(case_id, solution, status=None):
 
 
 def close_case(case_id):
+    '''
+    Changes the state of a case in the database to resolved, Code dependant on type of database
+    :param case_id: ID of the Case in the Database
+    :return: ID of the Case in the Database
+    '''
     DB.cases.update_one(
         {'case_nr': case_id},
         {
@@ -171,6 +185,13 @@ def close_case(case_id):
 
 
 def take_case(case_id, technician):
+    '''
+
+    :param case_id: ID of the Case in the Database
+    :param Solution: The Workflow Steps which are already done
+    :param Status: How far in the resolving of the Problem the case is, optional
+    :return: ID of the Case in the Database
+    '''
     DB.cases.update_one(
         {'case_nr': case_id},
         {

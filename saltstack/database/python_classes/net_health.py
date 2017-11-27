@@ -5,42 +5,50 @@ import json
 import pprint
 from bson.son import SON
 from datetime import datetime, timedelta
+from enum import Enum
+
 
 client = MongoClient()
 DB = client.oatsdb
 
+class Status(Enum):
+    NEW = 'new'
+    WORKING = 'solution_deployed'
+    ONHOLD = 'technician_needed'
+    TECH = 'technician_on_case'
+    DONE = 'resolved'
+
 def main():
 
-    new = 'new'
+    open_cases = numb_open_cases(Status.NEW.value)
+    numb_open_cases(Status.WORKING.value)
+    numb_open_cases(Status.ONHOLD.value)
+    numb_open_cases(Status.TECH.value)
 
-    #show_open_cases_nr()
-    caseident = '12345678'
-    print get_solutions_as_string(caseident)
-
-    open_cases = numb_open_cases(new)
+    print '\nThe Number of unresolved Cases is: ' + str(open_cases) + '\n'
 
     show_cases_of_last_day()
 
-    print '\nThe Number of unresolved Cases is: ' + str(open_cases) + '\n'
+    show_open_cases_nr()
 
 def numb_open_cases(status=None):
 
     new_cases = DB.cases.find({'Status': 'new'}).count()
     auto_cases = DB.cases.find({'Status': 'solution_deployed'}).count()
     techreq_cases = DB.cases.find({'Status': 'technician_needed'}).count()
-    tech_cases = DB.cases.find({'Status': 'technician_called'}).count()
+    tech_cases = DB.cases.find({'Status': 'technician_on_case'}).count()
 
     open_cases = new_cases + auto_cases + techreq_cases + tech_cases
 
-    if status == 'new':
+    if status == Status.NEW.value:
         print '\nNumber of Cases with Status new: ' + str(new_cases)
-    elif status == 'solution_deployed':
+    elif status == Status.WORKING.value:
         print '\nNumber of Cases with Status "solution_deployed": ' + str(auto_cases)
 
-    elif status == 'technician_needed':
+    elif status == Status.ONHOLD.value:
         print '\nNumber of Cases with Status "technician_needed": ' + str(techreq_cases)
-    elif status == 'technician_called':
-        print '\nNumber of Cases with Status "technician_called": ' + str(tech_cases)
+    elif status == Status.TECH.value:
+        print '\nNumber of Cases with Status "technician_on_case": ' + str(tech_cases)
 
     return open_cases
 
@@ -87,18 +95,6 @@ def show_open_case_dev():
         ]
 
     pprint.pprint(list(DB.cases.aggregate(pipe)))
-
-def get_solutions_as_string(case_id):
-    solution = DB.cases.find({'case_nr': case_id})
-    solution_list = []
-    for sol in solution:
-        for solprint in sol['Solution']:
-            solution_list.append('\n')
-            solution_list.append(solprint)
-    solution_strings = ''.join(solution_list)
-
-    return solution_strings
-
 
 if __name__ == '__main__':
     main()
