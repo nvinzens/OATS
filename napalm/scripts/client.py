@@ -11,6 +11,8 @@ from expiringdict import ExpiringDict
 INTERFACE_CHANGED = 'INTERFACE_CHANGED'
 OSPF_NEIGHBOR_DOWN = 'OSPF_NEIGHBOR_DOWN'
 OSPF_REASON_MESSAGE = 'adjacency-state-change-reason-message'
+YANG_MESSAGE = 'yang_message'
+ERROR = 'error'
 #CACHE_SIZE = 10
 #MAX_AGE = 3
 
@@ -24,11 +26,11 @@ OSPF_REASON_MESSAGE = 'adjacency-state-change-reason-message'
 def __send_salt_event(event_msg):
     global cache
     caller = salt.client.Caller()
-    yang_message =  event_msg['yang_message']
+    yang_message =  event_msg[YANG_MESSAGE]
     minion = event_msg['host']
     origin_ip = event_msg['ip']
     tag = event_msg['message_details']['tag']
-    error = event_msg['error']
+    error = event_msg[ERROR]
     optional_arg = __get_optional_arg(event_msg, error)
 
     #if not (cache.get(error) ==  error and cache.get(optional_arg) == optional_arg):
@@ -40,21 +42,17 @@ def __send_salt_event(event_msg):
         'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
         { 'minion': minion,
             'origin_ip': origin_ip,
-            'yang_message': yang_message,
+            YANG_MESSAGE: yang_message,
             'tag': tag,
-            'error': error
+            ERROR: error
           }
     )
 
 
 def __get_optional_arg(event_msg, error):
-    optional_arg = ''
-    if error == INTERFACE_CHANGED:
-        yang_message = collections.OrderedDict(event_msg['yang_message'])
-        return __get_interface_status(yang_message)
     return {
-        INTERFACE_CHANGED: lambda x: __get_interface_status(collections.OrderedDict(event_msg['yang_message'])),
-        OSPF_NEIGHBOR_DOWN: lambda  x:
+        INTERFACE_CHANGED: lambda: __get_interface_status(collections.OrderedDict(event_msg[YANG_MESSAGE])),
+        OSPF_NEIGHBOR_DOWN: lambda:  __get_ospf_change_reason(event_msg[YANG_MESSAGE])
     }[error]
 
 
@@ -79,6 +77,7 @@ def __get_ospf_change_reason(yang_message):
         else:
             return ''
 
+# listener for napalm-logs messages
 server_address = '10.20.1.10'
 server_port = 49017
 context = zmq.Context()
