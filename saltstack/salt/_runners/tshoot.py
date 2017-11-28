@@ -348,3 +348,7 @@ class YangMessage(object):
 
     def get_interface(self):
         return self.yang_message['interfaces']['interface'].popitem()[0]
+
+def ospf_nbr_down(host, origin_ip, yang_message, error, tag):
+
+

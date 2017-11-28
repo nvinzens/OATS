@@ -72,7 +72,7 @@ def __get_interface_status(yang_message):
 def __get_ospf_change_reason(yang_message):
     for k, v in sorted(yang_message.items()):
         if k == 'state':
-            if k['adjacency-state-change-reason-message'] == 'Dead timer expired':
+            if v['adjacency-state-change-reason-message'] == 'Dead timer expired':
                 return 'dead_timer_expired'
             return ''
         if v:
