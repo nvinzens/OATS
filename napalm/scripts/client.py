@@ -10,7 +10,6 @@ from expiringdict import ExpiringDict
 # CONSTANTS:
 INTERFACE_CHANGED = 'INTERFACE_CHANGED'
 OSPF_NEIGHBOR_DOWN = 'OSPF_NEIGHBOR_DOWN'
-OSPF_CHANGE_REASON = 'adjacency-state-change-reason'
 YANG_MESSAGE = 'yang_message'
 ERROR = 'error'
 #CACHE_SIZE = 10
@@ -72,8 +71,8 @@ def __get_interface_status(yang_message):
 
 def __get_ospf_change_reason(yang_message):
     for k, v in sorted(yang_message.items()):
-        if k == OSPF_CHANGE_REASON:
-            if k[OSPF_CHANGE_REASON] == 'Dead timer expired':
+        if k == 'state':
+            if k['adjacency-state-change-reason-message'] == 'Dead timer expired':
                 return 'dead_timer_expired'
             return ''
         if v:
