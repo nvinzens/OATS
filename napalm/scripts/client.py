@@ -54,7 +54,7 @@ def __get_optional_arg(event_msg, error):
     if error == INTERFACE_CHANGED:
         return __get_interface_status(yang_message)
     if error == OSPF_NEIGHBOR_DOWN:
-        return __get_interface_status(yang_message)
+        return __get_ospf_change_reason(yang_message)
     else:
         return ''
 
