@@ -58,7 +58,7 @@ def show_open_cases_nr():
         new_case_col = DB.cases.find({'Status':'new'})
         auto_cases_col = DB.cases.find({'Status': 'solution_deployed'})
         techreq_cases_col = DB.cases.find({'Status': 'technician_needed'})
-        tech_cases_col = DB.cases.find({'Status': 'technician_called'})
+        tech_cases_col = DB.cases.find({'Status': 'technician_on_case'})
 
         print '\nCases with Status new:'
         for cas in new_case_col:
@@ -69,7 +69,7 @@ def show_open_cases_nr():
         print '\nCases with Status technician_needed:'
         for techcol in techreq_cases_col:
             print '\n' + techcol['case_nr']
-        print '\nCases with Status technician_called:'
+        print '\nCases with Status technician_on_case:'
         for techcol in tech_cases_col:
             print '\n' + techcol['case_nr']
 

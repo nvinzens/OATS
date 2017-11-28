@@ -11,19 +11,25 @@ db = client.oatsdb
 
 def main():
     while 1:
-        selection = raw_input('\nSelect 1 to insert, 2 to update, 3 to read, 4 to delete, "CTRL +C" to end\n')
+        try:
+            selection = raw_input('\nSelect 1 to insert, 2 to update, 3 to read, 4 to delete, E to end\n')
 
-        if selection == '1':
-            insert()
-        elif selection == '2':
-            update()
-        elif selection == '3':
-            read()
-        elif selection == '4':
-            print 'delete'
-            delete()
-        else:
-            print '\nINVALID SELECTION\n'
+            if selection == '1':
+                insert()
+            elif selection == '2':
+                update()
+            elif selection == '3':
+                read()
+            elif selection == '4':
+                delete()
+            elif selection == 'E':
+                sys.exit()
+            elif selection == 'e':
+                sys.exit()
+            else:
+                print '\nINVALID SELECTION\n'
+        except KeyboardInterrupt:
+            sys.exit()
 
 def insert():
     host_name = ''
