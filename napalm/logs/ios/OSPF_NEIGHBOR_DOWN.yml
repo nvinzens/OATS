@@ -4,16 +4,15 @@ messages:
   - error: OSPF_NEIGHBOR_DOWN
     tag: OSPF-5-ADJCHG
     values:
-      processNumber: (\d+)
       neighborIP: (\d+.\d+.\d+.\d+)
       interface: (\w+[\.\-\d\/\w+]+)
       reasonMessage: ([\w ]+)
       initStatus: (\w+)
-    line: 'Process {processNumber}, Nbr {neighborIP} on {interface} from {initStatus} to DOWN, Neighbor Down: {reasonMessage}'
+    line: 'Nbr {neighborIP} on {interface} from {initStatus} to DOWN, Neighbor Down: {reasonMessage}'
     model: openconfig-ospf
     mapping:
       variables:
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason-message: reasonMessage
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason-message: reasonMessage
       static:
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state: DOWN
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason: DEAD
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state: DOWN
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//area//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason: DEAD
