@@ -11,8 +11,8 @@ prefixes:
       milliseconds: (\.\d\d\d)
       tag: ([\w\d-]+)
       # some messages contain a process number (eg. OSPF related messages)
-      processNumber: (\d+)
-    line: '{messageId}: {host}: *{date} {time}{milliseconds}: %{tag}: Process {processNumber}, '
+      processnumber: (\d+)
+    line: '{messageId}: {host}: *{date} {time}{milliseconds}: %{tag}: Process {processnumber}, '
   - time_format: "%b %d %H:%M:%S"
     values:
       messageId: (\d+)
