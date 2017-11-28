@@ -13,7 +13,7 @@ messages:
     model: openconfig-ospf
     mapping:
       variables:
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//processes//process//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason-message: reasonMessage
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason-message: reasonMessage
       static:
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//processes//process//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state: DOWN
-        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//processes//process//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason: DEAD
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state: DOWN
+        network-instances//network-instance//global//protocols//protocol//ospf//ospfv2//areas//area//{processNumber}//interfaces//interface//{interface}//neighbors//neighbor//{neighborIP}//state//adjacency-state-change-reason: DEAD
