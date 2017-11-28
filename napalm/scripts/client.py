@@ -52,8 +52,9 @@ def __send_salt_event(event_msg):
 def __get_optional_arg(event_msg, error):
     return {
         INTERFACE_CHANGED: __get_interface_status(collections.OrderedDict(event_msg[YANG_MESSAGE])),
-        OSPF_NEIGHBOR_DOWN: __get_ospf_change_reason(event_msg[YANG_MESSAGE])
+        OSPF_NEIGHBOR_DOWN: __get_ospf_change_reason(collections.OrderedDict(event_msg[YANG_MESSAGE]))
     }.get(error, '')
+
 
 
 def __get_interface_status(yang_message):
