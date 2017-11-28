@@ -23,7 +23,8 @@ ERROR = 'error'
 
 
 def __send_salt_event(event_msg):
-    global cache
+    #global cache
+    print event_msg
     caller = salt.client.Caller()
     yang_message =  event_msg[YANG_MESSAGE]
     minion = event_msg['host']
@@ -33,7 +34,6 @@ def __send_salt_event(event_msg):
     optional_arg = __get_optional_arg(event_msg, error)
 
     #if not (cache.get(error) ==  error and cache.get(optional_arg) == optional_arg):
-    print event_msg
     #cache[error] = error
     #cache[optional_arg] = optional_arg
 
