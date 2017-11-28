@@ -4,12 +4,11 @@ messages:
   - error: OSPF_NEIGHBOR_DOWN
     tag: OSPF-5-ADJCHG
     values:
-      processNumber: (\d+)
       neighborIP: (\d+.\d+.\d+.\d+)
       interface: (\w+[\.\-\d\/\w+]+)
       reasonMessage: ([\w ]+)
       initStatus: (\w+)
-    line: 'Process {processNumber}, Nbr {neighborIP} on {interface} from {initStatus} to DOWN, Neighbor Down: {reasonMessage}'
+    line: 'Nbr {neighborIP} on {interface} from {initStatus} to DOWN, Neighbor Down: {reasonMessage}'
     model: openconfig-ospf
     mapping:
       variables:

@@ -37,17 +37,6 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     interface_neighbor = _get_interface_neighbor(host, interface)
     current_case = create_case(error, host, status='solution_deployed')
 
-    # check if error is still present, might have been solved already
-    if _ping(host, interface_neighbor):
-        close_case(current_case)
-        return {
-            'error': error,
-            'tag': tag,
-            'comment': 'Error not present anymore. Workflow not executed',
-            'changes': conf,
-            'success': True
-        }
-
     neighbors = _get_neighbors(interface_neighbor)
     device_up = _check_device_connectivity(neighbors, interface_neighbor)
 
@@ -56,9 +45,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         _if_shutdown(host, interface)
         conf = _if_noshutdown(host, interface)
         # check if cycle was successful
-        # uncomment for use in real env
         success = _ping(host, interface_neighbor)
-        #success = _ping(MASTER, interface_neighbor)
         if success:
             success = True
             comment += ('Config for Interface '
@@ -233,24 +220,29 @@ def _post_slack(message):
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
-def _ping(from_host, to_host, check_connectivity=False):
+def _ping(source, destination, use_mgmt_vrf=False):
     '''
     Executes a ping from one host to another using the salt-api. If from_host equals 'master' it will
     try to establish a connection from the master to a host to simulate a ping (needed because in current
     lab environment pings don't behave as they would in a real environment).
-    :param from_host: The ping source
-    :param to_host: The ping destination
+    :param source: The ping source
+    :param destination: The ping destination
     :return: The results of the ping. Will be empty if the ping wasn't successful.
     '''
-    if check_connectivity:
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {_get_vrf_ip(to_host)}, vrf='mgmt')
-        update_case(current_case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
-            bool(ping_result)))
-        return ping_result[_get_vrf_ip(from_host)]['out']['success']['results']
+    if use_mgmt_vrf:
+        # execute ping from mgmt vrf
+        to_ip = _get_vrf_ip(destination)
+        vrf_dest = {'destination': to_ip, 'vrf': 'mgmt'}
+        ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
+        update_case(current_case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' +
+                                           str(bool(ping_result[source]['out']['success']['results'])))
+        return ping_result[source]['out']['success']['results']
     else:
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
-        update_case(current_case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
-    return ping_result[from_host]['out']['success']['results']
+        # execute ping directly to interface neighbor ip
+        ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
+        update_case(current_case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' +
+                                            str(bool(ping_result[source]['out']['success']['results'])))
+    return ping_result[source]['out']['success']['results']
 
 
 def _get_vrf_ip(host):
@@ -259,6 +251,7 @@ def _get_vrf_ip(host):
         if link['neighbor'] == MASTER:
             #update_case(current_case, {'TODO DICT': 'FOR SOLUTION'})
             return link['ip']
+
 
 def _if_noshutdown(host, interface):
     '''
@@ -289,7 +282,7 @@ def _if_shutdown(minion, interface):
         '''
     template_name = 'shutdown_interface'
     template_source = 'interface ' + interface + '\n  shutdown\nend'
-    config = {'template_name': template_name,'template_source': template_source}
+    config = {'template_name': template_name, 'template_source': template_source}
     update_case(current_case, solution='Trying to apply shutdown to interface ' + interface + '.')
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
@@ -305,12 +298,10 @@ def _check_device_connectivity(neighbors, host):
     # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
     connected = False
     for neighbor in neighbors:
-        connected = _ping(neighbor, host, check_connectivity=True)
+        connected = _ping(neighbor, host, use_mgmt_vrf=True)
+        #update_case(current_case, solution='Checking connectivity to ' + host + '. Result: ' + connected)
         if connected:
             return connected
-    # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = _ping(MASTER, host)
-    update_case(current_case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 
 
@@ -358,3 +349,7 @@ class YangMessage(object):
 
     def get_interface(self):
         return self.yang_message['interfaces']['interface'].popitem()[0]
+
+def ospf_nbr_down(host, origin_ip, yang_message, error, tag):
+
+
