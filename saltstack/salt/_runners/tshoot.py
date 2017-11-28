@@ -36,17 +36,6 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     interface_neighbor = _get_interface_neighbor(host, interface)
     current_case = create_case(error, host, status='solution_deployed')
 
-    # check if error is still present, might have been solved already
-    if _ping(host, interface_neighbor):
-        close_case(current_case)
-        return {
-            'error': error,
-            'tag': tag,
-            'comment': 'Error not present anymore. Workflow not executed',
-            'changes': conf,
-            'success': True
-        }
-
     neighbors = _get_neighbors(interface_neighbor)
     device_up = _check_device_connectivity(neighbors, interface_neighbor)
 
