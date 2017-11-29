@@ -7,7 +7,5 @@
   "last_updated": "INSERT_DATE",
   "technician":"$INSERT_TECHICIAN_ID$",
   "Sender_Device": "$INSERT_INVOLVED_DEVICE$",
-  "Solution_tried": {
-    "Solution": "$INSERT_SOLUTIONS$"
-  }
+  "Solution": ["$Solution$"]
 }
