@@ -158,7 +158,16 @@ def read():
         caseCol = db.cases.find()
         print '\nAll data from Case Database\n'
         for cas in caseCol:
-            print cas
+            print '\nCase Nr: ' + cas['case_nr']
+            print 'Case Event: ' + cas['Event']
+            print 'Case Description: ' + cas['Description']
+            print 'Case Status: ' + cas['Status']
+            print 'Case Created: ' + str(cas['created'])
+            print 'Case last updated: ' + str(cas['last_updated'])
+            print 'Case responsible Tech: ' + cas['technician']
+            print 'Case Origin Device: ' + cas['Sender_Device']
+            print 'Case applied Solutions:'
+            print cas['Solution']
 
     except Exception, e:
         print str(e)
