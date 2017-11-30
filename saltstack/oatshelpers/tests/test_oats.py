@@ -1,36 +1,99 @@
 from oats import oats
+import sys
+import pymongo
+from pymongo import MongoClient
+import datetime
+import json
+import string
+import random
 
-def test_interface_neighbor():
-    assert false
+DB_CLIENT = MongoClient()
+DB = DB_CLIENT.oatsdb
 
+def case_setup():
+    new_case = {
+        'case_nr': 1234,
+        'Event': 'Testevent',
+        'Description': 'Test description',
+        'Status': 'Test status',
+        'created': datetime.datetime.utcnow(),
+        'last_updated': datetime.datetime.utcnow(),
+        'technician': 'test_tech',
+        'Sender_Device': 'Test device',
+        'Solution': ['Test solution']
+    }
+    try:
+        DB.test.insert_one(new_case)
+        print '\nTest Setup successful\n'
+
+    except Exception, e:
+        print str(e)
+
+def net_setup():
+    new_device = {
+        'host_name': 'TEST',
+        'ip_address': '127.0.0.1',
+        'MAC_address': '00:00:00:00:00:01',
+        'Class': 'TEST_CLASS',
+        'Role': 'TEST_ROLE',
+        'connections': [
+            {'interface': 'TestIF1', 'ip': '127.0.0.2', 'neighbor': 'MASTER'},
+            {'interface': 'TestIF2', 'ip': '127.0.0.3', 'neighbor': 'TEST2'}
+        ]
+    }
+    try:
+        DB.test.insert_one(new_device)
+        print '\nTest Setup successful\n'
+
+    except Exception, e:
+        print str(e)
+
+def teardown():
+    try:
+        DB.test.delete_many({})
+        print '\nTest Teardown successful\n'
+
+    except Exception, e:
+        print str(e)
+
+#Test for KeyID generator
 def test_key_gen():
-    assert false
+    key1 = oats.key_gen()
+    key2 = oats.key_gen()
+    key_difference = key1 != key2
+    key_length = len(key1) == 12
+    assert key_difference == key_length
 
-def test_neighbor():
-    assert false
-
+#Tests for simple Database Access functions
 def test_create_case():
-    assert false
+    test_case_id = oats.create_case('Test', 'Test', solution='testsol', description='test desc', test=True)
+    teardown()
+    assert test_case_id
 
 def test_update_case():
-    assert false
-
+    case_setup()
+    update_case('1234', solution='testsol2', status=None, test=True)
+    teardown()
+    assert False
 
 def test_close_case():
-    assert false
-
+    assert False
 
 def test_take_case():
-    assert false
+    assert False
 
-
+#Tests for advanced Database Access functions
 def test_get_solutions():
-    assert false
-
+    assert False
 
 def test_vrf_ip():
-    assert false
-
+    assert False
 
 def test_open_cases():
-    assert false
+    assert False
+
+def test_neighbor():
+    assert False
+
+def test_interface_neighbor():
+    assert False

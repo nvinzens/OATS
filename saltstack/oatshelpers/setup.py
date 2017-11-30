@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='oatshelpers',
-      version='0.11',
+      version='0.1.01',
       description='Helper functions for OATS, includes db access functions which require MongoDB ',
       url='http://github.com/rjoehl',
       author='Raphael Joehl, Nico Vinzens',
