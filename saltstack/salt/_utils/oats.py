@@ -350,9 +350,6 @@ def show_open_cases_nr(test=False):
     except Exception, e:
         print str(e)
 
-class YangMessage(object):
-    def __init__(self, yang_message):
-        self.yang_message = yang_message
 
-    def get_interface(self):
-        return self.yang_message['interfaces']['interface'].popitem()[0]
+def get_interface(yang_message):
+    return yang_message['interfaces']['interface'].popitem()[0]
