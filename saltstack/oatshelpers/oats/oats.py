@@ -238,11 +238,11 @@ def check_device_connectivity(neighbors, host, case=None):
     # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
     connected = False
     for neighbor in neighbors:
-        connected = _ping(neighbor, host, check_connectivity=True)
+        connected = ping(neighbor, host, check_connectivity=True)
         if connected:
             return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = _ping(MASTER, host)
+    connected = ping(MASTER, host)
     update_case(case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 
