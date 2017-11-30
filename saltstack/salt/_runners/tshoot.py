@@ -14,49 +14,46 @@ DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 KEY_LEN = 12
 
-# Global variables
-current_case = None
 
 def ifdown(host, origin_ip, yang_message, error, tag):
     '''
     Function that executes a workflow to fix the error that started an ifdown event
     '''
-    global current_case
     conf = 'No changes'
     success = False
     yang_message = oats.YangMessage(yang_message)
     interface = yang_message.get_interface()
     comment = 'Interface down status on host ' + host + ' detected. '
     current_case = oats.create_case(error, host, status='solution_deployed')
-    interface_neighbor = oats.get_interface_neighbor(host, interface, current_case=current_case)
+    interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
 
-    neighbors = oats.get_neighbors(interface_neighbor, current_case=current_case)
-    device_up = oats.check_device_connectivity(neighbors, interface_neighbor, current_case=current_case)
+    neighbors = oats.get_neighbors(interface_neighbor, case=current_case)
+    device_up = oats.check_device_connectivity(neighbors, interface_neighbor, case=current_case)
 
     if device_up:
         # cycle affected interface
-        oats.if_shutdown(host, interface, current_case=current_case)
-        conf = oats.if_noshutdown(host, interface, current_case=current_case)
+        oats.if_shutdown(host, interface, case=current_case)
+        conf = oats.if_noshutdown(host, interface, case=current_case)
         # check if cycle was successful
-        success = oats.ping(host, interface_neighbor, current_case=current_case)
+        success = oats.ping(host, interface_neighbor, case=current_case)
         if success:
             success = True
             comment += ('Config for Interface '
                        + interface + ' automatically changed from down to up')
             # TODO: remove? only useful for debugging
-            oats.post_slack(comment, current_case=current_case)
+            oats.post_slack(comment, case=current_case)
             oats.close_case(current_case)
         else:
             oats.update_case(current_case, solution =error + 'could not get resolved. Technician needed.', status=Status.ONHOLD.value)
             comment = ('Could not fix down status of ' + interface + ' on host'
                        + host + ' .')
-            oats.post_slack(comment, current_case=current_case)
+            oats.post_slack(comment, case=current_case)
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
         oats.update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=Status.ONHOLD.value)
         comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
-        oats.post_slack(comment, current_case=current_case)
+        oats.post_slack(comment, case=current_case)
         comment += ' Could not restore connectivity - Slack Message sent.'
 
     return {
