@@ -7,6 +7,7 @@ import string
 import random
 from enum import Enum
 
+# TODO: add behaviour for calling methods without current_case id
 # Constants
 MASTER = 'master'
 DB_CLIENT = MongoClient()
@@ -142,11 +143,12 @@ def get_solutions_as_string(case_id, test=False):
 
     return solution_strings
 
-def post_slack(message):
+def post_slack(message, current_case=None):
     '''
     Posts a message to the predefined oats slack channel. The message contains the message param
     + all of the involved solution steps for the current case.
     :param message: the message to post to the channel.
+    :param current_case: case-id for updating the current case
     '''
     channel = '#testing'
     user = 'OATS'
@@ -157,13 +159,14 @@ def post_slack(message):
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
-def ping(from_host, to_host, check_connectivity=False):
+def ping(from_host, to_host, current_case=None, check_connectivity=False):
     '''
     Executes a ping from one host to another using the salt-api. If from_host equals 'master' it will
     try to establish a connection from the master to a host to simulate a ping (needed because in current
     lab environment pings don't behave as they would in a real environment).
     :param from_host: The ping source
     :param to_host: The ping destination
+    :param current_case: case-id for updating the current case
     :return: The results of the ping. Will be empty if the ping wasn't successful.
     '''
     if check_connectivity:
@@ -185,15 +188,15 @@ def get_vrf_ip(host, test=False):
     links = db_network.find_one({'host_name': host})['connections']
     for link in links:
         if link['neighbor'] == MASTER:
-            #update_case(current_case, {'TODO DICT': 'FOR SOLUTION'})
             return link['ip']
 
-def if_noshutdown(host, interface):
+def if_noshutdown(host, interface, current_case=None):
     '''
     Attempts to load the no shutdown config for the specified interface on the specified host (via napalm).
     Can only be used on ios devices in current state.
     :param host: The target host.
     :param interface: The target interface
+    :param current_case: case-id for updating the current case
     :return: a dictionary containing the follow keys:
                 result (bool), comment (str, a message for the user), already_configured (bool)
                 loaded_config (str), diff (str)
@@ -205,12 +208,13 @@ def if_noshutdown(host, interface):
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
-def if_shutdown(minion, interface):
+def if_shutdown(minion, interface, current_case=None):
     '''
     Attempts to load the no shutdown config for the specified interface on the specified host (via napalm).
     Can only be used on ios devices in current state.
     :param host: The target host.
     :param interface: The target interface
+    :param current_case: case-id for updating the current case
     :return: a dictionary containing the follow keys:
                 result (bool), comment (str, a message for the user), already_configured (bool)
                 loaded_config (str), diff (str)
@@ -222,12 +226,13 @@ def if_shutdown(minion, interface):
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
-def check_device_connectivity(neighbors, host):
+def check_device_connectivity(neighbors, host, current_case=None):
     '''
     executes pings from neighbors to the host
 
     :param neighbors: the hosts neighbors
     :param host: the host to check connectivity to
+    :param current_case: case-id for updating the current case
     :return: if the host is connected to one of his neighbors or the master (bool)
     '''
     # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
@@ -242,7 +247,7 @@ def check_device_connectivity(neighbors, host):
     return connected
 
 
-def get_interface_neighbor(host, interface, test=False):
+def get_interface_neighbor(host, interface, current_case=None, test=False):
     '''
     Get the neighbor of the specified host that is connected to it via the specified interface (via oats db).
     :param host: The host
@@ -260,10 +265,11 @@ def get_interface_neighbor(host, interface, test=False):
             return link['neighbor']
 
 
-def get_neighbors(host, test=False):
+def get_neighbors(host,current_case=None, test=False):
     '''
     Get all the neighbors of the host (via oats db).
     :param host: The host
+    :param current_case: case-id for updating the current case
     :return: All the hosts neighbors (as list)
     '''
     if test:
