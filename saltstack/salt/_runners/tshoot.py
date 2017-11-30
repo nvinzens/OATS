@@ -6,7 +6,7 @@ import json
 import string
 import random
 from enum import Enum
-from oats import oats
+import oats
 
 # Constants
 MASTER = 'master'
