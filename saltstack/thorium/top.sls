@@ -1,3 +1,3 @@
 base:
   '*':
-    - collect_ospf_events:
+    - collect_ospf_events

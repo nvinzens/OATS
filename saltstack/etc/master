@@ -6,6 +6,9 @@ file_roots:
 pillar_roots:
   base:
     - /srv/saltstack/pillar
+thorium_roots:
+  base:
+    - /srv/saltstack/thorium
 reactor:
   - 'napalm/syslog/*/INTERFACE_CHANGED/down/*':
     - /srv/saltstack/reactor/ifdown_workflow.sls
