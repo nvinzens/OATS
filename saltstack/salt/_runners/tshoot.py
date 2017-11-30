@@ -6,7 +6,8 @@ import json
 import string
 import random
 from enum import Enum
-import oats
+from oats import oats
+
 
 # Constants
 MASTER = 'master'
@@ -21,38 +22,40 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     '''
     conf = 'No changes'
     success = False
-    interface = __utils__['oats.get_interface'](yang_message)
+    interface = __salt__['salt.cmd'](fun='oats.get_interface', yang_message=yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
-    current_case = __utils__['oats.create_case'](error, host, status='solution_deployed')
-    interface_neighbor = __utils__['oats.get_interface_neighbor'](host, interface, case=current_case)
+    current_case = __salt__['salt.cmd'](fun='oats.create_case', error=error, host=host, status='solution_deployed')
+    interface_neighbor = __salt__['salt.cmd'](fun='oats.get_interface_neighbor',host=host, interface=interface, case=current_case)
 
-    neighbors = __utils__['oats.get_neighbors'](interface_neighbor, case=current_case)
-    device_up = __utils__['oats.check_device_connectivity'](neighbors, interface_neighbor, case=current_case)
+    neighbors = __salt__['salt.cmd'](fun='oats.get_neighbors', host=interface_neighbor, case=current_case)
+    device_up = __salt__['salt.cmd'](fun='oats.check_device_connectivity', neighbors=neighbors, host=interface_neighbor, case=current_case)
 
     if device_up:
         # cycle affected interface
-        __utils__['oats.if_shutdown'](host, interface, case=current_case)
-        conf = __utils__['oats.if_noshutdown'](host, interface, case=current_case)
+        __salt__['salt.cmd'](fun='oats.if_shutdown', host=host, interface=interface, case=current_case)
+        conf = __salt__['salt.cmd'](fun='oats.if_noshutdown', host=host, interface=interface, case=current_case)
         # check if cycle was successful
-        success = __utils__['oats.ping'](host, interface_neighbor, case=current_case)
+        success = __salt__['salt.cmd'](fun='oats.ping', source=host, destination=interface_neighbor, case=current_case)
         if success:
             success = True
             comment += ('Config for Interface '
                        + interface + ' automatically changed from down to up')
             # TODO: remove? only useful for debugging
-            __utils__['oats.post_slack'](comment, case=current_case)
-            __utils__['oats.close_case'](current_case)
+            __salt__['salt.cmd'](fun='oats.post_slack', message=comment, case=current_case)
+            __salt__['salt.cmd'](fun='oats.close_case', case_id=current_case)
         else:
-            __utils__['oats.update_case'](current_case, solution =error + 'could not get resolved. Technician needed.', status=Status.ONHOLD.value)
+            __salt__['salt.cmd'](fun='oats.update_case', case_id=current_case, solution=error +
+                                                    'could not get resolved. Technician needed.', status=oats.Status.ONHOLD.value)
             comment = ('Could not fix down status of ' + interface + ' on host'
                        + host + ' .')
-            __utils__['oats.post_slack'](comment, case=current_case)
+            __salt__['salt.cmd'](fun='oats.post_slack', comment=comment, case=current_case)
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        __utils__['oats.update_case'](current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=Status.ONHOLD.value)
-        comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
-        __utils__['oats.post_slack'](comment, case=current_case)
+        __salt__['salt.cmd'](fun='oats.update_case', case_id=current_case, solution ='Device ' + interface_neighbor +
+                                                    ' is unreachable. Technician needed.', status=oats.Status.ONHOLD.value)
+        comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor + ' is down.'
+        __salt__['salt.cmd'](fun='oats.post_slack', comment=comment, case=current_case)
         comment += ' Could not restore connectivity - Slack Message sent.'
 
     return {
