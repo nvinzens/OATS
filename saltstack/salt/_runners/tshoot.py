@@ -35,7 +35,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
         oats.if_shutdown(host, interface, case=current_case)
         conf = oats.if_noshutdown(host, interface, case=current_case)
         # check if cycle was successful
-        success = oats.ping(host, interface_neighbor, case=current_case)
+        success = oats.ping(host, interface_neighbor,check_connectivity=True, case=current_case)
         if success:
             success = True
             comment += ('Config for Interface '
