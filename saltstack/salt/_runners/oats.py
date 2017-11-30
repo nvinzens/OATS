@@ -174,7 +174,7 @@ def ping(source, destination, case=None, check_connectivity=False):
         ping_result = __salt__['salt.execute'](source, 'net.ping', {get_vrf_ip(destination)}, vrf='mgmt')
         update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
             bool(ping_result)))
-        return ping_result[get_vrf_ip(source)]['out']['success']['results']
+        return ping_result[source]['out']['success']['results']
     else:
         ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
         update_case(case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
@@ -242,8 +242,6 @@ def check_device_connectivity(neighbors, host, case=None):
         connected = ping(neighbor, host, check_connectivity=True)
         if connected:
             return connected
-    # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = ping(MASTER_IP, host)
     update_case(case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 
