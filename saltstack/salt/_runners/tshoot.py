@@ -27,8 +27,8 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     yang_message = oats.YangMessage(yang_message)
     interface = yang_message.get_interface()
     comment = 'Interface down status on host ' + host + ' detected. '
-    interface_neighbor = oats.get_interface_neighbor(host, interface, current_case=current_case)
     current_case = oats.create_case(error, host, status='solution_deployed')
+    interface_neighbor = oats.get_interface_neighbor(host, interface, current_case=current_case)
 
     neighbors = oats.get_neighbors(interface_neighbor, current_case=current_case)
     device_up = oats.check_device_connectivity(neighbors, interface_neighbor, current_case=current_case)
