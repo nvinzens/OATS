@@ -10,6 +10,7 @@ from enum import Enum
 # TODO: add behaviour for calling methods without current_case id
 # Constants
 MASTER = 'master'
+MASTER_IP ='10.20.1.10'
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 KEY_LEN = 12
@@ -242,7 +243,7 @@ def check_device_connectivity(neighbors, host, case=None):
         if connected:
             return connected
     # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = ping(MASTER, host)
+    connected = ping(MASTER_IP, host)
     update_case(case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 

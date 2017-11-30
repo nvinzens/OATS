@@ -28,7 +28,7 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
 
     neighbors = oats.get_neighbors(interface_neighbor, case=current_case)
-    device_up = oats.check_device_connectivity(neighbors, interface_neighbor, current_case)
+    device_up = oats.check_device_connectivity(neighbors, interface_neighbor, case=current_case)
 
     if device_up:
         # cycle affected interface
