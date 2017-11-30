@@ -27,36 +27,36 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     yang_message = oats.YangMessage(yang_message)
     interface = yang_message.get_interface()
     comment = 'Interface down status on host ' + host + ' detected. '
-    interface_neighbor = oats.get_interface_neighbor(host, interface)
+    interface_neighbor = oats.get_interface_neighbor(host, interface, current_case=current_case)
     current_case = oats.create_case(error, host, status='solution_deployed')
 
-    neighbors = oats.get_neighbors(interface_neighbor)
-    device_up = oats.check_device_connectivity(neighbors, interface_neighbor)
+    neighbors = oats.get_neighbors(interface_neighbor, current_case=current_case)
+    device_up = oats.check_device_connectivity(neighbors, interface_neighbor, current_case=current_case)
 
     if device_up:
         # cycle affected interface
-        oats.if_shutdown(host, interface)
-        conf = oats.if_noshutdown(host, interface)
+        oats.if_shutdown(host, interface, current_case=current_case)
+        conf = oats.if_noshutdown(host, interface, current_case=current_case)
         # check if cycle was successful
-        success = oats.ping(host, interface_neighbor)
+        success = oats.ping(host, interface_neighbor, current_case=current_case)
         if success:
             success = True
             comment += ('Config for Interface '
                        + interface + ' automatically changed from down to up')
             # TODO: remove? only useful for debugging
-            oats.post_slack(comment)
+            oats.post_slack(comment, current_case=current_case)
             oats.close_case(current_case)
         else:
             oats.update_case(current_case, solution =error + 'could not get resolved. Technician needed.', status=Status.ONHOLD.value)
             comment = ('Could not fix down status of ' + interface + ' on host'
                        + host + ' .')
-            oats.post_slack(comment)
+            oats.post_slack(comment, current_case=current_case)
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
         oats.update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=Status.ONHOLD.value)
         comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor +' is down.'
-        oats.post_slack(comment)
+        oats.post_slack(comment, current_case=current_case)
         comment += ' Could not restore connectivity - Slack Message sent.'
 
     return {
