@@ -27,21 +27,11 @@ def key_gen():
     keylist = [random.choice(base_str()) for i in range(KEY_LEN)]
     return ''.join(keylist)
 
-def get_interface_neighbor(host, interface):
-    links = DB.network.find_one({'host_name': host})['connections']
-    for link in links:
-        if link['interface'] == interface:
-            return link['neighbor']
-
-def get_neighbors(host):
-    neighbors = []
-    links = DB.network.find_one({'host_name': host})['connections']
-    for link in links:
-        if link['neighbor'] and not link['neighbor'] == MASTER:
-            neighbors.append(link['neighbor'])
-    return neighbors
-
-def create_case(error, host, solution=None, description=None, status=Status.NEW.value):
+def create_case(error, host, solution=None, description=None, status=Status.NEW.value, test=False):
+    if test:
+        db_cases = DB.test
+    else:
+        db_cases = DB.cases
     event = error
     device = host
     if not solution:
@@ -64,7 +54,7 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
     }
 
     try:
-        DB.cases.insert_one(new_case)
+        db_cases.insert_one(new_case)
         print '\nCase inserted successfully\n'
 
     except Exception, e:
@@ -72,9 +62,13 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
 
     return case_id
 
-def update_case(case_id, solution, status=None):
+def update_case(case_id, solution, status=None, test=False):
+    if test:
+        db_cases = DB.test
+    else:
+        db_cases = DB.cases
     if status == Status.ONHOLD.value or status==Status.WORKING.value or status==Status.TECH.value or status==Status.DONE.value :
-        DB.cases.update_one(
+        db_cases.update_one(
             {'case_nr': case_id},
             {
                 '$set': {
@@ -87,7 +81,7 @@ def update_case(case_id, solution, status=None):
             }
         )
     else:
-        DB.cases.update_one(
+        db_cases.update_one(
             {'case_nr': case_id},
             {
                 '$set': {
@@ -100,8 +94,12 @@ def update_case(case_id, solution, status=None):
         )
     return case_id
 
-def close_case(case_id):
-    DB.cases.update_one(
+def close_case(case_id, test=False):
+    if test:
+        db_cases = DB.test
+    else:
+        db_cases = DB.cases
+    db_cases.update_one(
         {'case_nr': case_id},
         {
             '$set': {
@@ -112,8 +110,12 @@ def close_case(case_id):
     )
     return case_id
 
-def take_case(case_id, technician):
-    DB.cases.update_one(
+def take_case(case_id, technician, test=False):
+    if test:
+        db_cases = DB.test
+    else:
+        db_cases = DB.cases
+    db_cases.update_one(
         {'case_nr': case_id},
         {
             '$set': {
@@ -125,8 +127,12 @@ def take_case(case_id, technician):
     )
     return case_id
 
-def get_solutions_as_string(case_id):
-    solution = DB.cases.find({'case_nr': case_id})
+def get_solutions_as_string(case_id, test=False):
+    if test:
+        db_cases = DB.test
+    else:
+        db_cases = DB.cases
+    solution = db_cases.find({'case_nr': case_id})
     solution_list = []
     for sol in solution:
         for solprint in sol['Solution']:
@@ -171,8 +177,12 @@ def ping(from_host, to_host, check_connectivity=False):
     return ping_result[from_host]['out']['success']['results']
 
 
-def get_vrf_ip(host):
-    links = DB.network.find_one({'host_name': host})['connections']
+def get_vrf_ip(host, test=False):
+    if test:
+        db_network = DB.test
+    else:
+        db_network = DB.network
+    links = db_network.find_one({'host_name': host})['connections']
     for link in links:
         if link['neighbor'] == MASTER:
             #update_case(current_case, {'TODO DICT': 'FOR SOLUTION'})
@@ -232,46 +242,49 @@ def check_device_connectivity(neighbors, host):
     return connected
 
 
-def get_interface_neighbor(host, interface):
+def get_interface_neighbor(host, interface, test=False):
     '''
     Get the neighbor of the specified host that is connected to it via the specified interface (via oats db).
     :param host: The host
     :param interface: The interface
     :return: The interface neighbor.
     '''
-    links = DB.network.find_one({'host_name': host})['connections']
+    if test:
+        db_network = DB.test
+    else:
+        db_network = DB.network
+    links = db_network.find_one({'host_name': host})['connections']
     for link in links:
         if link['interface'] == interface:
             update_case(current_case, 'Get interface neighbor of interface ' + interface + ' on host ' + host + '.')
             return link['neighbor']
 
 
-def get_neighbors(host):
+def get_neighbors(host, test=False):
     '''
     Get all the neighbors of the host (via oats db).
     :param host: The host
     :return: All the hosts neighbors (as list)
     '''
+    if test:
+        db_network = DB.test
+    else:
+        db_network = DB.network
     neighbors = []
-    links = DB.network.find_one({'host_name': host})['connections']
+    links = db_network.find_one({'host_name': host})['connections']
     for link in links:
         if link['neighbor'] and not link['neighbor'] == MASTER:
             neighbors.append(link['neighbor'])
     update_case(current_case, 'Get neighbors of ' + host + ' from oats database.')
     return neighbors
 
-
-def _base_str():
-    return string.letters+string.digits
-
-
-def key_gen():
-    keylist = [random.choice(_base_str()) for i in range(KEY_LEN)]
-    return ''.join(keylist)
-
-def show_cases_of_last_day():
+def show_cases_of_last_day(test=False):
+    if test:
+        db_cases = DB.test
+    else:
+        db_cases = DB.network
     last_day = datetime.now() - timedelta(hours=24)
-    cases = DB.cases.find({'last_updated':{'$gt':last_day}})
+    cases = db_cases.find({'last_updated':{'$gt':last_day}})
     print '\nList of cases updated in the last 24 hours:\n'
     for cas in cases:
         print 'Case Nr: ' + cas['case_nr']
@@ -279,12 +292,15 @@ def show_cases_of_last_day():
         print 'Case Description: ' + cas['Description']
         print 'Case Status: ' + cas['Status']
 
-def numb_open_cases(status=None):
-
-    new_cases = DB.cases.find({'Status': 'new'}).count()
-    auto_cases = DB.cases.find({'Status': 'solution_deployed'}).count()
-    techreq_cases = DB.cases.find({'Status': 'technician_needed'}).count()
-    tech_cases = DB.cases.find({'Status': 'technician_on_case'}).count()
+def numb_open_cases(status=None, test=False):
+    if test:
+        db_cases = DB.test
+    else:
+        db_cases = DB.network
+    new_cases = db_cases.find({'Status': 'new'}).count()
+    auto_cases = db_cases.find({'Status': 'solution_deployed'}).count()
+    techreq_cases = db_cases.find({'Status': 'technician_needed'}).count()
+    tech_cases = db_cases.find({'Status': 'technician_on_case'}).count()
 
     open_cases = new_cases + auto_cases + techreq_cases + tech_cases
 
@@ -300,13 +316,16 @@ def numb_open_cases(status=None):
 
     return open_cases
 
-def show_open_cases_nr():
-
+def show_open_cases_nr(test=False):
     try:
-        new_case_col = DB.cases.find({'Status':'new'})
-        auto_cases_col = DB.cases.find({'Status': 'solution_deployed'})
-        techreq_cases_col = DB.cases.find({'Status': 'technician_needed'})
-        tech_cases_col = DB.cases.find({'Status': 'technician_on_case'})
+        if test:
+            db_cases = DB.test
+        else:
+            db_cases = DB.network
+        new_case_col = db_cases.find({'Status':'new'})
+        auto_cases_col = db_cases.find({'Status': 'solution_deployed'})
+        techreq_cases_col = db_cases.find({'Status': 'technician_needed'})
+        tech_cases_col = db_cases.find({'Status': 'technician_on_case'})
 
         print '\nCases with Status new:'
         for cas in new_case_col:
@@ -320,7 +339,6 @@ def show_open_cases_nr():
         print '\nCases with Status technician_on_case:'
         for techcol in tech_cases_col:
             print '\n' + techcol['case_nr']
-
 
     except Exception, e:
         print str(e)
