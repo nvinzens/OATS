@@ -10,6 +10,7 @@ from enum import Enum
 # TODO: add behaviour for calling methods without current_case id
 # Constants
 MASTER = 'master'
+MASTER_IP ='10.20.1.10'
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 KEY_LEN = 12
@@ -159,25 +160,26 @@ def post_slack(message, case=None):
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
-def ping(from_host, to_host, case=None, check_connectivity=False):
+def ping(source, destination, case=None, check_connectivity=False):
     '''
     Executes a ping from one host to another using the salt-api. If from_host equals 'master' it will
     try to establish a connection from the master to a host to simulate a ping (needed because in current
     lab environment pings don't behave as they would in a real environment).
-    :param from_host: The ping source
-    :param to_host: The ping destination
+    :param source: The ping source
+    :param destination: The ping destination
     :param case: case-id for updating the current case
     :return: The results of the ping. Will be empty if the ping wasn't successful.
     '''
     if check_connectivity:
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {_get_vrf_ip(to_host)}, vrf='mgmt')
-        update_case(case, solution='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(
+        vrf_dest = {'destination': get_vrf_ip(destination), 'vrf': 'mgmt'}
+        ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
+        update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
             bool(ping_result)))
-        return ping_result[_get_vrf_ip(from_host)]['out']['success']['results']
+        return ping_result[source]['out']['success']['results']
     else:
-        ping_result = __salt__['salt.execute'](from_host, 'net.ping', {to_host})
-        update_case(case, solution ='Ping from ' + from_host + ' to ' + to_host + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
-    return ping_result[from_host]['out']['success']['results']
+        ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
+        update_case(case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
+    return ping_result[source]['out']['success']['results']
 
 
 def get_vrf_ip(host, test=False):
@@ -203,7 +205,7 @@ def if_noshutdown(host, interface, case=None):
     '''
     template_name = 'noshutdown_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
-    config = {'template_name': template_name,'template_source': template_source}
+    config = {'template_name': template_name, 'template_source': template_source}
     update_case(case, solution ='Trying to  apply no shutdown to interface ' + interface + '.')
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
@@ -241,8 +243,6 @@ def check_device_connectivity(neighbors, host, case=None):
         connected = ping(neighbor, host, check_connectivity=True)
         if connected:
             return connected
-    # TODO: evaluate what it means when master is connected, but none of the neighbors
-    connected = ping(MASTER, host)
     update_case(case, solution ='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
     return connected
 
@@ -350,9 +350,6 @@ def show_open_cases_nr(test=False):
     except Exception, e:
         print str(e)
 
-class YangMessage(object):
-    def __init__(self, yang_message):
-        self.yang_message = yang_message
 
-    def get_interface(self):
-        return self.yang_message['interfaces']['interface'].popitem()[0]
+def get_interface(yang_message):
+    return yang_message['interfaces']['interface'].popitem()[0]
