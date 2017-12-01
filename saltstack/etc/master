@@ -12,10 +12,8 @@ thorium_roots:
 reactor:
   - 'napalm/syslog/*/INTERFACE_CHANGED/down/*':
     - /srv/saltstack/reactor/ifdown_workflow.sls
-  - 'napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/disabled*':
+  - 'napalm/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*':
     - /srv/saltstack/reactor/ospf_neighbor_down_workflow.sls
-engines:
-  - thorium: {}
 
 slack:
   api_key: xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317
