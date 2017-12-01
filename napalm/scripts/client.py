@@ -30,6 +30,7 @@ def __send_salt_event(event_msg):
     minion = event_msg['host']
     origin_ip = event_msg['ip']
     tag = event_msg['message_details']['tag']
+    message_details = event_msg['message_details']
     error = event_msg[ERROR]
     optional_arg = __get_optional_arg(event_msg, error)
 
@@ -43,7 +44,8 @@ def __send_salt_event(event_msg):
             'origin_ip': origin_ip,
             YANG_MESSAGE: yang_message,
             'tag': tag,
-            ERROR: error
+            ERROR: error,
+            'message_details': message_details
           }
     )
 
