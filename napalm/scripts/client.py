@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import with_statement
 import zmq
 import napalm_logs.utils
 import salt.utils.event
@@ -6,7 +7,9 @@ import salt.client
 import collections
 from expiringdict import ExpiringDict
 import time
+import threading
 from threading import Thread
+
 
 
 # CONSTANTS:
@@ -22,6 +25,7 @@ MAX_AGE = 11
 # and if it did, skips it
 # can be refined, but needs to get data from the database for that
 cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
+lock = threading.Lock()
 
 
 def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
@@ -80,9 +84,12 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
     global cache
     # TODO: get OSPF neighbors
     if optional_arg:
-        cache[OSPF_NEIGHBOR_DOWN] = {}
-        cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
-        timeout = time.time() + MAX_AGE - 1 # -1 to avoid exceptions
+        lock.acquire()
+        try:
+            cache[OSPF_NEIGHBOR_DOWN] = {}
+            cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
+        finally:
+            lock.release()
         print 'Waiting for {0} seconds.'.format(MAX_AGE)
         time.sleep(MAX_AGE - 1) # -1 to make sure dict is still present
         if cache[OSPF_NEIGHBOR_DOWN]['counter'] > 1:
@@ -90,7 +97,11 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg)
 
     else:
-        cache[OSPF_NEIGHBOR_DOWN]['counter'] += 1
+        lock.acquire()
+        try:
+            cache[OSPF_NEIGHBOR_DOWN]['counter'] += 1
+        finally:
+            lock.release()
 
 
 
@@ -117,7 +128,7 @@ while True:
         if  not cache:
             print 'First dead_timer_expired Event detected: Start collecting Event.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
-                                                            message, event_error, opt_arg, True))
+                                                            message, event_error, opt_arg))
             thread.daemon = True
             thread.start()
             opt_arg= ''
@@ -125,7 +136,7 @@ while True:
             opt_arg = ''
             print 'Additional dead_timer_expired Event detected. Incrementing counter.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
-                                                            message, event_error, opt_arg, False))
+                                                            message, event_error, opt_arg))
             thread.daemon = True
             thread.start()
             break
