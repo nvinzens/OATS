@@ -7,5 +7,5 @@ ifdown_workflow:
     - yang_message: {{ event_data['yang_message'] }}
     - error: {{ event_data['error'] }}
     - tag: {{ event_data['tag'] }}
-    - process_number: {{ event_data['processnumber'] }}
+    - process_number: {{ event_data['message_details']['processnumber'] }}
 

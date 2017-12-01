@@ -82,7 +82,7 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, col
     success = False
     comment = 'OSPF neighbor down status on host {0} detected. Collecting OSPF events for {1} seconds.'.format(host, collect_for)
     counter = 0
-    if current_case is None
+    if current_case is None:
         current_case = oats.create_case(error, host, status='solution_deployed')
     # listener for events
     ret = {
