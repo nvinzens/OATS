@@ -121,12 +121,13 @@ while True:
             thread.daemon = True
             thread.start()
         else:
+            opt_arg = ''
             print 'Additional dead_timer_expired Event detected. Incrementing counter.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg, False))
             thread.daemon = True
             thread.start()
-    if event_msg:
+    if (opt_arg):
         __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
     else:
         continue
