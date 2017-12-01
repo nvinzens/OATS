@@ -90,11 +90,16 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
             cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
         finally:
             lock.release()
-        print 'Waiting for {0} seconds.'.format(MAX_AGE)
+        print 'Waiting for {0} seconds to gather data.'.format(MAX_AGE)
         time.sleep(MAX_AGE - 1) # -1 to make sure dict is still present
         if cache[OSPF_NEIGHBOR_DOWN]['counter'] > 1:
-            print cache[OSPF_NEIGHBOR_DOWN]['counter']
+            print 'Time passed. Event root cause suspected in OSPF protocol. Sending {0}' \
+                  ': {1} event to salt master'.format(error, optional_arg)
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg)
+        else:
+            print 'Time passed. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
+                  ' event to salt master'
+
 
     else:
         lock.acquire()
@@ -139,7 +144,6 @@ while True:
                                                             message, event_error, opt_arg))
             thread.daemon = True
             thread.start()
-            break
     if opt_arg:
         __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
     else:
