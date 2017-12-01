@@ -26,10 +26,11 @@ EVENT_TAGS = [
 ]
 
 
-def ifdown(host, origin_ip, yang_message, error, tag, current_case=None):
+def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_case=None):
     '''
     Function that executes a workflow to fix the error that started an ifdown event
     '''
+    # TODO: add optional interface param
     conf = 'No changes'
     success = False
     interface = oats.get_interface(yang_message)

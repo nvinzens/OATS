@@ -5,6 +5,8 @@ import salt.utils.event
 import salt.client
 import collections
 from expiringdict import ExpiringDict
+import time
+from threading import Thread
 
 
 # CONSTANTS:
@@ -12,31 +14,20 @@ INTERFACE_CHANGED = 'INTERFACE_CHANGED'
 OSPF_NEIGHBOR_DOWN = 'OSPF_NEIGHBOR_DOWN'
 YANG_MESSAGE = 'yang_message'
 ERROR = 'error'
-#CACHE_SIZE = 10
-#MAX_AGE = 3
+CACHE_SIZE = 1000
+MAX_AGE = 11
 
 # cache for not sending the same event multiple times
 # event correlation only looks if in the last MAX_AGE seconds the same event occured
 # and if it did, skips it
 # can be refined, but needs to get data from the database for that
-#cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
+cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
 
 
-def __send_salt_event(event_msg):
-    #global cache
+def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
+    global cache
     print event_msg
     caller = salt.client.Caller()
-    yang_message =  event_msg[YANG_MESSAGE]
-    minion = event_msg['host']
-    origin_ip = event_msg['ip']
-    tag = event_msg['message_details']['tag']
-    message_details = event_msg['message_details']
-    error = event_msg[ERROR]
-    optional_arg = __get_optional_arg(event_msg, error)
-
-    #if not (cache.get(error) ==  error and cache.get(optional_arg) == optional_arg):
-    #cache[error] = error
-    #cache[optional_arg] = optional_arg
 
     caller.sminion.functions['event.send'](
         'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
@@ -48,6 +39,8 @@ def __send_salt_event(event_msg):
             'message_details': message_details
           }
     )
+
+
 
 
 def __get_optional_arg(event_msg, error):
@@ -72,15 +65,32 @@ def __get_interface_status(yang_message):
 
 
 def __get_ospf_change_reason(yang_message):
+    global cache
     for k, v in sorted(yang_message.items()):
         if k == 'state':
             if v['adjacency-state-change-reason-message'] == 'Dead timer expired':
+                cache[OSPF_NEIGHBOR_DOWN]['counter'] += 1
                 return 'dead_timer_expired'
             return ''
         if v:
             return __get_ospf_change_reason(v)
         else:
             return ''
+
+
+def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, error, optional_arg, first):
+    global cache
+    # TODO: get OSPF neighbors
+    if first:
+        cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
+        timeout = time.time() + MAX_AGE - 1 # -1 to avoid exceptions
+        while time.time() < timeout:
+            if cache[OSPF_NEIGHBOR_DOWN]['counter'] > 1:
+                __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg)
+    else:
+        cache[OSPF_NEIGHBOR_DOWN]['counter'] += 1
+
+
 
 # listener for napalm-logs messages
 server_address = '10.20.1.10'
@@ -92,5 +102,27 @@ socket.connect('tcp://{address}:{port}'.format(address=server_address,
 socket.setsockopt(zmq.SUBSCRIBE,'')
 while True:
     raw_object = socket.recv()
-    msg = napalm_logs.utils.unserialize(raw_object)
-    __send_salt_event(msg)
+    event_msg = napalm_logs.utils.unserialize(raw_object)
+    yang_mess = event_msg[YANG_MESSAGE]
+    host = event_msg['host']
+    ip = event_msg['ip']
+    event_tag = event_msg['message_details']['tag']
+    message = event_msg['message_details']
+    event_error = event_msg[ERROR]
+    opt_arg = __get_optional_arg(event_msg, event_error)
+    if event_error == OSPF_NEIGHBOR_DOWN and opt_arg == 'dead_timer_expired':
+        if  not cache:
+            thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
+                                                            message, event_error, opt_arg, True))
+            thread.setDaemon(True)
+            thread.start()
+        else:
+            thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
+                                                            message, event_error, opt_arg, False))
+            thread.setDaemon(True)
+            thread.start()
+    if event_msg:
+        __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
+    else:
+        continue
+
