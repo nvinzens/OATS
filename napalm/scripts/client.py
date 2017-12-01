@@ -114,12 +114,12 @@ while True:
         if  not cache:
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg, True))
-            thread.setDaemon(True)
+            thread.daemon = True
             thread.start()
         else:
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg, False))
-            thread.setDaemon(True)
+            thread.daemon = True
             thread.start()
     if event_msg:
         __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
