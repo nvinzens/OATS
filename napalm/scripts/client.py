@@ -83,7 +83,11 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
         cache[OSPF_NEIGHBOR_DOWN] = {}
         cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
         timeout = time.time() + MAX_AGE - 1 # -1 to avoid exceptions
+        print 'Waiting for {0} seconds.'.format(MAX_AGE)
+        seconds = 0
         while time.time() < timeout:
+            print seconds
+            seconds +=1
             continue
         if cache[OSPF_NEIGHBOR_DOWN]['counter'] > 1:
             print cache[OSPF_NEIGHBOR_DOWN]['counter']
@@ -129,5 +133,5 @@ while True:
     if (opt_arg):
         __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
     else:
-        continue
+        print 'Got {0} Event: Not marked for troubleshooting, discaring.'.format(event_error)
 
