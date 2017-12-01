@@ -5,7 +5,10 @@ import datetime
 import json
 import string
 import random
+import time
 from enum import Enum
+import salt.config
+import salt.utils.event
 import oats
 
 
@@ -14,9 +17,16 @@ MASTER = 'master'
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 KEY_LEN = 12
+OSPF_NEIGHBOR_DOWN = 'napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/disabled*'
+INTERFACE_CHANGED_DOWN = 'napalm/syslog/*/INTERFACE_CHANGED/down/*'
+# TODO: add new events dinamically
+EVENT_TAGS = [
+    OSPF_NEIGHBOR_DOWN,
+    INTERFACE_CHANGED_DOWN
+]
 
 
-def ifdown(host, origin_ip, yang_message, error, tag):
+def ifdown(host, origin_ip, yang_message, error, tag, current_case=None):
     '''
     Function that executes a workflow to fix the error that started an ifdown event
     '''
@@ -24,7 +34,8 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     success = False
     interface = oats.get_interface(yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
-    current_case = oats.create_case(error, host, status='solution_deployed')
+    if current_case is None:
+        current_case = oats.create_case(error, host, status='solution_deployed')
     interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
 
     neighbors = oats.get_neighbors(interface_neighbor, case=current_case)
@@ -65,7 +76,52 @@ def ifdown(host, origin_ip, yang_message, error, tag):
     }
 
 
-def ospf_nbr_down(host, origin_ip, yang_message, error, tag):
+def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, collect_for=10, current_case=None):
+    # TODO: specify event-tag to start listening for relevant event (client.py), only if while loop below doesnt consume messages
     conf = 'No changes'
     success = False
+    comment = 'OSPF neighbor down status on host {0} detected. Collecting OSPF events for {1} seconds.'.format(host, collect_for)
+    counter = 0
+    if current_case is None
+        current_case = oats.create_case(error, host, status='solution_deployed')
+    # listener for events
+    opts = salt.config.client_config('/etc/salt/master')
+    salt_event = salt.utils.event.get_event(
+        'master',
+        sock_dir=opts['sock_dir'],
+        transport=opts['transport'],
+        opts=opts)
+    # make sure other important events dont get dropped
+    for tag in EVENT_TAGS:
+        if not tag == OSPF_NEIGHBOR_DOWN:
+            salt_event.subscribe(tag=tag)
+
+    # count dead_timer_expired events
+    timeout = time.time() + collect_for
+    while time.time() < timeout:
+        event_data = salt_event.get._event(wait=0.1, tag='napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*')
+        if event_data is None:
+            continue
+        else:
+            counter += 1
+    # TODO: get OSPF neighbors
+    ret = {
+        'error': error,
+        'tag': tag,
+        'comment': comment,
+        'changes': conf,
+        'success': success
+    }
+    if counter > 1:
+        #TODO: router ospf process_number shutdown/noshutdown
+        raise Exception('OSPF Process Dead')
+    else:
+        ret = ifdown(host, origin_ip, yang_message, error, tag)
+
+    return ret
+
+
+
+
+
 
