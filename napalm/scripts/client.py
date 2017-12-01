@@ -27,7 +27,7 @@ cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
 def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     global cache
     caller = salt.client.Caller()
-
+    print 'Sending Event {0} to salt event bus. Optional_arg: {1}'.format(error, optional_arg)
     caller.sminion.functions['event.send'](
         'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
         { 'minion': minion,
@@ -105,7 +105,6 @@ socket.setsockopt(zmq.SUBSCRIBE,'')
 while True:
     raw_object = socket.recv()
     event_msg = napalm_logs.utils.unserialize(raw_object)
-    print event_msg
     yang_mess = event_msg[YANG_MESSAGE]
     host = event_msg['host']
     ip = event_msg['ip']
