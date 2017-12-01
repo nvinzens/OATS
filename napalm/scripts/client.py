@@ -80,6 +80,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
     global cache
     # TODO: get OSPF neighbors
     if first:
+        cache[OSPF_NEIGHBOR_DOWN] = {}
         cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
         timeout = time.time() + MAX_AGE - 1 # -1 to avoid exceptions
         while time.time() < timeout:
