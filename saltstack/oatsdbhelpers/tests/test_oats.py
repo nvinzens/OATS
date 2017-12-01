@@ -37,8 +37,8 @@ def net_setup():
         'Class': 'TEST_CLASS',
         'Role': 'TEST_ROLE',
         'connections': [
-            {'interface': 'TestIF1', 'ip': '127.0.0.1', 'neighbor': 'master'},
-            {'interface': 'TestIF2', 'ip': '127.0.0.3', 'neighbor': 'TEST2'}
+            {'interface': 'TestIF1', 'ip': '127.0.0.1', 'neighbor': 'master', "ospf_area":""},
+            {'interface': 'TestIF2', 'ip': '127.0.0.3', 'neighbor': 'TEST2', "ospf_area":"1"}
         ]
     }
     try:
@@ -124,5 +124,8 @@ def test_interface_neighbor():
     teardown()
     assert neighif == 'master'
 
-def test_oats_neighbor():
-    assert False
+def test_ospf_neighbor():
+    net_setup()
+    neighospf = oats.get_ospf_neighbors('TEST', case=None, test=True)
+    teardown()
+    assert neighospf[0] == 'TEST2' and len(neighospf)

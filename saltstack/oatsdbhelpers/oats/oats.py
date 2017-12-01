@@ -128,7 +128,32 @@ def take_case(case_id, technician, test=False):
     )
     return case_id
 
+def get_ospf_neighbors(host, case=None, test=False):
+    '''
+    Get all the OSPF neighbors of the host (via oats db).
+    :param host: The host
+    :param case: case-id for updating the current case
+    :return: All the hosts OSPF neighbors (as list)
+    '''
+    ospf_neighbors = []
+    if test:
+        db_network = DB.test
+    else:
+        db_network = DB.network
+    links = db_network.find_one({'host_name': host})['connections']
+    for link in links:
+        if link['ospf_area'] and link['ospf_area']!='None':
+            ospf_neighbors.append(link['neighbor'])
+    if case:
+        update_case(case, 'Get OSPF neighbors of ' + host + ' from oats database.')
+    return ospf_neighbors
+
 def get_solutions_as_string(case_id, test=False):
+    '''
+    Get the applied solutions of a Case as string (via oats db).
+    :param case_id: The case
+    :return: List of applied solutions as string with \n inbetween.
+    '''
     if test:
         db_cases = DB.test
     else:
