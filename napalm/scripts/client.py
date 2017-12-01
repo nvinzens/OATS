@@ -26,7 +26,6 @@ cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
 
 def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     global cache
-    print event_msg
     caller = salt.client.Caller()
 
     caller.sminion.functions['event.send'](
@@ -69,7 +68,6 @@ def __get_ospf_change_reason(yang_message):
     for k, v in sorted(yang_message.items()):
         if k == 'state':
             if v['adjacency-state-change-reason-message'] == 'Dead timer expired':
-                cache[OSPF_NEIGHBOR_DOWN]['counter'] += 1
                 return 'dead_timer_expired'
             return ''
         if v:
@@ -103,6 +101,7 @@ socket.setsockopt(zmq.SUBSCRIBE,'')
 while True:
     raw_object = socket.recv()
     event_msg = napalm_logs.utils.unserialize(raw_object)
+    print event_msg
     yang_mess = event_msg[YANG_MESSAGE]
     host = event_msg['host']
     ip = event_msg['ip']
@@ -112,11 +111,13 @@ while True:
     opt_arg = __get_optional_arg(event_msg, event_error)
     if event_error == OSPF_NEIGHBOR_DOWN and opt_arg == 'dead_timer_expired':
         if  not cache:
+            print 'First dead_timer_expired Event detected: Start collecting Event.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg, True))
             thread.daemon = True
             thread.start()
         else:
+            print 'Additional dead_timer_expired Event detected. Incrementing counter.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg, False))
             thread.daemon = True
