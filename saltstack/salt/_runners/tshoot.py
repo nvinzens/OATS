@@ -85,6 +85,13 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, col
     if current_case is None
         current_case = oats.create_case(error, host, status='solution_deployed')
     # listener for events
+    ret = {
+        'error': error,
+        'tag': tag,
+        'comment': comment,
+        'changes': conf,
+        'success': success
+    }
     opts = salt.config.client_config('/etc/salt/master')
     salt_event = salt.utils.event.get_event(
         'master',
@@ -105,19 +112,12 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, col
         else:
             counter += 1
     # TODO: get OSPF neighbors
-    ret = {
-        'error': error,
-        'tag': tag,
-        'comment': comment,
-        'changes': conf,
-        'success': success
-    }
     if counter > 1:
         #TODO: router ospf process_number shutdown/noshutdown
         raise Exception('OSPF Process Dead')
     else:
         #TODO: add ping to check if ifdown workflow is necessary (might've been fixed already)
-        ret = ifdown(host, origin_ip, yang_message, error, tag)
+        ret = ifdown(host, origin_ip, yang_message, error, tag, current_case=current_case)
 
     return ret
 
