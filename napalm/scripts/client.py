@@ -127,9 +127,11 @@ while True:
     event_tag = event_msg['message_details']['tag']
     message = event_msg['message_details']
     event_error = event_msg[ERROR]
+    handled = False
     # only Events for which an opt_arg can be identified will be sent to the salt master
     opt_arg = __get_optional_arg(event_msg, event_error)
     if event_error == OSPF_NEIGHBOR_DOWN and opt_arg == 'dead_timer_expired':
+        handled = True
         if  not cache:
             print 'First dead_timer_expired Event detected: Start collecting Event.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
@@ -145,7 +147,8 @@ while True:
             thread.daemon = True
             thread.start()
     if opt_arg:
+        handled = True
         __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
-    else:
+    if not handled:
         print 'Got {0} Event: Not marked for troubleshooting, discarding.'.format(event_error)
 
