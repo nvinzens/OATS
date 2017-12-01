@@ -76,10 +76,10 @@ def __get_ospf_change_reason(yang_message):
             return ''
 
 
-def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, error, optional_arg, first):
+def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     global cache
     # TODO: get OSPF neighbors
-    if first:
+    if optional_arg:
         cache[OSPF_NEIGHBOR_DOWN] = {}
         cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
         timeout = time.time() + MAX_AGE - 1 # -1 to avoid exceptions
@@ -119,14 +119,17 @@ while True:
                                                             message, event_error, opt_arg, True))
             thread.daemon = True
             thread.start()
+            break
         else:
+            #remove opt_arg since this event shouldnt be sent to the salt master
             opt_arg = ''
             print 'Additional dead_timer_expired Event detected. Incrementing counter.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg, False))
             thread.daemon = True
             thread.start()
-    if (opt_arg):
+            break
+    if opt_arg:
         __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
     else:
         print 'Got {0} Event: Not marked for troubleshooting, discarding.'.format(event_error)
