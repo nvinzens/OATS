@@ -106,7 +106,7 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, col
     # count dead_timer_expired events
     timeout = time.time() + collect_for
     while time.time() < timeout:
-        event_data = salt_event.get._event(wait=0.1, tag='napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*')
+        event_data = salt_event.get_event(wait=0.1, tag='napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*')
         if event_data is None:
             continue
         else:
