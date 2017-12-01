@@ -6,7 +6,8 @@ prefixes:
     values:
       messageId: (\d+)
       host: (\w+\d)
-      date: (\w+ \d+)
+      # cisco ios adds a whitespace to single digit dates.
+      date: (\w+ [\s]?\d+)
       time: (\d\d:\d\d:\d\d)
       milliseconds: (\.\d\d\d)
       tag: ([\w\d-]+)
