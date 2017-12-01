@@ -93,32 +93,6 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, col
         'changes': conf,
         'success': success
     }
-    opts = salt.config.client_config('/etc/salt/master')
-    salt_event = salt.utils.event.get_event(
-        'master',
-        sock_dir=opts['sock_dir'],
-        transport=opts['transport'],
-        opts=opts)
-    # make sure other important events dont get dropped
-    for tag in EVENT_TAGS:
-        if not tag == OSPF_NEIGHBOR_DOWN:
-            salt_event.subscribe(tag=tag)
-
-    # count dead_timer_expired events
-    timeout = time.time() + collect_for
-    while time.time() < timeout:
-        event_data = salt_event.get_event(wait=0.1, tag='napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*')
-        if event_data is None:
-            continue
-        else:
-            counter += 1
-    # TODO: get OSPF neighbors
-    if counter > 1:
-        #TODO: router ospf process_number shutdown/noshutdown
-        raise Exception('OSPF Process Dead')
-    else:
-        #TODO: add ping to check if ifdown workflow is necessary (might've been fixed already)
-        ret = ifdown(host, origin_ip, yang_message, error, tag, current_case=current_case)
 
     return ret
 
