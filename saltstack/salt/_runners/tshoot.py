@@ -116,6 +116,7 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, col
         #TODO: router ospf process_number shutdown/noshutdown
         raise Exception('OSPF Process Dead')
     else:
+        #TODO: add ping to check if ifdown workflow is necessary (might've been fixed already)
         ret = ifdown(host, origin_ip, yang_message, error, tag)
 
     return ret

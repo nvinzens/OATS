@@ -18,7 +18,7 @@ prefixes:
     values:
       messageId: (\d+)
       host: (\w+\d)
-      date: (\w+ \d+)
+      date: (\w+ [\s]?\d+)
       time: (\d\d:\d\d:\d\d)
       milliseconds: (\.\d\d\d)
       tag: ([\w\d-]+)

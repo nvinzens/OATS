@@ -12,7 +12,7 @@ thorium_roots:
 reactor:
   - 'napalm/syslog/*/INTERFACE_CHANGED/down/*':
     - /srv/saltstack/reactor/ifdown_workflow.sls
-  - 'napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*':
+  - 'napalm/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*':
     - /srv/saltstack/reactor/ospf_neighbor_down_workflow.sls
 
 slack:
