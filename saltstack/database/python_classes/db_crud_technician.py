@@ -118,7 +118,10 @@ def read():
         techCol = db.technician.find()
         print '\n All data from Technician Database \n'
         for tec in techCol:
-            print tec
+            print '\nTech ID: ' + tec['tech_id']
+            print 'First name: ' + tec['first_name']
+            print 'Last name: ' + tec['last_name']
+            print 'Slack Channel: ' + tec['slack_channel']
 
     except Exception, e:
         print str(e)

@@ -37,6 +37,7 @@ def insert():
     interface_names = []
     port_ips = []
     neighbor_neighbors = []
+    ospf_area = []
     number_of_connections = None
     try:
         while not host_name:
@@ -57,12 +58,18 @@ def insert():
         while len(neighbor_neighbors) < number_of_connections:
             up_port_neighbor = raw_input('Enter Interface Neighbor for Interface Number "' + str(len(neighbor_neighbors)+1) + '": ')
             neighbor_neighbors.append(up_port_neighbor)
+        while len(ospf_area) < number_of_connections:
+            ospf_element = raw_input('Enter OSPF Area for Interface Number "' + str(len(ospf_area)+1) + '": ')
+            if ospf_element:
+                ospf_area.append(ospf_element)
+            else:
+                ospf_area.append(None)
 
         while 1:
             print '\nUpdate Device : ' + host_name + ', as follows:'
             print '\nIP Adresse: ' + ip_address + '\nMAC Address: ' + mac_address + '\nClass: ' + dev_class + '\nRole: ' + role
-            for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
-                print 'Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn
+            for ifn, ipp, nn, oa in izip(interface_names, port_ips, neighbor_neighbors, ospf_area):
+                print 'Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn + ' OSPF Area: ' + str(oa)
             selection = raw_input('Confirm [y] or [n]')
             if selection == 'y':
                 db.network.insert_one(
@@ -73,13 +80,13 @@ def insert():
                         'Class': dev_class,
                         'Role': role,
                     })
-                for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
+                for ifn, ipp, nn, oa in izip(interface_names, port_ips, neighbor_neighbors, ospf_area):
                     db.network.update_one(
                         {'host_name': host_name},
                         {
                             '$pushAll': {
                                 'connections': [
-                                     {'interface': ifn, 'ip': ipp, 'neighbor': nn}
+                                     {'interface': ifn, 'ip': ipp, 'neighbor': nn, 'ospf_area': oa}
                                 ]}
                         }
                     )
@@ -102,6 +109,7 @@ def update():
     neighbor_neighbors = []
     update_dev_props = []
     dev_attr = []
+    ospf_area = []
     try:
         while not host_name:
             host_name = raw_input('Enter Device Host name *required: ')
@@ -133,14 +141,20 @@ def update():
         while len(neighbor_neighbors) < number_of_connections:
             up_port_neighbor = raw_input('Enter Interface Neighbor for Interface Number "' + str(len(neighbor_neighbors) + 1) + '": ')
             neighbor_neighbors.append(up_port_neighbor)
+        while len(ospf_area) < number_of_connections:
+            ospf_element = raw_input('Enter OSPF Area for Interface Number "' + str(len(ospf_area)+1) + '": ')
+            if ospf_element:
+                ospf_area.append(ospf_element)
+            else:
+                ospf_area.append(None)
 
         while 1:
             print '\nUpdate Device : ' + host_name + ', as follows:\n'
             for prop, attr in izip(update_dev_props, dev_attr):
                 if prop:
                     print '\n' + attr + ": "+ prop
-            for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
-                print 'Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn
+            for ifn, ipp, nn, oa in izip(interface_names, port_ips, neighbor_neighbors, ospf_area):
+                print 'Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn + ' OSPF Area: ' + str(oa)
             selection = raw_input('Confirm [y] or [n]')
 
             if selection == 'y':
@@ -154,13 +168,13 @@ def update():
                                 }
                             }
                         )
-                for ifn, ipp, nn in izip(interface_names, port_ips, neighbor_neighbors):
+                for ifn, ipp, nn, oa in izip(interface_names, port_ips, neighbor_neighbors, ospf_area):
                     db.network.update_one(
                         {'host_name': host_name},
                         {
                             '$pushAll': {
                                 'connections': [
-                                     {'interface': ifn, 'ip': ipp, 'neighbor': nn}
+                                     {'interface': ifn, 'ip': ipp, 'neighbor': nn, 'ospf_area': oa}
                                 ]}
                         }
                     )
@@ -190,7 +204,13 @@ def read():
         netcol = db.network.find()
         print '\n All data from Network Database \n'
         for net in netcol:
-            print net
+            print '\nHost Name: ' + net['host_name']
+            print 'IP Addresse: '+ net['ip_address']
+            print 'MAC Addresse: ' + net['MAC_address']
+            print 'Class: ' + net['Class']
+            print 'Role: ' + net['Role']
+            print 'Connections:'
+            print net['connections']
 
     except Exception, e:
         print str(e)

@@ -1,7 +1,3 @@
 {
-  "tests/test_oats.py::test_get_solutions": true, 
-  "tests/test_oats.py::test_interface_neighbor": true, 
-  "tests/test_oats.py::test_neighbor": true, 
-  "tests/test_oats.py::test_open_cases": true, 
-  "tests/test_oats.py::test_vrf_ip": true
+  "tests/test_oats.py::test_get_solutions": true
 }

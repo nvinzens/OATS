@@ -15,7 +15,7 @@ def case_setup():
         'case_nr': '1234',
         'Event': 'Testevent',
         'Description': 'Test description',
-        'Status': 'Test status',
+        'Status': 'new',
         'created': datetime.datetime.utcnow(),
         'last_updated': datetime.datetime.utcnow(),
         'technician': '',
@@ -37,7 +37,7 @@ def net_setup():
         'Class': 'TEST_CLASS',
         'Role': 'TEST_ROLE',
         'connections': [
-            {'interface': 'TestIF1', 'ip': '127.0.0.2', 'neighbor': 'MASTER'},
+            {'interface': 'TestIF1', 'ip': '127.0.0.1', 'neighbor': 'master'},
             {'interface': 'TestIF2', 'ip': '127.0.0.3', 'neighbor': 'TEST2'}
         ]
     }
@@ -66,15 +66,19 @@ def test_key_gen():
 
 #Tests for simple Database Access functions
 def test_create_case():
-    test_case_id = oats.create_case('Test', 'Test', solution='testsol', description='test desc', test=True)
+    no_case = DB.test.find({'Event': 'Test'}).count()
+    oats.create_case('Test', 'Test', solution='testsol', description='test desc', test=True)
+    case = DB.test.find({'Event': 'Test'}).count()
     teardown()
-    assert test_case_id
+    assert no_case != case
 
 def test_update_case():
     case_setup()
-    test_case_id = oats.update_case('1234', solution='testsol2', status=None, test=True)
+    no_up = DB.test.find({'Solution': 'testsol2'}).count()
+    oats.update_case('1234', solution='testsol2', status=None, test=True)
+    up = DB.test.find({'Solution': 'testsol2'}).count()
     teardown()
-    assert test_case_id
+    assert no_up != up
 
 def test_close_case():
     case_setup()
@@ -91,20 +95,31 @@ def test_take_case():
     oats.take_case('1234', 'testtech', test=True)
     tech = DB.test.find({'Status': 'technician_on_case'}).count()
     tech2 = DB.test.find({'technician': 'testtech'}).count()
+    teardown()
     assert no_tech != tech and no_tech2 != tech2
 
 #Tests for advanced Database Access functions
-def test_get_solutions():
-    assert False
-
 def test_vrf_ip():
-    assert False
+    net_setup()
+    master_ip = oats.get_vrf_ip('TEST',test=True)
+    master_ips = '127.0.0.1'
+    teardown()
+    assert master_ip == master_ips
 
 def test_open_cases():
-    assert False
+    case_setup()
+    number = oats.numb_open_cases(status=None, test=True)
+    teardown()
+    assert number > 0
 
 def test_neighbor():
-    assert False
+    net_setup()
+    neighb = oats.get_neighbors('TEST', case=None, test=True)
+    teardown()
+    assert neighb[0] == 'TEST2'
 
 def test_interface_neighbor():
-    assert False
+    net_setup()
+    neighif = oats.get_interface_neighbor('TEST', 'TestIF1', case=None, test=True)
+    teardown()
+    assert neighif == 'master'

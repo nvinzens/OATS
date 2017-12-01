@@ -5,6 +5,6 @@
   "Class": "$INSERT_CLASS$",
   "Role": "$INSERT_ROLE$",
   "connections": [
-    { "interface": "$INSERT_INTERFACE$", "ip": "INSERT_IP_ADDRESS", "neighbor": "$INSERT_NEIGHBOR$" }
+    { "interface": "$INSERT_INTERFACE$", "ip": "INSERT_IP_ADDRESS", "neighbor": "$INSERT_NEIGHBOR$","ospf_area":"1" }
   ]
 }
