@@ -5,6 +5,6 @@
   "Class": "Switch",
   "Role": "Access",
   "connections": [
-    { "interface": "GigabitEthernet1/0/24", "ip": "", "neighbor": "" }
+    { "interface": "GigabitEthernet1/0/24", "ip": "", "neighbor": "", "ospf_area":"" }
   ]
 }
