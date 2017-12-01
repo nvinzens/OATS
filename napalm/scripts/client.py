@@ -111,6 +111,7 @@ while True:
     event_tag = event_msg['message_details']['tag']
     message = event_msg['message_details']
     event_error = event_msg[ERROR]
+    # only Events for which an opt_arg can be identified will be sent to the salt master
     opt_arg = __get_optional_arg(event_msg, event_error)
     if event_error == OSPF_NEIGHBOR_DOWN and opt_arg == 'dead_timer_expired':
         if  not cache:
@@ -119,9 +120,8 @@ while True:
                                                             message, event_error, opt_arg, True))
             thread.daemon = True
             thread.start()
-            break
+            opt_arg= ''
         else:
-            #remove opt_arg since this event shouldnt be sent to the salt master
             opt_arg = ''
             print 'Additional dead_timer_expired Event detected. Incrementing counter.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
