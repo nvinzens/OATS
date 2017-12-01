@@ -123,3 +123,6 @@ def test_interface_neighbor():
     neighif = oats.get_interface_neighbor('TEST', 'TestIF1', case=None, test=True)
     teardown()
     assert neighif == 'master'
+
+def test_oats_neighbor():
+    assert False
