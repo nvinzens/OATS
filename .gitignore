@@ -16,6 +16,6 @@ saltstack/database/python_classes/*.pyc
 
 saltstack/*.pyc
 
-saltstack/oatshelpers/.cache/
+saltstack/oatsdbhelpers/.cache/
 
-saltstack/oatshelpers/tests/__pycache__/
+saltstack/oatsdbhelpers/tests/__pycache__/

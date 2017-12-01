@@ -12,13 +12,13 @@ DB = DB_CLIENT.oatsdb
 
 def case_setup():
     new_case = {
-        'case_nr': 1234,
+        'case_nr': '1234',
         'Event': 'Testevent',
         'Description': 'Test description',
         'Status': 'Test status',
         'created': datetime.datetime.utcnow(),
         'last_updated': datetime.datetime.utcnow(),
-        'technician': 'test_tech',
+        'technician': '',
         'Sender_Device': 'Test device',
         'Solution': ['Test solution']
     }
@@ -72,15 +72,26 @@ def test_create_case():
 
 def test_update_case():
     case_setup()
-    update_case('1234', solution='testsol2', status=None, test=True)
+    test_case_id = oats.update_case('1234', solution='testsol2', status=None, test=True)
     teardown()
-    assert False
+    assert test_case_id
 
 def test_close_case():
-    assert False
+    case_setup()
+    no_done = DB.test.find({'Status': 'resolved'}).count()
+    oats.close_case('1234', test=True)
+    done = DB.test.find({'Status': 'resolved'}).count()
+    teardown()
+    assert done != no_done
 
 def test_take_case():
-    assert False
+    case_setup()
+    no_tech = DB.test.find({'Status': 'technician_on_case'}).count()
+    no_tech2 = DB.test.find({'technician': 'testtech'}).count()
+    oats.take_case('1234', 'testtech', test=True)
+    tech = DB.test.find({'Status': 'technician_on_case'}).count()
+    tech2 = DB.test.find({'technician': 'testtech'}).count()
+    assert no_tech != tech and no_tech2 != tech2
 
 #Tests for advanced Database Access functions
 def test_get_solutions():
