@@ -29,21 +29,19 @@ cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
 lock = threading.Lock()
 
 
-def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
-    global cache
+def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg, case=None):
     caller = salt.client.Caller()
     caller.sminion.functions['event.send'](
         'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
-        { 'minion': minion,
+            {'minion': minion,
             'origin_ip': origin_ip,
             YANG_MESSAGE: yang_message,
             'tag': tag,
-            ERROR: error,
-            'message_details': message_details
-          }
-    )
-
-
+             ERROR: error,
+             'message_details': message_details,
+             'case': case
+             }
+        )
 
 
 def __get_optional_arg(event_msg, error):
@@ -83,7 +81,11 @@ def __get_ospf_change_reason(yang_message):
 def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     global cache
     # TODO: get OSPF neighbors
+    current_case = oats.create_case(error, minion, status='solution_deployed')
     if optional_arg:
+        interface = oats.get_interface(yang_message)
+        root_host = oats.get_interface_neighbor(minion, interface, case=current_case)
+        n_of_neighbors = len(oats.get_ospf_neighbors(root_host, case=current_case))
         lock.acquire()
         try:
             cache[error] = {}
@@ -92,7 +94,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
             lock.release()
         print 'Waiting for {0} seconds to gather data.'.format(MAX_AGE)
         time.sleep(MAX_AGE - 1) # -1 to make sure dict is still present
-        if cache[error]['counter'] > 1:
+        if cache[error]['counter'] == n_of_neighbors:
             print 'Time passed. OSPF event counter is {0}. Event root cause suspected in OSPF protocol. Sending {1}' \
                   ': {2} event to salt master'.format(cache[error]['counter'], error, optional_arg)
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg)
@@ -100,8 +102,6 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
             print 'Time passed. OSPF event counter is 1. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
                   ' event to salt master'
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down')
-
-
     else:
         lock.acquire()
         try:

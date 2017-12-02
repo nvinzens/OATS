@@ -101,6 +101,7 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     oats.ospf_shutdown(interface_neighbor, process_number, case=current_case)
     conf = oats.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
     # TODO: check if ospf procces is running
+    oats.post_slack(comment, case=current_case)
 
     ret = {
         'error': error,

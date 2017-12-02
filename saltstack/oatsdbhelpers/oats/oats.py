@@ -282,3 +282,12 @@ def show_open_cases_nr(test=False):
 
     except Exception, e:
         print str(e)
+
+
+def get_interface(error, yang_message):
+    # method to get interface can be different for different errors
+    if error == 'INTERFACE_DOWN':
+        return yang_message['interfaces']['interface'].popitem()[0]
+    if error == 'OSPF_NEIGHBOR_DOWN':
+        interfaces = yang_message['network-instances']['network-instance']['global']['protocols']['protocol']['ospf']['ospfv2']['areas']['area']['area']
+        return interfaces['interface'].popitem()[0]
