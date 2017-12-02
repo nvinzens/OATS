@@ -9,6 +9,6 @@
     { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "", "ospf_area":"" },
     { "interface": "GigabitEthernet2.35", "ip": "172.16.35.5", "neighbor": "R13", "ospf_area":"1" },
     { "interface": "GigabitEthernet2.45", "ip": "172.16.45.5", "neighbor": "R14", "ospf_area":"1" },
-    { "interface": "GigabitEthernet2.56", "ip": "172.16.56.5", "neighbor": "R16", "ospf_area":"" }
+    { "interface": "GigabitEthernet2.56", "ip": "172.16.56.5", "neighbor": "R16", "ospf_area":"1" }
   ]
 }
