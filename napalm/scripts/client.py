@@ -87,13 +87,13 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
     if optional_arg:
         lock.acquire()
         try:
-            cache[OSPF_NEIGHBOR_DOWN] = {}
-            cache[OSPF_NEIGHBOR_DOWN]['counter'] = 1
+            cache[error] = {}
+            cache[error]['counter'] = 1
         finally:
             lock.release()
         print 'Waiting for {0} seconds to gather data.'.format(MAX_AGE)
         time.sleep(MAX_AGE - 1) # -1 to make sure dict is still present
-        if cache[OSPF_NEIGHBOR_DOWN]['counter'] > 1:
+        if cache[error]['counter'] > 1:
             print 'Time passed. Event root cause suspected in OSPF protocol. Sending {0}' \
                   ': {1} event to salt master'.format(error, optional_arg)
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg)
@@ -105,7 +105,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
     else:
         lock.acquire()
         try:
-            cache[OSPF_NEIGHBOR_DOWN]['counter'] += 1
+            cache[error]['counter'] += 1
         finally:
             lock.release()
 
@@ -120,6 +120,7 @@ socket.connect('tcp://{address}:{port}'.format(address=server_address,
                                           port=server_port))
 socket.setsockopt(zmq.SUBSCRIBE,'')
 while True:
+    global cache
     raw_object = socket.recv()
     event_msg = napalm_logs.utils.unserialize(raw_object)
     yang_mess = event_msg[YANG_MESSAGE]
@@ -131,16 +132,16 @@ while True:
     handled = False
     # only Events for which an opt_arg can be identified will be sent to the salt master
     opt_arg = __get_optional_arg(event_msg, event_error)
+
     if event_error == OSPF_NEIGHBOR_DOWN and opt_arg == 'dead_timer_expired':
         handled = True
-        lock.acquire()
-        if  not cache:
+        if not event_error in cache:
+            cache[event_error] = {}
             print 'First dead_timer_expired Event detected: Start collecting Event.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg))
             thread.daemon = True
             thread.start()
-            lock.release()
             opt_arg= ''
         else:
             opt_arg = ''
