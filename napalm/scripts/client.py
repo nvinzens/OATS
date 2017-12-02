@@ -103,6 +103,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
                   ' event to salt master'
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down')
     else:
+        time.sleep(1)
         lock.acquire()
         try:
             cache[error]['counter'] += 1
