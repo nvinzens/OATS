@@ -33,7 +33,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
     # TODO: add optional interface param
     conf = 'No changes'
     success = False
-    interface = oats.get_interface(yang_message)
+    interface = oats.get_interface(error, yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
     if current_case is None:
         current_case = oats.create_case(error, host, status='solution_deployed')
@@ -96,8 +96,10 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
     if current_case is None:
         current_case = oats.create_case(error, host, status='solution_deployed')
-    oats.ospf_shutdown(host, process_number, current_case)
-    conf = oats.ospf_noshutdown(host, process_number, current_case)
+    interface = oats.get_interface(error, yang_message)
+    interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
+    oats.ospf_shutdown(interface_neighbor, process_number, case=current_case)
+    conf = oats.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
     # TODO: check if ospf procces is running
 
     ret = {

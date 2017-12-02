@@ -366,5 +366,10 @@ def show_open_cases_nr(test=False):
         print str(e)
 
 
-def get_interface(yang_message):
-    return yang_message['interfaces']['interface'].popitem()[0]
+def get_interface(error, yang_message):
+    # method to get interface can be different for different errors
+    if error == 'INTERFACE_DOWN':
+        return yang_message['interfaces']['interface'].popitem()[0]
+    if error == 'OSPF_NEIGHBOR_DOWN':
+        interfaces = yang_message['network-instances']['network-instance']['global']['protocols']['protocol']['ospf']['ospfv2']['area']['area']['area']
+        return interfaces['interface'].popitem()[0]
