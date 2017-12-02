@@ -256,7 +256,7 @@ def check_device_connectivity(neighbors, host, case=None):
     for neighbor in neighbors:
         connected = ping(neighbor, host, check_connectivity=True)
         if connected:
-            update_case(case, solution='Checking connectivity from {0} to {1}. Result: {2}'.format(neighbor, host, str(bool(connected)))
+            update_case(case, solution='Checking connectivity from {0} to {1}. Result: {2}'.format(neighbor, host, str(bool(connected))))
             return connected
     return connected
 
