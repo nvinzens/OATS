@@ -84,12 +84,13 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
         current_case = oats.create_case(error, minion, status='solution_deployed')
         # make sure cache gets initialized before other threads try to access it
         lock.acquire()
-        interface = oats.get_interface(error, yang_message)
-        root_host = oats.get_interface_neighbor(minion, interface, case=current_case)
-        n_of_neighbors = len(oats.get_ospf_neighbors(root_host, case=current_case))
         try:
             cache[error] = {}
             cache[error]['counter'] = 1
+            # db operations take some time
+            interface = oats.get_interface(error, yang_message)
+            root_host = oats.get_interface_neighbor(minion, interface, case=current_case)
+            n_of_neighbors = len(oats.get_ospf_neighbors(root_host, case=current_case))
         finally:
             lock.release()
         print 'Waiting for {0} seconds to gather data.'.format(MAX_AGE)
@@ -103,7 +104,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
                   ' event to salt master'
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down', case=current_case)
     else:
-        time.sleep(0.5)
+        time.sleep(3)
         lock.acquire()
         try:
             cache[error]['counter'] += 1
