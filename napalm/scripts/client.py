@@ -19,13 +19,13 @@ OSPF_NEIGHBOR_DOWN = 'OSPF_NEIGHBOR_DOWN'
 YANG_MESSAGE = 'yang_message'
 ERROR = 'error'
 CACHE_SIZE = 1000
-MAX_AGE = 11
+MAX_AGE = 10
 
 # cache for not sending the same event multiple times
 # event correlation only looks if in the last MAX_AGE seconds the same event occured
 # and if it did, skips it
 # can be refined, but needs to get data from the database for that
-cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE+5) # +5 to give the function more time to evaluate dict
+cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE+10) # +20 to give the function more time to evaluate dict
 lock = threading.Lock()
 
 
@@ -103,7 +103,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
                   ': {2} event to salt master'.format(cache[error]['counter'], error, optional_arg)
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg, case=current_case)
         else:
-            print 'Time passed. OSPF event counter is {1}. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
+            print 'Time passed. OSPF event counter is {0}. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
                   ' event to salt master'.format(cache[error]['counter'])
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down', case=current_case)
     else:
