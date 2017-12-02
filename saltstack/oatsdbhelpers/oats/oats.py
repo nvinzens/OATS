@@ -142,7 +142,7 @@ def get_ospf_neighbors(host, case=None, test=False):
         db_network = DB.network
     links = db_network.find_one({'host_name': host})['connections']
     for link in links:
-        if link['ospf_area'] and link['ospf_area']!='None':
+        if link['ospf_area']:
             ospf_neighbors.append(link['neighbor'])
     if case:
         update_case(case, 'Get OSPF neighbors of ' + host + ' from oats database.')
