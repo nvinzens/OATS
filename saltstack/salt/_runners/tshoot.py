@@ -77,15 +77,29 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
     }
 
 
-def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, collect_for=10, current_case=None):
-
+def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, current_case=None):
+    '''
+    Once this function is called it has already been determined that a specific OSPF
+    process needs to be restarted. Data gathering happened in napalm-logs.
+    :param host:
+    :param origin_ip:
+    :param yang_message:
+    :param error:
+    :param tag:
+    :param process_number:
+    :param collect_for:
+    :param current_case:
+    :return:
+    '''
     conf = 'No changes'
-    success = False
-    comment = 'OSPF neighbor down status on host {0} detected. Collecting OSPF events for {1} seconds.'.format(host, collect_for)
-    counter = 0
+    success = True
+    comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
     if current_case is None:
         current_case = oats.create_case(error, host, status='solution_deployed')
-    # listener for events
+    oats.ospf_shutdown(host, process_number, current_case)
+    conf = oats.ospf_noshutdown(host, process_number, current_case)
+    # TODO: check if ospf procces is running
+
     ret = {
         'error': error,
         'tag': tag,

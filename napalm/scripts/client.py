@@ -32,7 +32,6 @@ lock = threading.Lock()
 def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     global cache
     caller = salt.client.Caller()
-    print 'Sending Event {0} to salt event bus. Optional_arg: {1}'.format(error, optional_arg)
     caller.sminion.functions['event.send'](
         'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
         { 'minion': minion,
@@ -94,12 +93,13 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
         print 'Waiting for {0} seconds to gather data.'.format(MAX_AGE)
         time.sleep(MAX_AGE - 1) # -1 to make sure dict is still present
         if cache[error]['counter'] > 1:
-            print 'Time passed. Event root cause suspected in OSPF protocol. Sending {0}' \
-                  ': {1} event to salt master'.format(error, optional_arg)
+            print 'Time passed. OSPF event counter is {0}. Event root cause suspected in OSPF protocol. Sending {1}' \
+                  ': {2} event to salt master'.format(cache[error]['counter'], error, optional_arg)
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg)
         else:
-            print 'Time passed. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
+            print 'Time passed. OSPF event counter is 1. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
                   ' event to salt master'
+            __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down')
 
 
     else:

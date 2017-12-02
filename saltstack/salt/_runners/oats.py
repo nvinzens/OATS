@@ -222,12 +222,25 @@ def if_shutdown(minion, interface, case=None):
                 loaded_config (str), diff (str)
         '''
     template_name = 'shutdown_interface'
-    template_source = 'interface ' + interface + '\n  shutdown\nend'
+    template_source = 'interface {0}\n  shutdown\nend'.format(interface)
     config = {'template_name': template_name,'template_source': template_source}
-    update_case(case, solution='Trying to apply shutdown to interface ' + interface + '.')
+    update_case(case, solution='Trying to apply shutdown to interface {0}.'.format(interface))
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
+def ospf_shutdown(minion, process_number, case=None):
+    template_name = 'shutdown_ospf'
+    template_source = 'router ospf {0}\n  shutdown\nend'.format(process_number)
+    config = {'template_name': template_name, 'template_source': template_source}
+    update_case(case, solution='Trying to apply shutdown to OSPF process {0}.'.format(process_number))
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+
+def ospf_noshutdown(minion, process_number, case=None):
+    template_name = 'shutdown_ospf'
+    template_source = 'router ospf {0}\n  no shutdown\nend'.format(process_number)
+    config = {'template_name': template_name, 'template_source': template_source}
+    update_case(case, solution='Trying to apply no shutdown to OSPF process {0}.'.format(process_number))
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 def check_device_connectivity(neighbors, host, case=None):
     '''
