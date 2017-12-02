@@ -25,7 +25,7 @@ MAX_AGE = 11
 # event correlation only looks if in the last MAX_AGE seconds the same event occured
 # and if it did, skips it
 # can be refined, but needs to get data from the database for that
-cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE)
+cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE+5) # +5 to give the function more time to evaluate dict
 lock = threading.Lock()
 
 
@@ -97,7 +97,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
         root_host = oats.get_interface_neighbor(minion, interface, case=current_case)
         n_of_neighbors = len(oats.get_ospf_neighbors(root_host, case=current_case))
         print 'Waiting for {0} seconds to gather data.'.format(MAX_AGE)
-        time.sleep(MAX_AGE - 1) # -1 to make sure dict is still present
+        time.sleep(MAX_AGE) # -1 to make sure dict is still present
         if cache[error]['counter'] == n_of_neighbors:
             print 'Time passed. OSPF event counter is {0}. Event root cause suspected in OSPF protocol. Sending {1}' \
                   ': {2} event to salt master'.format(cache[error]['counter'], error, optional_arg)
