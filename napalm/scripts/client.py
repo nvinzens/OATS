@@ -91,8 +91,7 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
     lock.release()
     if optional_arg:
         current_case = oats.create_case(error, minion, status='solution_deployed')
-        # make sure cache gets initialized before other threads try to access it
-        lock.acquire()
+        # make sure cache gets initialized before other threads try to access it)
         interface = oats.get_interface(error, yang_message)
         root_host = oats.get_interface_neighbor(minion, interface, case=current_case)
         n_of_neighbors = len(oats.get_ospf_neighbors(root_host, case=current_case))
