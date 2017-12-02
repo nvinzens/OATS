@@ -80,8 +80,8 @@ def __get_ospf_change_reason(yang_message):
 def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     global cache
     # TODO: get OSPF neighbors
-    current_case = oats.create_case(error, minion, status='solution_deployed')
     if optional_arg:
+        current_case = oats.create_case(error, minion, status='solution_deployed')
         # make sure cache gets initialized before other threads try to access it
         lock.acquire()
         interface = oats.get_interface(error, yang_message)
@@ -97,13 +97,13 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
         if cache[error]['counter'] == n_of_neighbors:
             print 'Time passed. OSPF event counter is {0}. Event root cause suspected in OSPF protocol. Sending {1}' \
                   ': {2} event to salt master'.format(cache[error]['counter'], error, optional_arg)
-            __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg)
+            __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg, case=current_case)
         else:
             print 'Time passed. OSPF event counter is 1. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
                   ' event to salt master'
-            __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down')
+            __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down', case=current_case)
     else:
-        time.sleep(1)
+        time.sleep(0.5)
         lock.acquire()
         try:
             cache[error]['counter'] += 1
