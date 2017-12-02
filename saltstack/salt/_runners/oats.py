@@ -228,6 +228,7 @@ def if_shutdown(minion, interface, case=None):
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
+
 def check_device_connectivity(neighbors, host, case=None):
     '''
     executes pings from neighbors to the host
@@ -242,7 +243,7 @@ def check_device_connectivity(neighbors, host, case=None):
     for neighbor in neighbors:
         connected = ping(neighbor, host, check_connectivity=True)
         if connected:
-            update_case(case, solution='Checking connectivity to ' + host + '. Result: ' + str(bool(connected)))
+            update_case(case, solution='Checking connectivity from {0} to {1}. Result: {2}'.format(neighbor, host, str(bool(connected)))
             return connected
     return connected
 
@@ -253,6 +254,7 @@ def get_interface_neighbor(host, interface, case=None, test=False):
     :param host: The host
     :param interface: The interface
     :param case: case-id for updating the current case
+    :param test: set True if used in testing environment
     :return: The interface neighbor.
     '''
     if test:

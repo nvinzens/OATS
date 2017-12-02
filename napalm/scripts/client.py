@@ -133,12 +133,14 @@ while True:
     opt_arg = __get_optional_arg(event_msg, event_error)
     if event_error == OSPF_NEIGHBOR_DOWN and opt_arg == 'dead_timer_expired':
         handled = True
+        lock.acquire()
         if  not cache:
             print 'First dead_timer_expired Event detected: Start collecting Event.'
             thread = Thread(target=__send_salt_async, args=(yang_mess, host, ip, event_tag,
                                                             message, event_error, opt_arg))
             thread.daemon = True
             thread.start()
+            lock.release()
             opt_arg= ''
         else:
             opt_arg = ''

@@ -78,7 +78,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
 
 
 def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, collect_for=10, current_case=None):
-    # TODO: specify event-tag to start listening for relevant event (client.py), only if while loop below doesnt consume messages
+
     conf = 'No changes'
     success = False
     comment = 'OSPF neighbor down status on host {0} detected. Collecting OSPF events for {1} seconds.'.format(host, collect_for)
