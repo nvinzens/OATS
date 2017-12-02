@@ -25,7 +25,7 @@ MAX_AGE = 10
 # event correlation only looks if in the last MAX_AGE seconds the same event occured
 # and if it did, skips it
 # can be refined, but needs to get data from the database for that
-cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE+10) # +20 to give the function more time to evaluate dict
+cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE+3) # +3 to give the function more time to evaluate dict
 lock = threading.Lock()
 
 
@@ -106,12 +106,6 @@ def __send_salt_async(yang_message, minion, origin_ip, tag, message_details, err
             print 'Time passed. OSPF event counter is {0}. Event root cause suspected in a single INTERFACE_DOWN event. Sending INTERFACE_DOWN' \
                   ' event to salt master'.format(cache[error]['counter'])
             __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, 'interface_down', case=current_case)
-    else:
-        lock.acquire()
-        try:
-            cache[error]['counter'] += 1
-        finally:
-            lock.release()
 
 
 
