@@ -9,7 +9,7 @@ import time
 import threading
 from threading import Thread
 import Queue
-from oats import oats
+from oatssalthelpers import oats
 from salt_event import send_salt_event
 
 

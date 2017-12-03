@@ -2,10 +2,14 @@ import sys
 import pymongo
 from pymongo import MongoClient
 import datetime
+import time
 import json
 import string
 import random
 from enum import Enum
+import salt.config
+import salt.utils.event
+
 
 # TODO: add behaviour for calling methods without current_case id
 # Constants
@@ -373,3 +377,19 @@ def get_interface(error, yang_message):
     if error == 'OSPF_NEIGHBOR_DOWN':
         interfaces = yang_message['network-instances']['network-instance']['global']['protocols']['protocol']['ospf']['ospfv2']['areas']['area']['area']
         return interfaces['interfaces']['interface'].popitem()[0]
+
+
+def wait_for_event(tag, amount, wait=10):
+    opts = salt.config.client_config('/etc/salt/master')
+
+    event = salt.utils.event.get_event(
+        'master',
+        sock_dir=opts['sock_dir'],
+        transport=opts['transport'],
+        opts=opts)
+    counter = 0
+    timeout = time.time() + wait
+    while time.time() < timeout:
+        if event.get_event(wait=wait, tag=tag):
+            counter += 1
+    return counter >= amount

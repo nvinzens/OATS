@@ -8,7 +8,7 @@ from expiringdict import ExpiringDict
 import time
 import threading
 from threading import Thread
-from oats import oats
+from oatssalthelpers import oats
 
 
 def __send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg, case=None):

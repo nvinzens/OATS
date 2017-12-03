@@ -16,6 +16,7 @@ from oats import oats
 # CONSTANTS:
 INTERFACE_CHANGED = 'INTERFACE_CHANGED'
 OSPF_NEIGHBOR_DOWN = 'OSPF_NEIGHBOR_DOWN'
+OSPF_NEIGHBOR_UP = 'OSPF_NEIGHBOR_UP'
 YANG_MESSAGE = 'yang_message'
 ERROR = 'error'
 CACHE_SIZE = 1000
@@ -50,6 +51,8 @@ def __get_optional_arg(event_msg, error):
         return __get_interface_status(yang_message)
     if error == OSPF_NEIGHBOR_DOWN:
         return __get_ospf_change_reason(yang_message)
+    if error == OSPF_NEIGHBOR_UP:
+        return 'ospf_nbr_up'
     else:
         return ''
 
