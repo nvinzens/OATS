@@ -140,7 +140,7 @@ def wait_for_event(tag, amount, wait=10, case=None):
         opts=opts)
     counter = 0
     timeout = time.time() + wait
-    oats.update_case(case, solution='Waiting for {0} amount of {1} events'.format(amount, tag))
+    oats.update_case(case, solution='Waiting for {0} {1} events'.format(amount, tag))
     while time.time() < timeout:
         if event.get_event(wait=3, tag=tag):
             counter += 1
