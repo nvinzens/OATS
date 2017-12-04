@@ -102,7 +102,7 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     oatssalthelpers.ospf_shutdown(interface_neighbor, process_number, case=current_case)
     conf = oatssalthelpers.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
     # TODO: check if ospf procces is running
-    success = oatssalthelpers.wait_for_event('napalm/syslog/*/OSPF_NEIGHBOR_DOWN/ospf_nbr_up/*', n_of_neighbors,
+    success = oatssalthelpers.wait_for_event('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbr_up/*', n_of_neighbors,
                                              wait=10, case=current_case)
     if success:
         oats.update_case(current_case, 'Successfully restarted OSPF process on host {0}'
