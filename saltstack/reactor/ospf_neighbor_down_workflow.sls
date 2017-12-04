@@ -8,5 +8,5 @@ ifdown_workflow:
     - error: {{ event_data['error'] }}
     - tag: {{ event_data['tag'] }}
     - process_number: {{ event_data['message_details']['processnumber'] }}
-    - current_case: {{ even_data['case'] }}
+    - current_case: {{ event_data['case'] }}
 
