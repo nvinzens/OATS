@@ -32,13 +32,13 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
     # TODO: add optional interface param
     conf = 'No changes'
     success = False
-    interface = oatssalthelpers.get_interface(error, yang_message)
+    interface = oats.get_interface(error, yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
     if current_case is None:
-        current_case = oatssalthelpers.create_case(error, host, status='solution_deployed')
-    interface_neighbor = oatssalthelpers.get_interface_neighbor(host, interface, case=current_case)
+        current_case = oats.create_case(error, host, status='solution_deployed')
+    interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
 
-    neighbors = oatssalthelpers.get_neighbors(interface_neighbor, case=current_case)
+    neighbors = oats.get_neighbors(interface_neighbor, case=current_case)
     device_up = oatssalthelpers.check_device_connectivity(neighbors, interface_neighbor, case=current_case)
 
     if device_up:
@@ -96,8 +96,8 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
     if current_case is None:
         current_case = oats.create_case(error, host, status='solution_deployed')
-    interface = oatssalthelpers.get_interface(error, yang_message)
-    interface_neighbor = oatssalthelpers.get_interface_neighbor(host, interface, case=current_case)
+    interface = oats.get_interface(error, yang_message)
+    interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
     n_of_neighbors = oats.get_ospf_neighbors(host, case=current_case)
     oatssalthelpers.ospf_shutdown(interface_neighbor, process_number, case=current_case)
     conf = oatssalthelpers.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
@@ -106,7 +106,7 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
                                              wait=10, case=current_case)
     if success:
         oats.update_case(current_case, 'Successfully restarted OSPF process on host {0}'
-                                    .format(interface_neighbor), oatssalthelpers.Status.DONE.value)
+                                    .format(interface_neighbor), oats.Status.DONE.value)
         comment += ' OSPF process restarted successfully.'
         oatssalthelpers.post_slack(comment, case=current_case)
     else:
