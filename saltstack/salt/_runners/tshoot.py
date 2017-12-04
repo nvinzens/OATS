@@ -1,5 +1,7 @@
 from oats import oats
 import oatssalthelpers
+from threading import Thread
+from multiprocessing.pool import ThreadPool
 
 
 # Constants
@@ -91,8 +93,9 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     :param current_case:
     :return:
     '''
+    pool = ThreadPool(processes=1)
     conf = 'No changes'
-    success = True
+    success = False
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
     if current_case is None:
         current_case = oats.create_case(error, host, status='solution_deployed')
@@ -100,10 +103,11 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
     n_of_neighbors = oats.get_ospf_neighbors(host, case=current_case)
     oatssalthelpers.ospf_shutdown(interface_neighbor, process_number, case=current_case)
+    async_result = pool.apply_async(oatssalthelpers.wait_for_event, ('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbr_up/*', n_of_neighbors,
+                                             10, current_case))
     conf = oatssalthelpers.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
     # TODO: check if ospf procces is running
-    success = oatssalthelpers.wait_for_event('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbr_up/*', n_of_neighbors,
-                                             wait=10, case=current_case)
+    success = async_result.get()
     if success:
         oats.update_case(current_case, 'Successfully restarted OSPF process on host {0}'
                                     .format(interface_neighbor), oats.Status.DONE.value)
