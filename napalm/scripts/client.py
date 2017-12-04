@@ -152,6 +152,7 @@ while True:
             thread.start()
     if opt_arg:
         handled = True
+        print 'Got {0}: {1} Event: Sending to salt master.'.format(event_error, opt_arg)
         __send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
     if not handled:
         print 'Got {0} Event: Not marked for troubleshooting, discarding.'.format(event_error)
