@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from oats import oats
 from __future__ import with_statement
 import zmq
 import napalm_logs.utils
@@ -9,7 +10,7 @@ from expiringdict import ExpiringDict
 import time
 import threading
 from threading import Thread
-from oats import oats
+
 
 
 

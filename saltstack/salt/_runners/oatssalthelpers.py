@@ -1,3 +1,4 @@
+from oats import oats
 import datetime
 import time
 import string
@@ -5,7 +6,6 @@ import random
 from enum import Enum
 import salt.config
 import salt.utils.event
-from oats import oats
 
 
 # TODO: add behaviour for calling methods without current_case id

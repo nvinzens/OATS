@@ -1,5 +1,5 @@
-import oatssalthelpers
 from oats import oats
+import oatssalthelpers
 
 
 # Constants
