@@ -1,4 +1,4 @@
-import oats
+from oats import oats
 import oatssalthelpers
 
 
