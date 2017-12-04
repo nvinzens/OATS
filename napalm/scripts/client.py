@@ -1,6 +1,6 @@
 #!/usr/bin/env python
-from oats import oats
 from __future__ import with_statement
+from oats import oats
 import zmq
 import napalm_logs.utils
 import salt.utils.event
