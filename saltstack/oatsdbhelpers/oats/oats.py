@@ -287,7 +287,7 @@ def show_open_cases_nr(test=False):
 
 def get_interface(error, yang_message):
     # method to get interface can be different for different errors
-    temp = yang_message
+    temp = yang_message.copy()
     if error == 'INTERFACE_DOWN':
         return temp['interfaces']['interface'].popitem()[0]
     if error == 'OSPF_NEIGHBOR_DOWN':
