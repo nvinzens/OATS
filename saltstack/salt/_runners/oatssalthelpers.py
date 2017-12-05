@@ -1,9 +1,5 @@
-from oats import oats
-import datetime
+from oats import oatsdbhelpers
 import time
-import string
-import random
-from enum import Enum
 import salt.config
 import salt.utils.event
 
@@ -20,8 +16,8 @@ def post_slack(message, case=None):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    oats.update_case(case, solution='Workflow finished. Case-ID: ' + case, status='technician_called')
-    solutions = oats.get_solutions_as_string(case)
+    oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status='technician_called')
+    solutions = oatsdbhelpers.get_solutions_as_string(case)
     message += "\nExecuted workflow:\n" + solutions
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
@@ -38,12 +34,12 @@ def ping(source, destination, case=None, check_connectivity=False):
     if check_connectivity:
         vrf_dest = {'destination': get_vrf_ip(destination), 'vrf': 'mgmt'}
         ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
-        oats.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
+        oatsdbhelpers.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
             bool(ping_result)))
         return ping_result[source]['out']['success']['results']
     else:
         ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
-        oats.update_case(case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
+        oatsdbhelpers.update_case(case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
     return ping_result[source]['out']['success']['results']
 
 
@@ -61,7 +57,7 @@ def if_noshutdown(host, interface, case=None):
     template_name = 'noshutdown_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name, 'template_source': template_source}
-    oats.update_case(case, solution ='Trying to  apply no shutdown to interface ' + interface + '.')
+    oatsdbhelpers.update_case(case, solution ='Trying to  apply no shutdown to interface ' + interface + '.')
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
@@ -79,7 +75,7 @@ def if_shutdown(minion, interface, case=None):
     template_name = 'shutdown_interface'
     template_source = 'interface {0}\n  shutdown\nend'.format(interface)
     config = {'template_name': template_name,'template_source': template_source}
-    oats.update_case(case, solution='Trying to apply shutdown to interface {0}.'.format(interface))
+    oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to interface {0}.'.format(interface))
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
@@ -96,7 +92,7 @@ def ospf_shutdown(minion, process_number, case=None):
     template_name = 'shutdown_ospf'
     template_source = 'router ospf {0}\n  shutdown\nend'.format(process_number)
     config = {'template_name': template_name, 'template_source': template_source}
-    oats.update_case(case, solution='Trying to apply shutdown to OSPF process {0}.'.format(process_number))
+    oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to OSPF process {0}.'.format(process_number))
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 def ospf_noshutdown(minion, process_number, case=None):
@@ -112,7 +108,7 @@ def ospf_noshutdown(minion, process_number, case=None):
     template_name = 'shutdown_ospf'
     template_source = 'router ospf {0}\n  no shutdown\nend'.format(process_number)
     config = {'template_name': template_name, 'template_source': template_source}
-    oats.update_case(case, solution='Trying to apply no shutdown to OSPF process {0}.'.format(process_number))
+    oatsdbhelpers.update_case(case, solution='Trying to apply no shutdown to OSPF process {0}.'.format(process_number))
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 def check_device_connectivity(neighbors, host, case=None):
@@ -128,7 +124,7 @@ def check_device_connectivity(neighbors, host, case=None):
     for neighbor in neighbors:
         connected = ping(neighbor, host, check_connectivity=True)
         if connected:
-            oats.update_case(case, solution='Checking connectivity from {0} to {1}. Result: {2}'.format(neighbor, host, str(bool(connected))))
+            oatsdbhelpers.update_case(case, solution='Checking connectivity from {0} to {1}. Result: {2}'.format(neighbor, host, str(bool(connected))))
             return connected
     return connected
 
@@ -172,10 +168,10 @@ def count_event(tag, error, amount, wait=10, case=None):
         opts=opts)
     counter = 0
     timeout = time.time() + wait
-    oats.update_case(case, solution='Waiting for {0} {1} events.'.format(amount, error))
+    oatsdbhelpers.update_case(case, solution='Waiting for {0} {1} events.'.format(amount, error))
     while time.time() < timeout:
         if event.get_event(wait=3, tag=tag):
             counter += 1
     success = counter >= amount
-    oats.update_case(case, solution='Result: {0} events. Wait success: {1}.'.format(counter, success))
+    oatsdbhelpers.update_case(case, solution='Result: {0} events. Wait success: {1}.'.format(counter, success))
     return success
