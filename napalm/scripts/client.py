@@ -32,7 +32,7 @@ def __get_optional_arg(msg, error):
     yang_message = msg['yang_message']
     if error == correlate.INTERFACE_CHANGED:
         return __get_interface_status(yang_message)
-    if error == correlate.OSPF_NEIGHBOR_DOWN and correlate.EVENT_OPTIONAL_ARGS[event_error]:
+    if error == correlate.OSPF_NEIGHBOR_DOWN:
         return __get_ospf_change_reason(yang_message)
     if error == correlate.OSPF_NEIGHBOR_UP:
         return 'ospf_nbr_up'
@@ -113,7 +113,7 @@ while True:
     handled = False
     # only Events for which an opt_arg can be identified will be sent to the salt master
     opt_arg = __get_optional_arg(event_msg, event_error)
-    if event_error in correlate.CORRELATE_EVENTS and correlate.EVENT_OPTIONAL_ARGS[event_error]:
+    if event_error in correlate.CORRELATE_EVENTS and opt_arg == correlate.EVENT_OPTIONAL_ARGS[event_error]:
         handled = True
         thread = Thread(target=correlate.correlate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
         thread.daemon = True
