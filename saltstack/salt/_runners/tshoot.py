@@ -1,18 +1,6 @@
-from oats import oats
+from oats import oatsdbhelpers
 import oatssalthelpers
-from threading import Thread
 from multiprocessing.pool import ThreadPool
-
-
-# Constants
-MASTER = 'master'
-OSPF_NEIGHBOR_DOWN = 'napam/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/disabled*'
-INTERFACE_CHANGED_DOWN = 'napalm/syslog/*/INTERFACE_CHANGED/down/*'
-# TODO: add new events dinamically
-EVENT_TAGS = [
-    OSPF_NEIGHBOR_DOWN,
-    INTERFACE_CHANGED_DOWN
-]
 
 
 def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_case=None):
@@ -31,16 +19,15 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
     earlier (eg. in the client that processes the syslog messages).
     :return: error, tag, a comment, configuration changes, success (bool)
     '''
-    # TODO: add optional interface param
     conf = 'No changes'
     success = False
-    interface = oats.get_interface(error, yang_message)
+    interface = oatsdbhelpers.get_interface(error, yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
     if current_case is None:
-        current_case = oats.create_case(error, host, status='Case created in salt tshoot.ifdown.')
-    interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
+        current_case = oatsdbhelpers.create_case(error, host, status='Case created in salt tshoot.ifdown.')
+    interface_neighbor = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
 
-    neighbors = oats.get_neighbors(interface_neighbor, case=current_case)
+    neighbors = oatsdbhelpers.get_neighbors(interface_neighbor, case=current_case)
     device_up = oatssalthelpers.check_device_connectivity(neighbors, interface_neighbor, case=current_case)
 
     if device_up:
@@ -53,18 +40,18 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
             success = True
             comment += ('Config for Interface '
                        + interface + ' automatically changed from down to up')
-            # TODO: remove? only useful for debugging
+            # TODO: remove, only useful for debugging
             oatssalthelpers.post_slack(comment, case=current_case)
-            oats.close_case(current_case)
+            oatsdbhelpers.close_case(current_case)
         else:
-            oats.update_case(current_case, solution=error + 'could not get resolved. Technician needed.', status=oatssalthelpers.Status.ONHOLD.value)
+            oatsdbhelpers.update_case(current_case, solution=error + 'could not get resolved. Technician needed.', status=oatsdbhelpers.Status.ONHOLD.value)
             comment = ('Could not fix down status of ' + interface + ' on host'
                        + host + ' .')
             oatssalthelpers.post_slack(comment, case=current_case)
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
-        oats.update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=oatssalthelpers.Status.ONHOLD.value)
+        oatsdbhelpers.update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=oatsdbhelpers.Status.ONHOLD.value)
         comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor + ' is down.'
         oatssalthelpers.post_slack(comment, case=current_case)
         comment += ' Could not restore connectivity - Slack Message sent.'
@@ -91,30 +78,27 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     :param tag:
     :param process_number:
     :param current_case:
-    :return:
+    :return: error, tag, a comment, success (bool)
     '''
     pool = ThreadPool(processes=1)
-    conf = 'No changes'
-    success = False
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
     if current_case is None:
-        current_case = oats.create_case(error, host, status='Case created in salt tshoot.ospf_nbr_down.')
-    interface = oats.get_interface(error, yang_message)
-    interface_neighbor = oats.get_interface_neighbor(host, interface, case=current_case)
-    n_of_neighbors = len(oats.get_ospf_neighbors(interface_neighbor, case=current_case))
+        current_case = oatsdbhelpers.create_case(error, host, status='Case created in salt tshoot.ospf_nbr_down.')
+    interface = oatsdbhelpers.get_interface(error, yang_message)
+    interface_neighbor = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
+    n_of_neighbors = len(oatsdbhelpers.get_ospf_neighbors(interface_neighbor, case=current_case))
     oatssalthelpers.ospf_shutdown(interface_neighbor, process_number, case=current_case)
-    async_result = pool.apply_async(oatssalthelpers.wait_for_event, ('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbr_up/*',
+    async_result = pool.apply_async(oatssalthelpers.count_event, ('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbr_up/*',
                                                                      'OSPF_NEIGHBOR_UP', n_of_neighbors, 30, current_case))
     conf = oatssalthelpers.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
-    # TODO: check if ospf procces is running
     success = async_result.get()
     if success:
-        oats.update_case(current_case, 'Successfully restarted OSPF process on host {0}.'
-                                    .format(interface_neighbor), oats.Status.DONE.value)
+        oatsdbhelpers.update_case(current_case, 'Successfully restarted OSPF process on host {0}.'
+                                    .format(interface_neighbor), oatsdbhelpers.Status.DONE.value)
         comment += ' OSPF process restarted successfully.'
     else:
-        oats.update_case(current_case, 'Unable to restart OSPF process on host {0}'
-                                       '. Technician needed.'.format(interface_neighbor), oats.Status.ONHOLD.value)
+        oatsdbhelpers.update_case(current_case, 'Unable to restart OSPF process on host {0}'
+                                       '. Technician needed.'.format(interface_neighbor), oatsdbhelpers.Status.ONHOLD.value)
     oatssalthelpers.post_slack(comment, case=current_case)
 
     ret = {

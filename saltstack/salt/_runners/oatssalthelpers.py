@@ -9,10 +9,6 @@ import salt.utils.event
 
 
 # TODO: add behaviour for calling methods without current_case id
-# Constants
-MASTER = 'master'
-MASTER_IP ='10.20.1.10'
-
 
 def post_slack(message, case=None):
     '''
@@ -32,13 +28,12 @@ def post_slack(message, case=None):
 
 def ping(source, destination, case=None, check_connectivity=False):
     '''
-    Executes a ping from one host to another using the salt-api. If from_host equals 'master' it will
-    try to establish a connection from the master to a host to simulate a ping (needed because in current
-    lab environment pings don't behave as they would in a real environment).
+    Executes a ping from one host to another using the salt-api. If check_connectivity is set
+    to true it will use the mgmt vrf destination address.
     :param source: The ping source
     :param destination: The ping destination
     :param case: case-id for updating the current case
-    :return: The results of the ping. Will be empty if the ping wasn't successful.
+    :return: The results of the ping as a dict. Will be empty if the ping wasn't successful.
     '''
     if check_connectivity:
         vrf_dest = {'destination': get_vrf_ip(destination), 'vrf': 'mgmt'}
@@ -89,6 +84,15 @@ def if_shutdown(minion, interface, case=None):
 
 
 def ospf_shutdown(minion, process_number, case=None):
+    '''
+    Attempts to load the ospf shutdown config for the specified host and process (via napalm).
+    :param minion: The target host
+    :param process_number: The OSPF process number
+    :param case: case-id for updating the current case
+    :return: a dictionary containing the follow keys:
+                result (bool), comment (str, a message for the user), already_configured (bool)
+                loaded_config (str), diff (str)
+    '''
     template_name = 'shutdown_ospf'
     template_source = 'router ospf {0}\n  shutdown\nend'.format(process_number)
     config = {'template_name': template_name, 'template_source': template_source}
@@ -96,6 +100,15 @@ def ospf_shutdown(minion, process_number, case=None):
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 def ospf_noshutdown(minion, process_number, case=None):
+    '''
+        Attempts to load the ospf no shutdown config for the specified host and process (via napalm).
+        :param minion: The target host
+        :param process_number: The OSPF process number
+        :param case: case-id for updating the current case
+        :return: a dictionary containing the follow keys:
+                    result (bool), comment (str, a message for the user), already_configured (bool)
+                    loaded_config (str), diff (str)
+        '''
     template_name = 'shutdown_ospf'
     template_source = 'router ospf {0}\n  no shutdown\nend'.format(process_number)
     config = {'template_name': template_name, 'template_source': template_source}
@@ -111,7 +124,6 @@ def check_device_connectivity(neighbors, host, case=None):
     :param case: case-id for updating the current case
     :return: if the host is connected to one of his neighbors or the master (bool)
     '''
-    # TODO: uncomment for use in real env, in lab env routers are pingable even if the respective interfaces are down
     connected = False
     for neighbor in neighbors:
         connected = ping(neighbor, host, check_connectivity=True)
@@ -122,15 +134,35 @@ def check_device_connectivity(neighbors, host, case=None):
 
 
 def get_interface(error, yang_message):
+    '''
+    Returns the interface name that is part of a yang-message.
+    Probably needs to be implemented for every new yang-message
+    that is part of a workflow.
+    :param error:
+    :param yang_message:
+    :return: the interface name or an empty string
+    '''
     # method to get interface can be different for different errors
     if error == 'INTERFACE_DOWN':
         return yang_message['interfaces']['interface'].popitem()[0]
     if error == 'OSPF_NEIGHBOR_DOWN':
         interfaces = yang_message['network-instances']['network-instance']['global']['protocols']['protocol']['ospf']['ospfv2']['areas']['area']['area']
         return interfaces['interfaces']['interface'].popitem()[0]
+    return ''
 
 
-def wait_for_event(tag, error, amount, wait=10, case=None):
+def count_event(tag, error, amount, wait=10, case=None):
+    '''
+    Checks if a certain event occurs X amount of times in a
+    given timeframe. Should be used asynchronous, since
+    the method is blocking.
+    :param tag: The event to count
+    :param error: used for update_case
+    :param amount: the required amount of events
+    :param wait: the timeframe to wait for the events
+    :param case: case-id for updating the current case
+    :return: if the event occured atleast <amount> of times (bool)
+    '''
     opts = salt.config.client_config('/etc/salt/master')
 
     event = salt.utils.event.get_event(

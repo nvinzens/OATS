@@ -1,3 +1,5 @@
+# Interface GigabitEthernet2, changed state to administratively down
+
 messages:
   - error: INTERFACE_CHANGED
     tag: LINK-3-UPDOWN

@@ -1,4 +1,4 @@
-#Process1, Nbr 172.16.46.4 on GigabitEthernet2.45 from FULL to DOWN, Neighbor Down: Dead timer expired
+# Nbr 172.16.46.4 on GigabitEthernet2.45 from FULL to DOWN, Neighbor Down: Dead timer expired
 
 messages:
   - error: OSPF_NEIGHBOR_DOWN
