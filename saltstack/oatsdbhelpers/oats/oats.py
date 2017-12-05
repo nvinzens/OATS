@@ -196,7 +196,8 @@ def get_interface_neighbor(host, interface, case=None, test=False):
     for link in links:
         if link['interface'] == interface:
             if case:
-                update_case(case, 'Get interface neighbor of interface ' + interface + ' on host ' + host + '.')
+                update_case(case, 'Get interface neighbor of interface ' + interface + ' on host ' + host +
+                            '. Neighbor: ' + link['neighbor'])
             return link['neighbor']
 
 
