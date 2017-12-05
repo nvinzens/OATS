@@ -36,7 +36,7 @@ def ping(source, destination, case=None, check_connectivity=False):
         ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
         oatsdbhelpers.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
             bool(ping_result)))
-        return ping_result[source]['out']['success']['results']
+        return ping_result[source]
     else:
         ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
         oatsdbhelpers.update_case(case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
