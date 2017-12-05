@@ -55,7 +55,9 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
     lock.release()
     current_case = oatsdbhelpers.create_case(error, minion, solution='Case started in napalm-logs correlation client.',
                                     status='solution_deployed')
-    n_of_required_events = __get_n_of_required_events(error, minion, yang_message, current_case)
+    interface = oatsdbhelpers.get_interface(error, yang_message)
+    root_host = oatsdbhelpers.get_interface_neighbor(host, interface, case=case)
+    n_of_required_events = __get_n_of_required_events(error, root_host, yang_message, current_case)
     print ('{0} event detected: Waiting for {1} seconds to gather event data. Required amount of events: {2}'.
            format(error, MAX_AGE, n_of_required_events))
     time.sleep(MAX_AGE)
@@ -66,7 +68,7 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
     else:
         optional_arg = __get_optional_arg(error)
         __print_correlation_result(cache[error]['counter'], error, optional_arg)
-        salt_event.send_salt_event(yang_message, minion, origin_ip, tag, message_details,
+        salt_event.send_salt_event(yang_message, root_host, origin_ip, tag, message_details,
                                    error, optional_arg, case=current_case)
 
 
@@ -75,10 +77,8 @@ def __print_correlation_result(counter, error, optional_arg):
            '{2} event to salt master'.format(error, counter, optional_arg))
 
 
-def __get_n_of_required_events(error, minion, yang_message, case):
+def __get_n_of_required_events(error, host, yang_message, case):
     if error == OSPF_NEIGHBOR_DOWN:
-        interface = oatsdbhelpers.get_interface(error, yang_message)
-        root_host = oatsdbhelpers.get_interface_neighbor(minion, interface, case=case)
         return len(oatsdbhelpers.get_ospf_neighbors(root_host, case=case))
     return 0
 
