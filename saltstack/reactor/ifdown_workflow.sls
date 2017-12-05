@@ -7,5 +7,5 @@ ifdown_workflow:
     - yang_message: {{ event_data['yang_message'] }}
     - error: {{ event_data['error'] }}
     - tag: {{ event_data['tag'] }}
-    - current_case: {{ even_data['case'] }}
+    - current_case: {{ event_data['case'] }}
 
