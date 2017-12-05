@@ -130,7 +130,7 @@ def get_interface(error, yang_message):
         return interfaces['interfaces']['interface'].popitem()[0]
 
 
-def wait_for_event(tag, amount, wait=10, case=None):
+def wait_for_event(tag, error, amount, wait=10, case=None):
     opts = salt.config.client_config('/etc/salt/master')
 
     event = salt.utils.event.get_event(
@@ -140,10 +140,10 @@ def wait_for_event(tag, amount, wait=10, case=None):
         opts=opts)
     counter = 0
     timeout = time.time() + wait
-    oats.update_case(case, solution='Waiting for {0} {1} events'.format(amount, tag))
+    oats.update_case(case, solution='Waiting for {0} {1} events.'.format(amount, error))
     while time.time() < timeout:
         if event.get_event(wait=3, tag=tag):
             counter += 1
     success = counter >= amount
-    oats.update_case(case, solution='Result: {0} events. Wait success: {1}'.format(counter, success))
+    oats.update_case(case, solution='Result: {0} events. Wait success: {1}.'.format(counter, success))
     return success

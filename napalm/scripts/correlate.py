@@ -37,10 +37,11 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
         lock.release()
         return
     lock.release()
-    current_case = oats.create_case(error, minion, status='solution_deployed')
+    current_case = oats.create_case(error, minion, solution='Case started in napalm-logs correlation client.',
+                                    status='solution_deployed')
     n_of_required_events = __get_n_of_required_events(error, minion, yang_message, current_case)
-    print ('Waiting for {0} seconds to gather {1} event data. Required amount of events: {2}'.
-           format(MAX_AGE, error, n_of_required_events))
+    print ('{0} event detected: Waiting for {1} seconds to gather event data. Required amount of events: {2}'.
+           format(error, MAX_AGE, n_of_required_events))
     time.sleep(MAX_AGE)
     if cache[error]['counter'] == n_of_required_events:
         __print_correlation_result(cache[error]['counter'], error, optional_arg)
