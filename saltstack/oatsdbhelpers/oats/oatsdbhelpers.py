@@ -200,7 +200,7 @@ def get_solutions_as_string(case_id, test=False):
     solution = db_cases.find({'case_nr': case_id})
     solution_list = []
     for sol in solution:
-        for solprintin sol['Solution']:
+        for solprint in sol['Solution']:
             solution_list.append('\n')
             solution_list.append(solprint)
     solution_strings = ''.join(solution_list)
@@ -328,14 +328,14 @@ def show_open_cases_nr(test=False):
         techreq_cases_col = db_cases.find({'Status': 'technician_needed'})
         tech_cases_col = db_cases.find({'Status': 'technician_on_case'})
 
-        print('\nCases with Status new:'
+        print('\nCases with Status new:')
         for cas in new_case_col:
-            print('\n' + cas['case_nr'])
+            print ('\n' + cas['case_nr'])
         print('\nCases with Status solution_deployed:')
         for aucas in auto_cases_col:
             print('\n' + aucas['case_nr'])
         print('\nCases with Status technician_needed:')
-        for techcol in techreq_cases_col:)
+        for techcol in techreq_cases_col:
             print('\n' + techcol['case_nr'])
         print('\nCases with Status technician_on_case:')
         for techcol in tech_cases_col:
