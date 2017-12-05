@@ -1,4 +1,4 @@
-#Process1, Nbr 172.16.46.4 on GigabitEthernet2.45 from FULL to DOWN, Neighbor Down: Dead timer expired
+# Nbr 172.16.36.3 on GigabitEthernet2.35 from LOADING to FULL, Loading Done
 
 messages:
   - error: OSPF_NEIGHBOR_UP
@@ -6,7 +6,6 @@ messages:
     values:
       neighborIP: (\d+.\d+.\d+.\d+)
       interface: (\w+[\.\-\d\/\w+]+)
-      reasonMessage: ([\w ]+)
       initStatus: (\w+)
     line: 'Nbr {neighborIP} on {interface} from {initStatus} to FULL, Loading Done'
     model: openconfig-ospf
