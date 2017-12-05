@@ -32,7 +32,7 @@ def ping(source, destination, case=None, check_connectivity=False):
     :return: The results of the ping as a dict. Will be empty if the ping wasn't successful.
     '''
     if check_connectivity:
-        vrf_dest = {'destination': get_vrf_ip(destination), 'vrf': 'mgmt'}
+        vrf_dest = {'destination': oatsdbhelpers.get_vrf_ip(destination), 'vrf': 'mgmt'}
         ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
         oatsdbhelpers.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
             bool(ping_result)))
