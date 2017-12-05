@@ -93,5 +93,6 @@ def __get_optional_arg(error):
     :return: the optional argument (str) or an empty string
     '''
     if error == OSPF_NEIGHBOR_DOWN:
-        return 'interface_down'
+        # TODO: temporarily disabled
+        return 'interface_down/disabled'
     return ''
