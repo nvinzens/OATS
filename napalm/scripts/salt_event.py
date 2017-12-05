@@ -12,9 +12,9 @@ def send_salt_event(yang_message, minion, origin_ip, tag, message_details, error
         'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
             {'minion': minion,
             'origin_ip': origin_ip,
-            YANG_MESSAGE: yang_message,
+            'yang_message': yang_message,
             'tag': tag,
-             ERROR: error,
+             'error': error,
              'message_details': message_details,
              'case': case
              }
