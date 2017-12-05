@@ -24,7 +24,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
     interface = oatsdbhelpers.get_interface(error, yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
     if current_case is None:
-        current_case = oatsdbhelpers.create_case(error, host, status='Case created in salt tshoot.ifdown.')
+        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt tshoot.ifdown.')
     interface_neighbor = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
 
     neighbors = oatsdbhelpers.get_neighbors(interface_neighbor, case=current_case)
