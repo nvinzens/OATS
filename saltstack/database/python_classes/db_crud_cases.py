@@ -36,7 +36,7 @@ def main():
             elif selection == 'e':
                 sys.exit()
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
         except KeyboardInterrupt:
             sys.exit()
 
@@ -69,15 +69,15 @@ def insert():
                         'Sender_Device': device,
                         'Solution': [solution]
                     })
-                print ('\nInserted data successfully\n')
+                print('\nInserted data successfully\n')
                 break
             elif selection == 'n':
-                print ('\nInsertion Cancelled\n')
+                print('\nInsertion Cancelled\n')
                 break
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 def update():
     update_elements = []
@@ -110,12 +110,12 @@ def update():
         up_solution = raw_input('Enter Solution :')
 
         while 1:
-            print ('\nUpdate Case Nr: ' + up_case_id + ', as follows:')
+            print('\nUpdate Case Nr: ' + up_case_id + ', as follows:')
             for el, attr in izip(update_elements, case_attr):
                 if el:
-                    print (attr + ': '+ el)
+                    print(attr + ': '+ el)
             if up_solution:
-                print ('\nAdded Solution: ' + up_solution + '\n')
+                print('\nAdded Solution: ' + up_solution + '\n')
             selection = raw_input('Confirm [y] or [n]:')
 
             if selection == 'y':
@@ -143,37 +143,37 @@ def update():
                          }
                     }
                     )
-                print ('\nData updated successfully\n')
+                print('\nData updated successfully\n')
                 break
             elif selection == 'n':
-                print ('\nUpdate cancelled\n')
+                print('\nUpdate cancelled\n')
                 break
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 
 def read():
     try:
         caseCol = db.cases.find()
-        print ('\nAll data from Case Database\n')
+        print('\nAll data from Case Database\n')
         for cas in caseCol:
-            print ('\nCase Nr: ' + cas['case_nr'])
-            print ('Case Event: ' + cas['Event'])
-            print ('Case Description: ' + cas['Description'])
-            print ('Case Status: ' + cas['Status'])
-            print ('Case Created: ' + str(cas['created']))
-            print ('Case last updated: ' + str(cas['last_updated']))
-            print ('Case responsible Tech: ' + cas['technician'])
-            print ('Case Origin Device: ' + cas['Sender_Device'])
-            print ('Case applied Solutions:')
+            print('\nCase Nr: ' + cas['case_nr'])
+            print('Case Event: ' + cas['Event'])
+            print('Case Description: ' + cas['Description'])
+            print('Case Status: ' + cas['Status'])
+            print('Case Created: ' + str(cas['created']))
+            print('Case last updated: ' + str(cas['last_updated']))
+            print('Case responsible Tech: ' + cas['technician'])
+            print('Case Origin Device: ' + cas['Sender_Device'])
+            print('Case applied Solutions:')
             cassol = cas['Solution']
             for cs in cassol:
-                print (' - ' + cs)
+                print(' - ' + cs)
 
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 
 def delete():
@@ -184,15 +184,15 @@ def delete():
 
             if selection == 'y':
                 db.cases.delete_many({'case_nr': del_case})
-                print ('\nDeletion successful\n')
+                print('\nDeletion successful\n')
                 break
             elif selection == 'n':
-                print ('\nDeletion cancelled\n')
+                print('\nDeletion cancelled\n')
                 break
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 
 main()

@@ -27,10 +27,24 @@ def base_str():
     return string.letters+string.digits
 
 def key_gen():
+    '''
+        Generates a key from random letters and numbers.
+        :return: returns the generated key
+        '''
     keylist = [random.choice(base_str()) for i in range(KEY_LEN)]
     return ''.join(keylist)
 
 def create_case(error, host, solution=None, description=None, status=Status.NEW.value, test=False):
+    '''
+    Creates a new case in the database (via oats db).
+    :param error: The error message.
+    :param host: The host where the error occurred.
+    :param solution: The solution which was already applied, not required.
+    :param descrption: The of the problem and the case, not required.
+    :param status: The Status of the Case, default is 'new'.
+    :param test: Decides if the the function call is for testing.
+    :return: The Case ID of the new created case.
+    '''
     if test:
         db_cases = DB.test
     else:
@@ -58,14 +72,22 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
 
     try:
         db_cases.insert_one(new_case)
-        print '\nCase inserted successfully\n'
+        print('\nCase inserted successfully\n')
 
     except Exception, e:
-        print str(e)
+        print(str(e))
 
     return case_id
 
 def update_case(case_id, solution, status=None, test=False):
+    '''
+    Updates a case in the database (via oats db).
+    :param case_id: The id of the case to update.
+    :param solution: The solution which was applied.
+    :param status: The Status of the Case, nor required.
+    :param test: Decides if the the function call is for testing.
+    :return: The Case ID of the updated case.
+    '''
     if test:
         db_cases = DB.test
     else:
@@ -98,6 +120,12 @@ def update_case(case_id, solution, status=None, test=False):
     return case_id
 
 def close_case(case_id, test=False):
+    '''
+    Puts the status of a case to 'resolved and closes it in the database (via oats db).
+    :param case_id: The id of the case to close.
+    :param test: Decides if the the function call is for testing.
+    :return: The Case ID of the closed case.
+    '''
     if test:
         db_cases = DB.test
     else:
@@ -114,6 +142,13 @@ def close_case(case_id, test=False):
     return case_id
 
 def take_case(case_id, technician, test=False):
+    '''
+    Puts the Status of the case to "Technician on case" in the database (via oats db).
+    :param case_id: The id of the case to update.
+    :param technician: The technician who is working on the case.
+    :param test: Decides if the the function call is for testing.
+    :return: The Case ID of the updated case.
+    '''
     if test:
         db_cases = DB.test
     else:
@@ -133,8 +168,9 @@ def take_case(case_id, technician, test=False):
 def get_ospf_neighbors(host, case=None, test=False):
     '''
     Get all the OSPF neighbors of the host (via oats db).
-    :param host: The host
+    :param host: The host whose neighbors we want.
     :param case: case-id for updating the current case
+    :param test: Decides if the the function call is for testing.
     :return: All the hosts OSPF neighbors (as list)
     '''
     ospf_neighbors = []
@@ -153,7 +189,8 @@ def get_ospf_neighbors(host, case=None, test=False):
 def get_solutions_as_string(case_id, test=False):
     '''
     Get the applied solutions of a Case as string (via oats db).
-    :param case_id: The case
+    :param case_id: The id of the case.
+    :param test: Decides if the the function call is for testing.
     :return: List of applied solutions as string with \n inbetween.
     '''
     if test:
@@ -163,7 +200,7 @@ def get_solutions_as_string(case_id, test=False):
     solution = db_cases.find({'case_nr': case_id})
     solution_list = []
     for sol in solution:
-        for solprint in sol['Solution']:
+        for solprintin sol['Solution']:
             solution_list.append('\n')
             solution_list.append(solprint)
     solution_strings = ''.join(solution_list)
@@ -171,6 +208,12 @@ def get_solutions_as_string(case_id, test=False):
     return solution_strings
 
 def get_vrf_ip(host, test=False):
+    '''
+    Get the VRF IP of the defined host (via oats db).
+    :param host: The hostname of the device.
+    :param test: Decides if the the function call is for testing.
+    :return: The interface neighbor.
+    '''
     if test:
         db_network = DB.test
     else:
@@ -183,9 +226,10 @@ def get_vrf_ip(host, test=False):
 def get_interface_neighbor(host, interface, case=None, test=False):
     '''
     Get the neighbor of the specified host that is connected to it via the specified interface (via oats db).
-    :param host: The host
+    :param host: The host of the device.
     :param interface: The interface
     :param case: case-id for updating the current case
+    :param test: Decides if the the function call is for testing.
     :return: The interface neighbor.
     '''
     if test:
@@ -205,6 +249,7 @@ def get_neighbors(host, case=None, test=False):
     Get all the neighbors of the host (via oats db).
     :param host: The host
     :param case: case-id for updating the current case
+    :param test: Decides if the the function call is for testing.
     :return: All the hosts neighbors (as list)
     '''
     if test:
@@ -221,20 +266,30 @@ def get_neighbors(host, case=None, test=False):
     return neighbors
 
 def show_cases_of_last_day(test=False):
+    '''
+    Prints out a list of all the cases which were last updated in the last 24 hours.
+    :param test: Decides if the the function call is for testing.
+    '''
     if test:
         db_cases = DB.test
     else:
         db_cases = DB.network
     last_day = datetime.now() - timedelta(hours=24)
     cases = db_cases.find({'last_updated':{'$gt':last_day}})
-    print '\nList of cases updated in the last 24 hours:\n'
+    print('\nList of cases updated in the last 24 hours:\n')
     for cas in cases:
-        print 'Case Nr: ' + cas['case_nr']
-        print 'Case Event: ' + cas['Event']
-        print 'Case Description: ' + cas['Description']
-        print 'Case Status: ' + cas['Status']
+        print('Case Nr: ' + cas['case_nr'])
+        print('Case Event: ' + cas['Event'])
+        print('Case Description: ' + cas['Description'])
+        print('Case Status: ' + cas['Status'])
 
 def numb_open_cases(status=None, test=False):
+    '''
+    Prints out the Cases currently in a certain status.
+    :param status: Decides which cases are printed out.
+    :param test: Decides if the the function call is for testing.
+    :return: Returns the number of all unresolved cases.
+    '''
     if test:
         db_cases = DB.test
     else:
@@ -247,18 +302,21 @@ def numb_open_cases(status=None, test=False):
     open_cases = new_cases + auto_cases + techreq_cases + tech_cases
 
     if status == Status.NEW.value:
-        print '\nNumber of Cases with Status new: ' + str(new_cases)
+        print('\nNumber of Cases with Status new: ' + str(new_cases))
     elif status == Status.WORKING.value:
-        print '\nNumber of Cases with Status "solution_deployed": ' + str(auto_cases)
-
+        print('\nNumber of Cases with Status "solution_deployed": ' + str(auto_cases))
     elif status == Status.ONHOLD.value:
-        print '\nNumber of Cases with Status "technician_needed": ' + str(techreq_cases)
+        print('\nNumber of Cases with Status "technician_needed": ' + str(techreq_cases))
     elif status == Status.TECH.value:
-        print '\nNumber of Cases with Status "technician_on_case": ' + str(tech_cases)
+        print('\nNumber of Cases with Status "technician_on_case": ' + str(tech_cases))
 
     return open_cases
 
 def show_open_cases_nr(test=False):
+    '''
+    Prints out a list of all currently open Cases.
+    :param test: Decides if the the function call is for testing.
+    '''
     try:
         if test:
             db_cases = DB.test
@@ -269,24 +327,29 @@ def show_open_cases_nr(test=False):
         techreq_cases_col = db_cases.find({'Status': 'technician_needed'})
         tech_cases_col = db_cases.find({'Status': 'technician_on_case'})
 
-        print '\nCases with Status new:'
+        print('\nCases with Status new:'
         for cas in new_case_col:
-            print '\n' + cas['case_nr']
-        print '\nCases with Status solution_deployed:'
+            print('\n' + cas['case_nr'])
+        print('\nCases with Status solution_deployed:')
         for aucas in auto_cases_col:
-            print '\n' + aucas['case_nr']
-        print '\nCases with Status technician_needed:'
-        for techcol in techreq_cases_col:
-            print '\n' + techcol['case_nr']
-        print '\nCases with Status technician_on_case:'
+            print('\n' + aucas['case_nr'])
+        print('\nCases with Status technician_needed:')
+        for techcol in techreq_cases_col:)
+            print('\n' + techcol['case_nr'])
+        print('\nCases with Status technician_on_case:')
         for techcol in tech_cases_col:
-            print '\n' + techcol['case_nr']
+            print('\n' + techcol['case_nr'])
 
     except Exception, e:
-        print str(e)
-
+        print(str(e))
 
 def get_interface(error, yang_message):
+    '''
+    Gets the relevant Interface from a yang message.
+    :param error:
+    :param yang_message:
+    :return:
+    '''
     # method to get interface can be different for different errors
     temp = copy.deepcopy(yang_message)
     if error == 'INTERFACE_DOWN':

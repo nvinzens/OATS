@@ -28,7 +28,7 @@ def main():
             elif selection == 'e':
                 sys.exit()
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
         except KeyboardInterrupt:
             sys.exit()
 
@@ -67,10 +67,10 @@ def insert():
                 ospf_area.append(None)
 
         while 1:
-            print ('\nUpdate Device : ' + host_name + ', as follows:')
-            print ('\nIP Adresse: ' + ip_address + '\nMAC Address: ' + mac_address + '\nClass: ' + dev_class + '\nRole: ' + role)
+            print('\nUpdate Device : ' + host_name + ', as follows:')
+            print('\nIP Adresse: ' + ip_address + '\nMAC Address: ' + mac_address + '\nClass: ' + dev_class + '\nRole: ' + role)
             for ifn, ipp, nn, oa in izip(interface_names, port_ips, neighbor_neighbors, ospf_area):
-                print ('Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn + ' OSPF Area: ' + str(oa))
+                print('Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn + ' OSPF Area: ' + str(oa))
             selection = raw_input('Confirm [y] or [n]')
             if selection == 'y':
                 db.network.insert_one(
@@ -91,16 +91,16 @@ def insert():
                                 ]}
                         }
                     )
-                print ('\nInserted data successfully\n')
+                print('\nInserted data successfully\n')
                 break
             elif selection == 'n':
-                print ('\nInsertion Cancelled\n')
+                print('\nInsertion Cancelled\n')
                 break
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
 
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 def update():
     host_name = ''
@@ -150,12 +150,12 @@ def update():
                 ospf_area.append(None)
 
         while 1:
-            print ('\nUpdate Device : ' + host_name + ', as follows:\n')
+            print('\nUpdate Device : ' + host_name + ', as follows:\n')
             for prop, attr in izip(update_dev_props, dev_attr):
                 if prop:
-                    print ('\n' + attr + ": "+ prop)
+                    print('\n' + attr + ": "+ prop)
             for ifn, ipp, nn, oa in izip(interface_names, port_ips, neighbor_neighbors, ospf_area):
-                print ('Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn + ' OSPF Area: ' + str(oa))
+                print('Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn + ' OSPF Area: ' + str(oa))
             selection = raw_input('Confirm [y] or [n]')
 
             if selection == 'y':
@@ -180,13 +180,13 @@ def update():
                         }
                     )
 
-                print ('\nData updated successfully\n')
+                print('\nData updated successfully\n')
                 break
             elif selection == 'n':
-                print ('\nUpdate cancelled\n')
+                print('\nUpdate cancelled\n')
                 break
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
         db.network.update_one(
             {'host_name': up_host_name,},
             {
@@ -198,25 +198,25 @@ def update():
         )
 
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 def read():
     try:
         netcol = db.network.find()
-        print ('\n All data from Network Database \n')
+        print('\n All data from Network Database \n')
         for net in netcol:
-            print ('\nHost Name: ' + net['host_name'])
-            print ('IP Addresse: '+ net['ip_address'])
-            print ('MAC Addresse: ' + net['MAC_address'])
-            print ('Class: ' + net['Class'])
-            print ('Role: ' + net['Role'])
-            print ('Connections:')
+            print('\nHost Name: ' + net['host_name'])
+            print('IP Addresse: '+ net['ip_address'])
+            print('MAC Addresse: ' + net['MAC_address'])
+            print('Class: ' + net['Class'])
+            print('Role: ' + net['Role'])
+            print('Connections:')
             netcon = net['connections']
             for nc in netcon:
-                print (' - ' + str(nc['interface']) + ' ' + str(nc['ip']) + ' Neighbor: '+ str(nc['neighbor'])+ ' OSPF Area: ' + str(nc['ospf_area']))
+                print(' - ' + str(nc['interface']) + ' ' + str(nc['ip']) + ' Neighbor: '+ str(nc['neighbor'])+ ' OSPF Area: ' + str(nc['ospf_area']))
 
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 def delete():
     try:
@@ -226,14 +226,14 @@ def delete():
 
             if selection == 'y':
                 db.network.delete_many({'host_name': del_dev})
-                print ('\nDeletion successful\n')
+                print('\nDeletion successful\n')
                 break
             elif selection == 'n':
-                print ('\nDeletion cancelled\n')
+                print('\nDeletion cancelled\n')
                 break
             else:
-                print ('\nINVALID SELECTION\n')
+                print('\nINVALID SELECTION\n')
     except Exception, e:
-        print (str(e))
+        print(str(e))
 
 main()

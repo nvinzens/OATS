@@ -24,10 +24,10 @@ def case_setup():
     }
     try:
         DB.test.insert_one(new_case)
-        print '\nTest Setup successful\n'
+        print('\nTest Setup successful\n')
 
     except Exception, e:
-        print str(e)
+        print(str(e))
 
 def net_setup():
     new_device = {
@@ -43,18 +43,18 @@ def net_setup():
     }
     try:
         DB.test.insert_one(new_device)
-        print '\nTest Setup successful\n'
+        print('\nTest Setup successful\n')
 
     except Exception, e:
-        print str(e)
+        print(str(e))
 
 def teardown():
     try:
         DB.test.delete_many({})
-        print '\nTest Teardown successful\n'
+        print('\nTest Teardown successful\n')
 
     except Exception, e:
-        print str(e)
+        print(str(e))
 
 #Test for KeyID generator
 def test_key_gen():
