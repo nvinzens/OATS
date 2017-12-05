@@ -34,6 +34,7 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
     else:
         # later threads increment counter
         cache[error]['counter'] += 1
+        lock.release()
         return
     lock.release()
     current_case = oats.create_case(error, minion, status='solution_deployed')

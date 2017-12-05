@@ -118,7 +118,7 @@ while True:
         thread = Thread(target=correlate.correlate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
         thread.daemon = True
         thread.start()
-        opt_arg = '' # marks the event as processed
+        opt_arg = ''  # marks the event as processed
         # if not event_error in cache:
         #     cache[event_error] = {}
         #     print 'First dead_timer_expired Event detected: Start collecting Event.'
