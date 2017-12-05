@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import pymongo
 from pymongo import MongoClient
@@ -27,7 +28,7 @@ def main():
             elif selection == 'e':
                 sys.exit()
             else:
-                print '\nINVALID SELECTION\n'
+                print ('\nINVALID SELECTION\n')
 
         except KeyboardInterrupt:
             sys.exit()
@@ -52,16 +53,16 @@ def insert():
                         "last_name": lname,
                         "slack_channel": schannel
                     })
-                print '\nInserted data successfully\n'
+                print ('\nInserted data successfully\n')
                 break
             elif selection == 'n':
-                print '\nInsertion Cancelled\n'
+                print ('\nInsertion Cancelled\n')
                 break
             else:
-                print '\nINVALID SELECTION\n'
+                print ('\nINVALID SELECTION\n')
 
     except Exception, e:
-        print str(e)
+        print (str(e))
 
 def update():
     update_elements = []
@@ -84,10 +85,10 @@ def update():
             tech_attr.append("slack_channel")
 
         while 1:
-            print '\nUpdate Technician: ' + up_tech_id + ', as follows:'
+            print ('\nUpdate Technician: ' + up_tech_id + ', as follows:')
             for el, attr in izip(update_elements, tech_attr):
                 if el:
-                    print attr + ": "+ el
+                    print (attr + ": "+ el)
             selection = raw_input('Confirm [y] or [n]')
 
             if selection == 'y':
@@ -101,30 +102,30 @@ def update():
                                 }
                             }
                         )
-                print "\nData updated successfully\n"
+                print ("\nData updated successfully\n")
                 break
             elif selection == 'n':
-                print "\nUpdate cancelled\n"
+                print ("\nUpdate cancelled\n")
                 break
             else:
-                print '\nINVALID SELECTION\n'
+                print ('\nINVALID SELECTION\n')
 
     except Exception, e:
-        print str(e)
+        print (str(e))
 
 
 def read():
     try:
         techCol = db.technician.find()
-        print '\n All data from Technician Database \n'
+        print ('\n All data from Technician Database \n')
         for tec in techCol:
-            print '\nTech ID: ' + tec['tech_id']
-            print 'First name: ' + tec['first_name']
-            print 'Last name: ' + tec['last_name']
-            print 'Slack Channel: ' + tec['slack_channel']
+            print ('\nTech ID: ' + tec['tech_id'])
+            print ('First name: ' + tec['first_name'])
+            print ('Last name: ' + tec['last_name'])
+            print ('Slack Channel: ' + tec['slack_channel'])
 
     except Exception, e:
-        print str(e)
+        print (str(e))
 
 
 def delete():
@@ -135,15 +136,15 @@ def delete():
 
             if selection == 'y':
                 db.technician.delete_many({"tech_id": del_tech})
-                print '\nDeletion successful\n'
+                print ('\nDeletion successful\n')
                 break
             elif selection == 'n':
-                print '\nDeletion cancelled\n'
+                print ('\nDeletion cancelled\n')
                 break
             else:
-                print '\nINVALID SELECTION\n'
+                print ('\nINVALID SELECTION\n')
     except Exception, e:
-        print str(e)
+        print (str(e))
 
 
 main()
