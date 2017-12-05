@@ -32,7 +32,7 @@ def __get_optional_arg(msg, error):
     yang_message = msg['yang_message']
     if error == correlate.INTERFACE_CHANGED:
         return __get_interface_status(yang_message)
-    if error == correlate.OSPF_NEIGHBOR_DOWN:
+    if error == correlate.OSPF_NEIGHBOR_DOWN and correlate.EVENT_OPTIONAL_ARGS[event_error]:
         return __get_ospf_change_reason(yang_message)
     if error == correlate.OSPF_NEIGHBOR_UP:
         return 'ospf_nbr_up'
