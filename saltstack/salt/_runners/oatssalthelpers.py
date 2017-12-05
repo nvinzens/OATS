@@ -57,11 +57,11 @@ def if_noshutdown(host, interface, case=None):
     template_name = 'noshutdown_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name, 'template_source': template_source}
-    oatsdbhelpers.update_case(case, solution ='Trying to  apply no shutdown to interface ' + interface + '.')
+    oatsdbhelpers.update_case(case, solution='Trying to apply no shutdown to interface {0} on host {1}.'.format(interface, host))
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
-def if_shutdown(minion, interface, case=None):
+def if_shutdown(host, interface, case=None):
     '''
     Attempts to load the no shutdown config for the specified interface on the specified host (via napalm).
     Can only be used on ios devices in current state.
@@ -75,8 +75,8 @@ def if_shutdown(minion, interface, case=None):
     template_name = 'shutdown_interface'
     template_source = 'interface {0}\n  shutdown\nend'.format(interface)
     config = {'template_name': template_name,'template_source': template_source}
-    oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to interface {0}.'.format(interface))
-    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+    oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to interface {0} on host {1}.'.format(interface, host))
+    return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
 def ospf_shutdown(minion, process_number, case=None):
