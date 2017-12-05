@@ -116,6 +116,7 @@ while True:
     if event_error in correlate.CORRELATE_EVENTS and correlate.EVENT_OPTIONAL_ARGS[event_error]:
         handled = True
         thread = Thread(target=correlate.correlate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
+        thread.daemon = True
         thread.start()
         opt_arg = '' # marks the event as processed
         # if not event_error in cache:

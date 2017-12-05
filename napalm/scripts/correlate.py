@@ -27,7 +27,7 @@ lock = threading.Lock()
 def correlate(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     global cache
     lock.acquire()
-    if not cache[error]:
+    if error not in cache:
         # first thread populates dict
         cache[error] = {}
         cache[error]['counter'] = 1
