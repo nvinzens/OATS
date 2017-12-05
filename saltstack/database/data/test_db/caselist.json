@@ -7,5 +7,5 @@
   "last_updated": "datetime.datetime.utcnow()",
   "technician":"1",
   "Sender_Device": "device",
-  "Solution": "solution"
+  "Solution": ["solution"]
 }

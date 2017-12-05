@@ -20,7 +20,7 @@ In this tutorial whenever you see `cases/network/technician` means that you have
 
 ## CREATE
 
-Go to /srv/database/templates choose one of the templates and save a copy of them to your directory.
+Go to /srv/database/data/templates choose one of the templates and save a copy of them to your directory.
 ```
 $ cd /srv/database/templates
 $ cp template_file.json name_of_your_created_doc.json
@@ -42,7 +42,7 @@ to
 After you saved the file import it into the desired collection.
 
 ```
-$ mongoimport --db test --collection cases/network/technician --file /srv/Database/your_file_name.json
+$ mongoimport --db test --collection cases/network/technician --file /srv/database/data/your_file_name.json
 ```
 
 `--db test` specifies your database.
