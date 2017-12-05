@@ -79,7 +79,7 @@ def __print_correlation_result(counter, error, optional_arg):
 
 def __get_n_of_required_events(error, host, yang_message, case):
     if error == OSPF_NEIGHBOR_DOWN:
-        return len(oatsdbhelpers.get_ospf_neighbors(root_host, case=case))
+        return len(oatsdbhelpers.get_ospf_neighbors(host, case=case))
     return 0
 
 
