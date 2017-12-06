@@ -16,7 +16,7 @@ def post_slack(message, case=None):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status='technician_called')
+    oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status=oatsdbhelpers.Status.ONHOLD.value)
     solutions = oatsdbhelpers.get_solutions_as_string(case)
     message += "\nExecuted workflow:\n" + solutions
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)

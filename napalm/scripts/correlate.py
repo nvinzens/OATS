@@ -54,7 +54,7 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
         return
     lock.release()
     current_case = oatsdbhelpers.create_case(error, minion, solution='Case started in napalm-logs correlation client.',
-                                    status='solution_deployed')
+                                    status=oatsdbhelpers.Status.WORKING.value)
     interface = oatsdbhelpers.get_interface(error, yang_message)
     root_host = oatsdbhelpers.get_interface_neighbor(minion, interface, case=current_case)
     n_of_required_events = __get_n_of_required_events(error, root_host, yang_message, current_case)
