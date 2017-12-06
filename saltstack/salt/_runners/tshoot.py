@@ -24,8 +24,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
     interface = oatsdbhelpers.get_interface(error, yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
     if current_case is None:
-        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt tshoot.ifdown.',
-                                                 status=oatsdbhelpers.Status.WORKING.value)
+        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt tshoot.ifdown.')
     interface_neighbor = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
 
     neighbors = oatsdbhelpers.get_neighbors(interface_neighbor, case=current_case)
@@ -83,9 +82,8 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     '''
     pool = ThreadPool(processes=1)
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
-    if current_case is None:
-        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt tshoot.ospf_nbr_down.',
-                                                 status=oatsdbhelpers.Status.ONHOLD.value)
+    if current_case is None or current_case == 'None':
+        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt tshoot.ospf_nbr_down.')
     interface = oatsdbhelpers.get_interface(error, yang_message)
     interface_neighbor = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
     n_of_neighbors = len(oatsdbhelpers.get_ospf_neighbors(interface_neighbor, case=current_case))
