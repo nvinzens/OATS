@@ -9,7 +9,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_ca
     Is triggered by the salt system once an INTERFACE_DOWN event arrives in the salt
     event bus. Will try to fix the error or send a notification if it is unable to
     do so.
-    :param host: The host from which the event is originated
+    :param host: The host from which the event originated
     :param origin_ip: The hosts IP address
     :param yang_message: Contains event specific data, eg. the affected Interface
     :param error: The error, in this case INTERFACE_DOWN, INTERFACHE_CHANGED/down
@@ -71,14 +71,15 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     process needs to be restarted. Most of the data gathering happened in the napalm-logs
     client. Will attempt to restart the ospf process on the affected device. Last step
     is a check to see if all the neighbors triggered OSPF_NEIGHBOR_UP events.
-    :param host:
-    :param origin_ip:
-    :param yang_message:
-    :param error:
-    :param tag:
-    :param process_number:
-    :param current_case:
-    :return: error, tag, a comment, success (bool)
+    :param host: The host from which the event originated
+    :param origin_ip: The hosts IP address
+    :param yang_message: Contains event specific data, eg. the affected Interface
+    :param error: The error: in this case OSPF_NEIGHBOR_DOWN
+    :param tag: The tag used in the syslog message that triggered the event
+    :param process_number: The OSPF process number
+    :param current_case: Optional: the current case. Can be passed if the workflow has started
+    earlier (eg. in the client that processes the syslog messages)
+    :return: error, tag, a comment, the changes to the config, success (bool)
     '''
     pool = ThreadPool(processes=1)
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
@@ -97,7 +98,7 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
                                     .format(interface_neighbor), oatsdbhelpers.Status.DONE.value)
         comment += ' OSPF process restarted successfully.'
     else:
-        oatsdbhelpers.update_case(current_case, 'Unable to restart OSPF process on host {0}'
+        oatsdbhelpers.update_case(current_case, 'Unable to restart OSPF process on host {0}. Host might be offline.'
                                        '. Technician needed.'.format(interface_neighbor), oatsdbhelpers.Status.ONHOLD.value)
     oatssalthelpers.post_slack(comment, case=current_case)
 
