@@ -36,7 +36,7 @@ def ping(source, destination, case=None, check_connectivity=False):
         ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
         oatsdbhelpers.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
             bool(ping_result)))
-        return ping_result[source]
+        return ping_result[source]['out']['success']['results']
     else:
         ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
         oatsdbhelpers.update_case(case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
@@ -123,8 +123,10 @@ def check_device_connectivity(neighbors, host, case=None):
     connected = False
     for neighbor in neighbors:
         connected = ping(neighbor, host, check_connectivity=True)
+        oatsdbhelpers.update_case(case,
+                                  solution='Checking connectivity from {0} to {1}. Result: {2}'
+                                  .format(neighbor, host,str(bool(connected))))
         if connected:
-            oatsdbhelpers.update_case(case, solution='Checking connectivity from {0} to {1}. Result: {2}'.format(neighbor, host, str(bool(connected))))
             return connected
     return connected
 
