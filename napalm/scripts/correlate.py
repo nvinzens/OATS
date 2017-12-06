@@ -72,7 +72,7 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
 
 
 def __print_correlation_result(counter, error, optional_arg):
-    print ('Time passed. {0} event counter is {1}. Sending {0}: '
+    print ('Time passed. {0} event counter is {1}. Sending {0}:'
            '{2} event to salt master'.format(error, counter, optional_arg))
 
 
@@ -93,5 +93,5 @@ def __get_optional_arg(error):
     '''
     if error == OSPF_NEIGHBOR_DOWN:
         # TODO: temporarily disabled
-        return 'interface_down/disabled'
+        return 'interface_down'
     return ''
