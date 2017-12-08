@@ -16,7 +16,7 @@ def post_slack(message, case=None):
     channel = '#testing'
     user = 'OATS'
     api_key = 'xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317'
-    oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status='technician_called')
+    oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status=oatsdbhelpers.Status.ONHOLD.value)
     solutions = oatsdbhelpers.get_solutions_as_string(case)
     message += "\nExecuted workflow:\n" + solutions
     __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
@@ -57,11 +57,11 @@ def if_noshutdown(host, interface, case=None):
     template_name = 'noshutdown_interface'
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name, 'template_source': template_source}
-    oatsdbhelpers.update_case(case, solution ='Trying to  apply no shutdown to interface ' + interface + '.')
+    oatsdbhelpers.update_case(case, solution='Trying to apply no shutdown to interface {0} on host {1}.'.format(interface, host))
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
-def if_shutdown(minion, interface, case=None):
+def if_shutdown(host, interface, case=None):
     '''
     Attempts to load the no shutdown config for the specified interface on the specified host (via napalm).
     Can only be used on ios devices in current state.
@@ -75,8 +75,8 @@ def if_shutdown(minion, interface, case=None):
     template_name = 'shutdown_interface'
     template_source = 'interface {0}\n  shutdown\nend'.format(interface)
     config = {'template_name': template_name,'template_source': template_source}
-    oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to interface {0}.'.format(interface))
-    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+    oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to interface {0} on host {1}.'.format(interface, host))
+    return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
 def ospf_shutdown(minion, process_number, case=None):
@@ -123,8 +123,10 @@ def check_device_connectivity(neighbors, host, case=None):
     connected = False
     for neighbor in neighbors:
         connected = ping(neighbor, host, check_connectivity=True)
+        oatsdbhelpers.update_case(case,
+                                  solution='Checking connectivity from {0} to {1}. Result: {2}'
+                                  .format(neighbor, host,str(bool(connected))))
         if connected:
-            oatsdbhelpers.update_case(case, solution='Checking connectivity from {0} to {1}. Result: {2}'.format(neighbor, host, str(bool(connected))))
             return connected
     return connected
 

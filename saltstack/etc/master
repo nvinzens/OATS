@@ -14,7 +14,7 @@ reactor:
     - /srv/saltstack/reactor/ifdown_workflow.sls
   - 'napalm/syslog/*/OSPF_NEIGHBOR_DOWN/dead_timer_expired/*':
     - /srv/saltstack/reactor/ospf_neighbor_down_workflow.sls
-  - 'napalm/syslog/*/OSPF_NEIGHBOR_DOWN/interface_down/*':
+  - 'napalm/syslog/*/OSPF_NEIGHBOR_DOWN/interface_down/disabled':
     - /srv/saltstack/reactor/ifdown_workflow.sls
 
 slack:

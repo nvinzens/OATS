@@ -354,8 +354,8 @@ def get_interface(error, yang_message):
     '''
     # method to get interface can be different for different errors
     temp = copy.deepcopy(yang_message)
-    if error == 'INTERFACE_DOWN':
-        return temp['interfaces']['interface'].popitem()[0]
+    if error == 'INTERFACE_CHANGED' or error == 'INTERFACE_DOWN':
+        return yang_message['interfaces']['interface'].popitem()[0]
     if error == 'OSPF_NEIGHBOR_DOWN':
         interfaces = temp['network-instances']['network-instance']['global']['protocols']['protocol']['ospf']['ospfv2']['areas']['area']['area']
         return interfaces['interfaces']['interface'].popitem()[0]

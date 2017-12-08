@@ -53,8 +53,7 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
         lock.release()
         return
     lock.release()
-    current_case = oatsdbhelpers.create_case(error, minion, solution='Case started in napalm-logs correlation client.',
-                                    status='solution_deployed')
+    current_case = oatsdbhelpers.create_case(error, minion, solution='Case started in napalm-logs correlation client.')
     interface = oatsdbhelpers.get_interface(error, yang_message)
     root_host = oatsdbhelpers.get_interface_neighbor(minion, interface, case=current_case)
     n_of_required_events = __get_n_of_required_events(error, root_host, yang_message, current_case)
@@ -73,7 +72,7 @@ def correlate(yang_message, minion, origin_ip, tag, message_details, error, opti
 
 
 def __print_correlation_result(counter, error, optional_arg):
-    print ('Time passed. {0} event counter is {1}. Sending {0}: '
+    print ('Time passed. {0} event counter is {1}. Sending {0}:'
            '{2} event to salt master'.format(error, counter, optional_arg))
 
 
@@ -93,5 +92,6 @@ def __get_optional_arg(error):
     :return: the optional argument (str) or an empty string
     '''
     if error == OSPF_NEIGHBOR_DOWN:
+        # TODO: temporarily disabled
         return 'interface_down'
     return ''
