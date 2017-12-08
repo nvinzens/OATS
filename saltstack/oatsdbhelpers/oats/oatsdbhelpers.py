@@ -9,9 +9,10 @@ import random
 from enum import Enum
 import copy
 
-# TODO: add behaviour for calling methods without current_case id
 # Constants
 MASTER = 'master'
+# MongoClient(host='localhost', port=27017, document_class=dict, tz_aware=False, connect=True, **kwargs)
+# To connect to a remote MongoDB this has to be edited
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 KEY_LEN = 12
@@ -28,9 +29,9 @@ def base_str():
 
 def key_gen():
     '''
-        Generates a key from random letters and numbers.
-        :return: returns the generated key
-        '''
+    Generates a key from random letters and numbers.
+    :return: returns the generated key
+    '''
     keylist = [random.choice(base_str()) for i in range(KEY_LEN)]
     return ''.join(keylist)
 
