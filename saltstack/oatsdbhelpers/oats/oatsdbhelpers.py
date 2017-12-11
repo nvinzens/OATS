@@ -346,10 +346,12 @@ def show_open_cases_nr(test=False):
 
 def get_interface(error, yang_message):
     '''
-    Gets the relevant Interface from a yang message.
-    :param error:
-    :param yang_message:
-    :return:
+    Returns the interface name that is part of a yang-message.
+    Probably needs to be implemented for every new yang-message
+    that is part of a workflow.
+    :param error: The error to know where to look for the interface
+    :param yang_message: The message that contains the interface
+    :return: the interface name or an empty string
     '''
     # method to get interface can be different for different errors
     temp = copy.deepcopy(yang_message)
@@ -358,3 +360,4 @@ def get_interface(error, yang_message):
     if error == 'OSPF_NEIGHBOR_DOWN':
         interfaces = temp['network-instances']['network-instance']['global']['protocols']['protocol']['ospf']['ospfv2']['areas']['area']['area']
         return interfaces['interfaces']['interface'].popitem()[0]
+    return ''

@@ -131,24 +131,6 @@ def check_device_connectivity(neighbors, host, case=None):
     return connected
 
 
-def get_interface(error, yang_message):
-    '''
-    Returns the interface name that is part of a yang-message.
-    Probably needs to be implemented for every new yang-message
-    that is part of a workflow.
-    :param error:
-    :param yang_message:
-    :return: the interface name or an empty string
-    '''
-    # method to get interface can be different for different errors
-    if error == 'INTERFACE_DOWN':
-        return yang_message['interfaces']['interface'].popitem()[0]
-    if error == 'OSPF_NEIGHBOR_DOWN':
-        interfaces = yang_message['network-instances']['network-instance']['global']['protocols']['protocol']['ospf']['ospfv2']['areas']['area']['area']
-        return interfaces['interfaces']['interface'].popitem()[0]
-    return ''
-
-
 def count_event(tag, error, amount, wait=10, case=None):
     '''
     Checks if a certain event occurs X amount of times in a

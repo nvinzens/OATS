@@ -3,7 +3,7 @@ import oatssalthelpers
 from multiprocessing.pool import ThreadPool
 
 
-def ifdown(host, origin_ip, yang_message, error, tag, interface=None, current_case=None):
+def ifdown(host, origin_ip, yang_message, error, tag, current_case=None):
     '''
     Function that gathers data in the network and executes a workflow according to the data.
     Is triggered by the salt system once an INTERFACE_DOWN event arrives in the salt
