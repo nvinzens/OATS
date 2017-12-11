@@ -55,7 +55,7 @@ def insert():
         solution = raw_input('Enter Solution: ')
 
         while 1:
-            selection = raw_input('\nInsert this into Database?\nCase Nr:' + case_nr  + '\nDescription: ' + description + '\nDevice: ' + device + '\nSolution: ' + solution +'\n\n [y] or [n]')
+            selection = raw_input('\nInsert this Case into the Database?\nCase Nr:' + case_nr  + '\nDescription: ' + description + '\nDevice: ' + device + '\nSolution: ' + solution +'\n\n [y] or [n]')
             if selection == 'y':
                 db.cases.insert_one(
                     {

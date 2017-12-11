@@ -43,7 +43,7 @@ def insert():
         schannel = raw_input('Enter Slack Channel :')
 
         while 1:
-            selection = raw_input('\nInsert this into Database?\nTech Id: ' + tech_id + '\nFirst Name: '+ fname + '\nLast Name: '+ lname + '\nSlack Channel: ' + schannel +'\n[y] or [n]: ')
+            selection = raw_input('\nInsert this Technician into the Database?\nTech Id: ' + tech_id + '\nFirst Name: '+ fname + '\nLast Name: '+ lname + '\nSlack Channel: ' + schannel +'\n[y] or [n]: ')
 
             if selection == 'y':
                 db.technician.insert_one(

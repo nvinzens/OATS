@@ -67,7 +67,7 @@ def insert():
                 ospf_area.append(None)
 
         while 1:
-            print('\nUpdate Device : ' + host_name + ', as follows:')
+            print('\nInsert Device : ' + host_name + ', as follows, into the Database?:')
             print('\nIP Adresse: ' + ip_address + '\nMAC Address: ' + mac_address + '\nClass: ' + dev_class + '\nRole: ' + role)
             for ifn, ipp, nn, oa in izip(interface_names, port_ips, neighbor_neighbors, ospf_area):
                 print('Interface name: ' + ifn + ' Port IP: ' + ipp + ' Neighbor: ' + nn + ' OSPF Area: ' + str(oa))
