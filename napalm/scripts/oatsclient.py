@@ -4,7 +4,7 @@ import zmq
 import napalm_logs.utils
 from threading import Thread
 import clienthelpers
-import correlate
+import aggregate
 import salt_event
 
 
@@ -32,9 +32,9 @@ while True:
     handled = False
     # only Events for which an opt_arg can be identified will be sent to the salt master
     opt_arg = clienthelpers.get_optional_arg(event_msg, event_error)
-    if event_error in correlate.CORRELATE_EVENTS and opt_arg == correlate.EVENT_OPTIONAL_ARGS[event_error]:
+    if event_error in aggregate.CORRELATE_EVENTS and opt_arg == aggregate.EVENT_OPTIONAL_ARGS[event_error]:
         handled = True
-        thread = Thread(target=correlate.correlate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
+        thread = Thread(target=aggregate.correlate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
         thread.daemon = True
         thread.start()
         opt_arg = ''  # marks the event as processed

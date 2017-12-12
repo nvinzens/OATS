@@ -22,7 +22,7 @@ def send_salt_event(yang_message, minion, origin_ip, tag, message_details, error
     '''
     caller = salt.client.Caller()
     caller.sminion.functions['event.send'](
-        'napalm/syslog/*/' + error + '/' + optional_arg + '/*',
+        'napalm/syslog/*/' + error + '/' + optional_arg,
             {'minion': minion,
             'origin_ip': origin_ip,
             'yang_message': yang_message,

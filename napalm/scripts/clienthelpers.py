@@ -1,4 +1,4 @@
-import correlate
+import aggregate
 
 
 def get_optional_arg(msg, error):
@@ -14,11 +14,11 @@ def get_optional_arg(msg, error):
     :return: the optional_arg (str), empty string if error is not part of the system yet.
     '''
     yang_message = msg['yang_message']
-    if error == correlate.INTERFACE_CHANGED:
+    if error == aggregate.INTERFACE_CHANGED:
         return __get_interface_status(yang_message)
-    if error == correlate.OSPF_NEIGHBOR_DOWN:
+    if error == aggregate.OSPF_NEIGHBOR_DOWN:
         return __get_ospf_change_reason(yang_message)
-    if error == correlate.OSPF_NEIGHBOR_UP:
+    if error == aggregate.OSPF_NEIGHBOR_UP:
         return 'ospf_nbr_up'
     else:
         return ''
