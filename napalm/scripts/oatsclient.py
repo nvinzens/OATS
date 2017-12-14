@@ -32,7 +32,7 @@ while True:
     handled = False
     # only Events for which an opt_arg can be identified will be sent to the salt master
     opt_arg = clienthelpers.get_optional_arg(event_msg, event_error)
-    if event_error in aggregate.CORRELATE_EVENTS and opt_arg == aggregate.EVENT_OPTIONAL_ARGS[event_error]:
+    if event_error in aggregate.AGGREGATE_EVENTS and opt_arg == aggregate.EVENT_OPTIONAL_ARGS[event_error]:
         handled = True
         thread = Thread(target=aggregate.correlate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
         thread.daemon = True
