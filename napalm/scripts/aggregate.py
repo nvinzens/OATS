@@ -21,13 +21,13 @@ cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=MAX_AGE+3) # +3 to give
 lock = threading.Lock()
 
 
-def correlate(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
+def aggregate(yang_message, minion, origin_ip, tag, message_details, error, optional_arg):
     '''
-    Correlates the event (given by the error) to other events that occured
+    Aggregates the event (given by the error) to other events that occured
     in a given time frame. For every recognized event in the system that
-    needs to be correlated atleast one optional workflow has to exist
-    for correlation to make sense.
-    Sends an event to the salt event bus, once correlation has determined
+    needs to be aggregated atleast one optional workflow has to exist
+    for aggregation to make sense.
+    Sends an event to the salt event bus, once aggregation has determined
     which workflow needs to be executed.
     Should be executed asynchronous, since the method will block for
     MAX_AGE time.

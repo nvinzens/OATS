@@ -34,7 +34,7 @@ while True:
     opt_arg = clienthelpers.get_optional_arg(event_msg, event_error)
     if event_error in aggregate.AGGREGATE_EVENTS and opt_arg == aggregate.EVENT_OPTIONAL_ARGS[event_error]:
         handled = True
-        thread = Thread(target=aggregate.correlate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
+        thread = Thread(target=aggregate.aggregate, args=(yang_mess, host, ip, event_tag, message, event_error, opt_arg))
         thread.daemon = True
         thread.start()
         opt_arg = ''  # marks the event as processed
