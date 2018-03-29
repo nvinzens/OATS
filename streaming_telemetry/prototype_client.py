@@ -1,27 +1,56 @@
 from ncclient import manager
-from ncclient.xml_ import new_ele, sub_ele
 from lxml import etree
+import time
+from kafka import KafkaProducer
+from kafka.errors import KafkaError
+import json
+import xmltodict
+import argparse
 
 XPATH = "/memory-ios-xe-oper:memory-statistics/memory-statistic/free-memory"
+TOPIC = 'oats'
 
 
 def errback(notif):
-	pass
+    pass
 
 
-def callback(notif):
-	print (etree.tostring(notif.datastore_ele, pretty_print=True).decode('utf-8'))
+def debug_callback(notif):
+    jsonString = json.dumps(xmltodict.parse(notif.xml), indent=2)
+    #print (etree.tostring(notif.datastore_ele, pretty_print=True).decode('utf-8'))
+    print (jsonString)
 
-manager = manager.connect(host='10.20.1.21',
-                              port=830,
-                              username='ins',
-                              password='ins@lab',
-                              allow_agent=False,
-                              look_for_keys=False,
-                              hostkey_verify=False,
-                              unknown_host_cb=True)
+def callback_kafka_publish(notif):
+    # Publishes message to Kafka messaging bus
+    jsonString = json.dumps(xmltodict.parse(notif.xml), indent=2)
+    #producer.send(TOPIC, jsonString)
+    print (jsonString)
 
-s =  manager.establish_subscription(callback, errback, xpath=XPATH, period=1000)
-print s
-while True:
-	pass
+
+if __name__ == '__main__':
+
+    m = manager.connect(host='10.20.1.21',
+                        port=830,
+                        username='ins',
+                        password='ins@lab',
+                        allow_agent=False,
+                        look_for_keys=False,
+                        hostkey_verify=False,
+                        unknown_host_cb=True,
+                        timeout=25
+                        )
+
+    #producer = KafkaProducer(bootstrap_servers='localhost:9092')
+    sub = ''
+    while True:
+        if not sub:
+            if 'producer' in locals():
+                print ("kafka enabled")
+                sub = m.establish_subscription(callback_kafka_publish, errback, xpath=XPATH, period=1000)
+            else:
+                print ("debug")
+                sub = m.establish_subscription(debug_callback, errback, xpath=XPATH, period=1000)
+        time.sleep(9.8)
+
+
+
