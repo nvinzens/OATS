@@ -1,0 +1,9 @@
+name,device_role,tenant,manufacturer,model_name,platform,serial,asset_tag,status,site,rack_group,rack_name,position,face,comments
+R11,Router,,Cisco,CSR1000v,Cisco IOS,,,Active,INS-Lab,,,,,
+R12,Router,,Cisco,CSR1000v,Cisco IOS,,,Active,INS-Lab,,,,,
+R13,Router,,Cisco,CSR1000v,Cisco IOS,,,Active,INS-Lab,,,,,
+R14,Router,,Cisco,CSR1000v,Cisco IOS,,,Active,INS-Lab,,,,,
+R15,Router,,Cisco,CSR1000v,Cisco IOS,,,Active,INS-Lab,,,,,
+R16,Router,,Cisco,CSR1000v,Cisco IOS,,,Active,INS-Lab,,,,,
+sw01,Access Switch,,Cisco,WS-C3850-24P,Cisco IOS,,,Active,INS-Lab,,,,,
+sw02,Access Switch,,Cisco,WS-C3850-24P,Cisco IOS,,,Active,INS-Lab,,,,,
