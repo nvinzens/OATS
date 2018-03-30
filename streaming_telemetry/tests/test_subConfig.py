@@ -1,7 +1,5 @@
 import pytest
 import sys
-import json
-import xmltodict
 sys.path.append("..")
 from SubscriptionConfig import SubscriptionConfig
 
