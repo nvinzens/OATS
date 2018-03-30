@@ -9,7 +9,6 @@ python:
 install:
   - pip install xmltodict
   - pip install pymongo
-  - pip install saltstack/oatsdbhelpers/oats
 
 script:
   - pytest
