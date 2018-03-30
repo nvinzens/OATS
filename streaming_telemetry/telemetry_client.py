@@ -52,20 +52,15 @@ def __create_subscriptions(host_config):
             for sub in subs:
                 period = config.get_publish_period(sub)
                 xpath = config.get_xpath(sub)
-                #if not active_subscriptions[xpath]:
+
 
                 if counter < len(subs):
                     s = m.establish_subscription(callback_kafka_publish, errback, xpath=xpath,
                                                  period=period)
                     counter = counter + 1
                     timers.append(period)
-                #else:
-                #    counter = len(subs)
-                #    next = timers.popleft()
-                #    if period - next >= 0:
-                #        time.sleep(next - 0.2)
-                #    timers.append(period)
             if counter < len(subs):
+                counter = len(subs)
                 time.sleep((period/100)-0.2)
 
 
