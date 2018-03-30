@@ -5,6 +5,7 @@ python:
 install:
   - pip install xmltodict
   - pip install pymongo
+  - pip install /home/travis/build/nvinzens/OATS/saltstack/oatsdbhelpers/oats
 
 script:
   - pytest
