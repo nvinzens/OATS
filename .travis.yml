@@ -9,5 +9,8 @@ install:
   - pip install pytest
   - pip install --upgrade pip enum34
 
+before_script:
+ - export PYTHONPATH=$PYTHONPATH:$(pwd)
+
 script:
   - pytest
