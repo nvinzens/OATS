@@ -7,7 +7,9 @@ import json
 import xmltodict
 import argparse
 
-XPATH = "/memory-ios-xe-oper:memory-statistics/memory-statistic/free-memory"
+#XPATH = "/memory-ios-xe-oper:memory-statistics/memory-statistic/free-memory"
+#XPATH = "/bgp-ios-xe-oper:bgp-state-data/bgp-prefix-counters/current-prefixes"
+XPATH = "/ip-sla-ios-xe-oper:ip-sla-stats/sla-oper-entry/stats/jitter/sd/avg"
 TOPIC = 'oats'
 
 
