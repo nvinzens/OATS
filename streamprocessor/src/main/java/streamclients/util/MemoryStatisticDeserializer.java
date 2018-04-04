@@ -8,13 +8,14 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@JsonDeserialize(using = MemoryStatisticDeserializer.class)
+
 public class MemoryStatisticDeserializer extends StdDeserializer<MemoryStatistic> {
 
     public MemoryStatisticDeserializer() {
@@ -31,76 +32,17 @@ public class MemoryStatisticDeserializer extends StdDeserializer<MemoryStatistic
 
         JsonNode memStatNode = jp.getCodec().readTree(jp);
         MemoryStatistic memStat = new MemoryStatistic();
-        memStat.setEventTime(getEventTime(memStatNode));
-        Map<String, String> memoryStats = new HashMap<>();
-        memoryStats = getMemoryStatistics(memStatNode, memoryStats);
-        memStat.setMemoryStatistic(memoryStats);
+
+        ArrayNode array = (ArrayNode)memStatNode.at("/notification/push-update/datastore-contents-xml/memory-statistics/memory-statistic");
+        Map<String, Long> map = new HashMap<>();
+        for (JsonNode node: array) {
+            map.put(node.get("name").asText(), Long.parseLong(node.get("used-memory").asText()));
+        }
+        memStat.setMemoryStatistic(map);
+
+        String eventTime = memStatNode.at("/notification/eventTime").asText();
+        memStat.setEventTime(eventTime);
 
         return memStat;
     }
-
-    private static void getFields(JsonNode node) {
-        Iterator<String> fieldNames = node.fieldNames();
-        while (fieldNames.hasNext()) {
-            String fieldName = fieldNames.next();
-            JsonNode fieldValue = node.get(fieldName);
-            if (fieldValue.isObject()) {
-                //System.out.println(fieldName + " :");
-                getFields(fieldValue);
-            } else if (fieldValue.isArray()) {
-                String value = fieldValue.asText();
-                Iterator<JsonNode> it = fieldValue.elements();
-                while (it.hasNext()) {
-                    JsonNode n = it.next();
-                    System.out.println(n.get("name"));
-                    System.out.println(n.get("used-memory"));
-                }
-            } else {
-                String value = fieldValue.asText();
-                if (fieldName == "eventTime") {
-                    System.out.println(fieldName + " : " + value);
-                }
-            }
-        }
-    }
-
-    private String getEventTime(JsonNode node) {
-        Iterator<String> fieldNames = node.fieldNames();
-        while (fieldNames.hasNext()) {
-            String fieldName = fieldNames.next();
-            JsonNode fieldValue = node.get(fieldName);
-            if (fieldValue.isObject()) {
-                getEventTime(fieldValue);
-            } else {
-                String value = fieldValue.asText();
-                if (fieldName == "eventTime") {
-                    return value;
-                }
-                return "";
-            }
-        }
-        return "";
-    }
-
-    private Map<String, String> getMemoryStatistics(JsonNode node, Map<String, String> map) {
-        Iterator<String> fieldNames = node.fieldNames();
-        while (fieldNames.hasNext()) {
-            String fieldName = fieldNames.next();
-            JsonNode fieldValue = node.get(fieldName);
-            if (fieldValue.isObject()) {
-                getMemoryStatistics(fieldValue, map);
-            } else if (fieldValue.isArray()) {
-                Iterator<JsonNode> it = fieldValue.elements();
-                while (it.hasNext()) {
-                    JsonNode n = it.next();
-                    map.put(n.get("name").asText(), n.get("used-memory").asText());
-                }
-                return map;
-            } else {
-                return null;
-            }
-        }
-        return map;
-    }
-
 }

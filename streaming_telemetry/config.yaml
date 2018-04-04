@@ -8,5 +8,14 @@ hosts:
             xpath: /memory-ios-xe-oper:memory-statistics/memory-statistic/used-memory
             period: 1000
             kafka_publish_topic: oats
+  - host: 10.20.1.22
+    port: 830
+    username: ins
+    password: ins@lab
+    subscriptions:
+      - subscription:
+          xpath: /memory-ios-xe-oper:memory-statistics/memory-statistic/used-memory
+          period: 1000
+          kafka_publish_topic: oats
 
 

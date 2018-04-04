@@ -7,9 +7,7 @@ import xmltodict
 from SubscriptionConfig import SubscriptionConfig
 from multiprocessing import Process, Lock
 
-
 YAML_FILE = 'config.yaml'
-
 
 def errback(notif):
     pass
@@ -17,15 +15,14 @@ def errback(notif):
 
 def debug_callback(notif):
     jsonString = json.dumps(xmltodict.parse(notif.xml), indent=2)
-    #print (etree.tostring(notif.datastore_ele, pretty_print=True).decode('utf-8'))
     print (jsonString)
 
 
-def callback_kafka_publish(notif, topic):
+def callback_kafka_publish(notif, topic, host):
     # Publishes message to Kafka topic
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
-    producer.send(topic, json_string)
+    producer.send(topic, key=host, value=json_string)
     producer.flush()
     print (json_string)
 
@@ -33,13 +30,13 @@ def callback_kafka_publish(notif, topic):
 def __process_host(host_config):
     subs = config.get_subscriptions(host_config)
     for sub in subs:
-        p = Process(target=__create_subscriptions, args=(sub,))
+        p = Process(target=__create_subscriptions, args=(sub, host_config))
         p.start()
 
 
-
-def __create_subscriptions(subscription):
+def __create_subscriptions(subscription, host_config):
     first = True
+    host = config.get_host(host_config)
     with manager.connect(host=config.get_host(host_config),
                          port=config.get_port(host_config),
                          username=config.get_username(host_config),
@@ -57,10 +54,10 @@ def __create_subscriptions(subscription):
 
             if first:
                 s = m.establish_subscription(callback_kafka_publish, errback, xpath=xpath,
-                                             period=period, topic=topic)
+                                             period=period, topic=topic, host=host)
                 first = False
-            if not first:
-                time.sleep((period/100)-0.2)
+                print s.subscription_result
+            time.sleep((period/100)-0.2)
 
 
 

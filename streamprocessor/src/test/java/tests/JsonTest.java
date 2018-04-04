@@ -1,11 +1,17 @@
-package streamclients.util;
+package tests;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.jayway.jsonpath.JsonPath;
+import streamclients.util.MemoryStatistic;
+import streamclients.util.MemoryStatisticDeserializer;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class JsonTest {
 
@@ -29,23 +35,41 @@ public class JsonTest {
 
         JsonNode not = root.path("notification");
 
+        /**
         Iterator<String> fieldNames = root.fieldNames();
+        MemoryStatistic memStat = new MemoryStatistic();
+
+        ArrayNode array = (ArrayNode)root.at("/notification/push-update/datastore-contents-xml/memory-statistics/memory-statistic");
+        Map<String, Long> map = new HashMap<>();
+        for (JsonNode node: array) {
+            map.put(node.get("name").asText(), Long.parseLong(node.get("used-memory").asText()));
+            System.out.println(node.get("name").asText());
+            System.out.println(Long.parseLong(node.get("used-memory").asText()));
+        }
+        memStat.setMemoryStatistic(map);
+
+        String eventTime = root.at("/notification/eventTime").asText();
+        System.out.println(eventTime);
+        memStat.setEventTime(eventTime);
+        System.out.println(memStat.toString());
         //String name = root.get("notification").textValue();
-        //System.out.println(name);
         List<String> h = JsonPath.parse(json).read("$.notification.push-update.datastore-contents-xml.memory-statistics.memory-statistic[*].name");
         for (String name: h) {
             System.out.println(name);
         }
+         **/
 
         //System.out.println(name);
         //System.out.println(not.textValue());
         //printAll(root);
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(MemoryStatistic.class, new MemoryStatisticDeserializer());
+        mapper.registerModule(module);
+        MemoryStatistic stat = mapper.readValue(json, MemoryStatistic.class);
 
-        //MemoryStatistic stat = mapper.readValue(json2, MemoryStatistic.class);
+        System.out.println(stat.toString());
 
-        //System.out.println(stat.getEventTime());
-
-        //System.out.println(mapper.readValue(json2, MemoryStatistic.class));
+        //System.out.println(mapper.readValue(json, MemoryStatistic.class));
 
         //System.out.println("blabla" + root.get("eventTime").textValue());
 

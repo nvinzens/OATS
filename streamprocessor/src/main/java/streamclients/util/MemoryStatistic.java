@@ -11,8 +11,8 @@ import java.util.Map;
 public class MemoryStatistic {
 
     private String eventTime;
-
-    private Map<String, String> memoryStatistic;
+    @JsonProperty("memory-statistic")
+    private Map<String, Long> memoryStatistic;
 
     public void setEventTime(String eventTime) {
         this.eventTime = eventTime;
@@ -22,16 +22,20 @@ public class MemoryStatistic {
         return eventTime;
     }
 
-    public void setMemoryStatistic(Map<String, String> memoryStatistic) {
+    public void setMemoryStatistic(Map<String, Long> memoryStatistic) {
         this.memoryStatistic = memoryStatistic;
     }
 
-    public Map<String, String> getMemoryStatistic() {
+    public Map<String, Long> getMemoryStatistic() {
         return memoryStatistic;
     }
 
     @Override
     public String toString() {
-        return "EventTime: " + eventTime + ", MemoryStatistic: " + memoryStatistic;
+        String string = "EventTime " + eventTime + "\nMemoryStatics:\n";
+        for (Map.Entry<String, Long> entry : memoryStatistic.entrySet()) {
+            string += "    Process " + entry.getKey() + ": used memory: " + entry.getValue() + "\n";
+        }
+        return string;
     }
 }
