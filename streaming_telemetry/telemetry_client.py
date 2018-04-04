@@ -1,5 +1,4 @@
 from ncclient import manager
-from lxml import etree
 import time
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
@@ -7,12 +6,10 @@ import json
 import xmltodict
 from SubscriptionConfig import SubscriptionConfig
 from multiprocessing import Process, Lock
-import collections
 
-#XPATH = "/ip-sla-ios-xe-oper:ip-sla-stats/sla-oper-entry/stats/jitter/sd/avg"
-TOPIC = None
+
 YAML_FILE = 'config.yaml'
-#PRODUCER = None
+
 
 def errback(notif):
     pass
@@ -25,25 +22,23 @@ def debug_callback(notif):
 
 
 def callback_kafka_publish(notif, topic):
+    # Publishes message to Kafka topic
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
-    # Publishes message to Kafka messaging bus
-    #print (topic)
-    print ("")
-    jsonString = json.dumps(xmltodict.parse(notif.xml), indent=2).encode('utf-8') + topic
-    #producer.send(topic, jsonString)
-    #producer.flush()
-    print (jsonString)
+    json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
+    producer.send(topic, json_string)
+    producer.flush()
+    print (json_string)
 
 
 def __process_host(host_config):
     subs = config.get_subscriptions(host_config)
     for sub in subs:
-        p = Process(target=__create_subscriptions, args=(sub, len(subs)))
+        p = Process(target=__create_subscriptions, args=(sub,))
         p.start()
 
 
 
-def __create_subscriptions(subscription, n_of_subs):
+def __create_subscriptions(subscription):
     first = True
     with manager.connect(host=config.get_host(host_config),
                          port=config.get_port(host_config),
@@ -76,16 +71,6 @@ if __name__ == '__main__':
         p = Process(target=__process_host, args=(host_config,))
         p.start()
 
-    '''sub = ''
-    while True:
-        if not sub:
-            if 'producer' in locals():
-                print ("kafka enabled")
-                sub = m.establish_subscription(callback_kafka_publish, errback, xpath=XPATH, period=1000)
-            else:
-                print ("debug")
-                sub = m.establish_subscription(debug_callback, errback, xpath=XPATH, period=1000)
-        time.sleep(9.8)'''
 
 
 
