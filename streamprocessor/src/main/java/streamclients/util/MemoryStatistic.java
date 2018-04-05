@@ -34,7 +34,7 @@ public class MemoryStatistic {
     public String toString() {
         String string = "EventTime " + eventTime + "\nMemoryStatics:\n";
         for (Map.Entry<String, Long> entry : memoryStatistic.entrySet()) {
-            string += "    Process " + entry.getKey() + ": used memory: " + entry.getValue() + "\n";
+            string += "Process " + entry.getKey() + ": used memory: " + entry.getValue() + "\n";
         }
         return string;
     }
