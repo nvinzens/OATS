@@ -22,8 +22,8 @@ def callback_kafka_publish(notif, topic, host):
     # Publishes message to Kafka topic
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
-    producer.send(topic, key=host, value=json_string)
-    producer.flush()
+    #producer.send(topic, key=host, value=json_string)
+    #producer.flush()
     print (json_string)
 
 
@@ -55,9 +55,11 @@ def __create_subscriptions(subscription, host_config):
             if first:
                 s = m.establish_subscription(callback_kafka_publish, errback, xpath=xpath,
                                              period=period, topic=topic, host=host)
-                first = False
-                print s.subscription_result
-            time.sleep((period/100)-0.2)
+
+                print (s.subscription_result)
+            if not first:
+                time.sleep((period/100)-0.2)
+            first = False
 
 
 
