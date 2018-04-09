@@ -22,8 +22,8 @@ def callback_kafka_publish(notif, topic, host):
     # Publishes message to Kafka topic
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
-    #producer.send(topic, key=host, value=json_string)
-    #producer.flush()
+    producer.send(topic, key=host, value=json_string)
+    producer.flush()
     print (json_string)
 
 

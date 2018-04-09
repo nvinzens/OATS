@@ -95,7 +95,7 @@ public class InterfaceStatisticsClient {
             return new KeyValue<>(key, stat);
         });
         KStream<String, InterfaceStatistic> eventStream = statsStream.flatMapValues(value -> value.getIfaceStatistics())
-                .filter((key, value) -> value.getOutDiscards() == 0)
+                .filter((key, value) -> value.getOutDiscards() > 0)
                 .map((key, value) -> new KeyValue<>(key, value));
 
         eventStream.to( "streams-pipe-output", Produced.with(Serdes.String(), ifaceStatSerde));
