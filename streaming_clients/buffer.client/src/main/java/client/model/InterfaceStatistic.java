@@ -20,4 +20,8 @@ public class InterfaceStatistic {
     public void setOutDiscards(long outDiscards) {
         this.outDiscards = outDiscards;
     }
+
+    public static boolean filterNonZero(String key, InterfaceStatistic stat) {
+        return stat.getOutDiscards() != 0 && key != null;
+    }
 }

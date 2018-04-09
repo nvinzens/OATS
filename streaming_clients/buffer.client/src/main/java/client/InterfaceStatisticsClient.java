@@ -35,6 +35,7 @@ import org.apache.kafka.streams.kstream.Produced;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
@@ -94,11 +95,18 @@ public class InterfaceStatisticsClient {
             }
             return new KeyValue<>(key, stat);
         });
-        KStream<String, InterfaceStatistic> eventStream = statsStream.flatMapValues(value -> value.getIfaceStatistics())
-                .filter((key, value) -> value.getOutDiscards() > 0)
+        Map<String, InterfaceStatistic> statsMap = new HashMap<>();
+        KStream<String, List<InterfaceStatistic>> ifaceStatStream = statsStream
+                .map((key, value) -> new KeyValue<>(key, value.getIfaceStatistics()));
+
+        KStream<String, InterfaceStatistic> nonZeroStream = statsStream.flatMapValues(value -> value.getIfaceStatistics())
+                .filter(InterfaceStatistic::filterNonZero)
                 .map((key, value) -> new KeyValue<>(key, value));
 
-        eventStream.to( "streams-pipe-output", Produced.with(Serdes.String(), ifaceStatSerde));
+        //Map<String, InterfaceStatistic> finalStatsMap = statsMap;
+        //ifaceStatStream.foreach((key, value) -> finalStatsMap.put(key, value));
+        //eventStream.to( "streams-pipe-output", Produced.with(Serdes.String(), ifaceStatSerde));
+        nonZeroStream.to( "streams-pipe-output", Produced.with(Serdes.String(), ifaceStatSerde));
 
         final Topology topology = builder.build();
         final KafkaStreams streams = new KafkaStreams(topology, props);
