@@ -61,3 +61,7 @@ hosts:
           xpath: /memory-ios-xe-oper:memory-statistics/memory-statistic/used-memory
           period: 1000
           kafka_publish_topic: oats
+      - subscription:
+            xpath: /if:interfaces-state/interface/statistics/out-discards
+            period: 1000
+            kafka_publish_topic: interfaces-out-discards

@@ -5,6 +5,6 @@ hosts:
     password: ins@lab
     subscriptions:
         - subscription:
-            xpath: /bgp-ios-xe-oper:bgp-state-data/neighbors/neighbor/prefix-activity/received
+            xpath: /if:interfaces-state/interface/statistics
             period: 1000
-            kafka_publish_topic: oats
+            kafka_publish_topic: interfaces-out-discards
