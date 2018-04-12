@@ -24,4 +24,8 @@ public class InterfaceStatistic {
     public static boolean filterNonZero(String key, InterfaceStatistic stat) {
         return stat.getOutDiscards() != 0 && key != null;
     }
+
+    public boolean isAboveThreshold(InterfaceStatistic oldStat, long threshold) {
+        return (this.getOutDiscards() - oldStat.getOutDiscards()) > threshold;
+    }
 }
