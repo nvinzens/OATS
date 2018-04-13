@@ -18,6 +18,8 @@ package client;
 
 import client.model.InterfaceStatistic;
 import client.model.InterfaceStatistics;
+import client.processor.InterfaceStatisticProcessor;
+import client.processor.InterfaceStatisticTransformer;
 import client.serde.InterfaceStatisticsDeserializer;
 import client.serde.JsonPOJODeserializer;
 import client.serde.JsonPOJOSerializer;
@@ -30,22 +32,25 @@ import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.errors.LogAndContinueExceptionHandler;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.processor.StateStore;
+import org.apache.kafka.streams.state.KeyValueBytesStoreSupplier;
+import org.apache.kafka.streams.state.KeyValueStore;
+import org.apache.kafka.streams.state.StoreBuilder;
+import org.apache.kafka.streams.state.Stores;
+import org.apache.kafka.streams.state.internals.StateStoreProvider;
 import org.cache2k.Cache;
 import org.cache2k.Cache2kBuilder;
 import org.cache2k.CacheEntry;
 import org.cache2k.event.CacheEntryCreatedListener;
-import org.cache2k.expiry.Expiry;
 
-import javax.sound.midi.SysexMessage;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 /**
  * In this example, we implement a simple LineSplit program using the high-level Streams DSL
@@ -55,6 +60,9 @@ import java.util.concurrent.TimeUnit;
 public class InterfaceStatisticsClient {
 
     private static final long THRESHOLD =  100000;
+    private static final String INPUTTOPIC = "interfaces-out-discards";
+    private static final String OUTPUTTOPIC = "out-discards-events";
+    public static final String STAT_STATESTORE = "iface-stat-statestore";
 
     public static void main(String[] args) throws Exception {
         Properties props = new Properties();
@@ -92,9 +100,14 @@ public class InterfaceStatisticsClient {
 
         final Serde<InterfaceStatistic> ifaceStatSerde = Serdes.serdeFrom(ifaceStatSerializer, ifaceStatDeserializer);
 
+        StoreBuilder<KeyValueStore<String, InterfaceStatistic>> ifaceStatSupplier = Stores.keyValueStoreBuilder(
+                Stores.inMemoryKeyValueStore
+                        (STAT_STATESTORE),
+                        Serdes.String(),
+                        ifaceStatSerde);
+        builder.addStateStore(ifaceStatSupplier);
 
-
-        KStream<String, String> raw = builder.stream("interfaces-out-discards");
+        KStream<String, String> raw = builder.stream(INPUTTOPIC);
         KStream<String, InterfaceStatistics> statsStream = raw.map((KeyValueMapper<String, String, KeyValue<String, InterfaceStatistics>>) (key, value) -> {
             InterfaceStatistics stat = new InterfaceStatistics();
             try {
@@ -105,48 +118,17 @@ public class InterfaceStatisticsClient {
             return new KeyValue<>(key, stat);
         });
 
-
-
-        Cache<String, Map<String, Long>> cache = new Cache2kBuilder<String, Map<String, Long>>() {}
-                .eternal(true)
-                .addListener(new CacheEntryCreatedListener<String, Map<String, Long>>() {
-                    @Override
-                    public void onEntryCreated(final Cache<String, Map<String, Long>> cache,
-                                               final CacheEntry<String, Map<String, Long>> entry) {
-                        System.out.println("inserted: " + entry.getKey() + ", size: " + entry.getValue().size());
-                    }
-                })
-                .build();
-        statsStream.foreach((key, value) -> {
-            cache.putIfAbsent(key, new HashMap<>());
-            for (InterfaceStatistic stat : value.getIfaceStatistics()) {
-                cache.get(key).put(stat.getIfaceName(), stat.getOutDiscards());
-            }
-        });
-
-
-
-        KStream<String, InterfaceStatistic> ifaceStatStream= statsStream
+        KStream<String, InterfaceStatistic> ifaceStatStream = statsStream
                 .flatMapValues(value -> value.getIfaceStatistics())
                 .map((key, value) -> new KeyValue<>(key, value));
 
-        KStream<String, InterfaceStatistic> nonZeroStream = ifaceStatStream
-                .filter(InterfaceStatistic::filterNonZero);
+        KStream<String, InterfaceStatistic> eventStream = ifaceStatStream
+                .transform(() -> new InterfaceStatisticTransformer(THRESHOLD), STAT_STATESTORE);
 
 
-        KStream<String, InterfaceStatistic> eventStream = nonZeroStream
-                .filter((key, value) -> (value.getOutDiscards() - cache.get(key).get(value.getIfaceName())) > THRESHOLD);
-
-        nonZeroStream.foreach((key, value) -> {
-            Map<String, Long> map = cache.get(key);
-            map.replace(value.getIfaceName(), value.getOutDiscards());
-        });
-
-        ifaceStatStream.foreach((key, value) -> {
-            System.out.println(cache.get(key).get(value.getIfaceName()));
-        });
-
-        nonZeroStream.to( "streams-pipe-output", Produced.with(Serdes.String(), ifaceStatSerde));
+        eventStream
+                .filter((key, value) -> key != null)
+                .to(OUTPUTTOPIC, Produced.with(Serdes.String(), ifaceStatSerde));
 
         final Topology topology = builder.build();
         final KafkaStreams streams = new KafkaStreams(topology, props);
