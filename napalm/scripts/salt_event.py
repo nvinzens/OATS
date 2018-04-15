@@ -4,8 +4,6 @@ import salt.utils.event
 import salt.client
 
 
-
-
 def send_salt_event(yang_message, minion, origin_ip, tag, message_details, error, optional_arg, case=None):
     '''
     Sends all the given data to the salt event bus.
