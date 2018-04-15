@@ -25,3 +25,5 @@ streaming_telemetry/tests/.pytest_cache/
 streaming_telemetry/tests/__pycache__/
 
 streamprocessor/target
+
+kafka/*.pyc

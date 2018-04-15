@@ -1,5 +1,5 @@
 from kafka import KafkaConsumer
-from salt_event import send_salt_event
+#from salt_event import send_salt_event
 
 def __extract_data(message):
     host = None
@@ -17,9 +17,9 @@ def __extract_data(message):
 consumer = KafkaConsumer('out-discards-events')
 
 for msg in consumer:
-    print msg
-    host, timestamp, data = __extract_data(msg)
-    send_salt_event(data, host, timestamp)
+    print (msg)
+    #host, timestamp, data = __extract_data(msg)
+    #send_salt_event(data, host, timestamp)
 
 
 
