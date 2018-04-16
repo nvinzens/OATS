@@ -11,7 +11,7 @@ def send_salt_event(data, host, timestamp):
     '''
     caller = salt.client.Caller()
     caller.sminion.functions['event.send'](
-        'kafka/streaming-telemetry/*/out-discard-event/',
+        'kafka/streaming-telemetry/*/out-discard-event',
             {'data': data,
             'host': host,
              'timestamp': timestamp
