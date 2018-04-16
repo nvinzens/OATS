@@ -22,7 +22,7 @@ def post_slack(message, case=None):
         oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status=oatsdbhelpers.Status.ONHOLD.value)
         solutions = oatsdbhelpers.get_solutions_as_string(case)
         message += "\nExecuted workflow:\n" + solutions
-    __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
+    return __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
 
 def ping(source, destination, case=None, check_connectivity=False):
