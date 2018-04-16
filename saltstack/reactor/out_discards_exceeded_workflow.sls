@@ -1,6 +1,6 @@
 {% set event_data = data['data'] %}
 
-ifdown_workflow:
+out_discards_workflow:
   runner.tshoot.out_discards_exceeded:
     - data: {{ event_data['data'] }}
     - host: {{ event_data['host'] }}
