@@ -14,8 +14,8 @@ public class InterfaceStatisticTransformer implements Transformer<String, Interf
 
     private long threshold;
 
-    public InterfaceStatisticTransformer(long threshhold) {
-        this.threshold = threshhold;
+    public InterfaceStatisticTransformer(long threshold) {
+        this.threshold = threshold;
     }
 
     @Override
