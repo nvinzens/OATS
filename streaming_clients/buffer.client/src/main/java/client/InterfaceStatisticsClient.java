@@ -126,9 +126,9 @@ public class InterfaceStatisticsClient {
                 .transform(() -> new InterfaceStatisticTransformer(THRESHOLD), STAT_STATESTORE);
 
 
-        ifaceStatStream
+        eventStream
                 .filter((key, value) -> key != null)
-                .to("streams-pipe-output", Produced.with(Serdes.String(), ifaceStatSerde));
+                .to(OUTPUTTOPIC, Produced.with(Serdes.String(), ifaceStatSerde));
 
         final Topology topology = builder.build();
         final KafkaStreams streams = new KafkaStreams(topology, props);
