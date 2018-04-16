@@ -117,7 +117,8 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
 def out_discards_exceeded(data, host, timestamp):
     eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
     comment = "Discarded pakets on host {0} on egress interface {1} exceeds threshhold. Time of Event: {2}".format(host, data['ifaceName'], eventTime)
-    oatssalthelpers.post_slack(comment)
+    ret = oatssalthelpers.post_slack(comment)
+    return ret
 
 
 
