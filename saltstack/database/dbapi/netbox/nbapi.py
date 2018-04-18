@@ -47,9 +47,9 @@ def get_interface_neighbor(host, interface, case=None, test=False):
 
     neighborif = nb.dcim.interface_connections.filter(device=host)
     for nbif in neighborif:
-        if nbif.interface_a.name == interface:
+        if nbif.interface_a.name == interface and nbif.interface_a.device.name != host:
             neighbor = nbif.interface_a.device.name
-        elif nbif.interface_b.name == interface:
+        elif nbif.interface_b.name == interface and nbif.interface_b.device.name != host:
             neighbor = nbif.interface_b.device.name
 
     return neighbor
