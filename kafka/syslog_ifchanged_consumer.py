@@ -1,5 +1,5 @@
 from kafka import KafkaConsumer
-from kafka.helpers import salt_event
+from helpers import salt_event
 
 def __get_interface_status(yang_message):
     for k, v in sorted(yang_message.items()):
