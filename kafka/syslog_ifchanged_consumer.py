@@ -13,7 +13,7 @@ def __get_interface_status(yang_message):
 consumer = KafkaConsumer('INTERFACE_CHANGED')
 
 for msg in consumer:
-    event_msg = msg['value']
+    event_msg = msg.value
     print (event_msg)
     yang_mess = event_msg['yang_message']
     host = event_msg['host']

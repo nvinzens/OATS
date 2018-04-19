@@ -22,3 +22,4 @@ while True:
     event_msg = napalm_logs.utils.unserialize(raw_object)
     topic = event_msg['error']
     producer.send(topic, json.dumps(event_msg))
+    producer.flush()
