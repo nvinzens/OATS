@@ -3,10 +3,6 @@ from __future__ import with_statement
 import zmq
 import napalm_logs.utils
 import json
-
-
-
-
 from kafka import KafkaProducer
 
 
@@ -21,9 +17,6 @@ socket.setsockopt(zmq.SUBSCRIBE,'')
 
 producer = KafkaProducer(bootstrap_servers='localhost:9092')
 
-# extracts all the relevant bits of data from a napalm-logs message
-# and sends it to the salt event bus (after correlating events, if
-# needed).
 while True:
     raw_object = socket.recv()
     event_msg = napalm_logs.utils.unserialize(raw_object)
