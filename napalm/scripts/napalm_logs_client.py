@@ -2,6 +2,7 @@
 from __future__ import with_statement
 import zmq
 import napalm_logs.utils
+import json
 
 
 
@@ -28,4 +29,4 @@ while True:
     event_msg = napalm_logs.utils.unserialize(raw_object)
     yang_mess = event_msg['yang_message']
     topic = event_msg['error']
-    producer.send(topic, yang_mess)
+    producer.send(topic, json.dumps(yang_mess))
