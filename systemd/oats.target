@@ -1,0 +1,3 @@
+[Unit]
+Description=Starts all relevant scripts and services for OATS
+Requires=napalm-logs.service oatsclient.service

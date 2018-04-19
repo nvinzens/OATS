@@ -1,0 +1,11 @@
+[Unit]
+Description=napalm-logs service for normalizing syslog messages, part of OATS
+After=oats.target
+Before=oatsclient.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/napalm-logs
+
+[Install]
+WantedBy=oats.target

@@ -32,7 +32,7 @@ class SaltEventConfig:
     def get_username(self, host_config):
         return host_config['username']
 
-    def get_password(self, host_con fig):
+    def get_password(self, host_config):
         return host_config['password']
 
     def get_kafka_topic(self, subscription):
