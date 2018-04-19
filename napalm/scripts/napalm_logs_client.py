@@ -27,6 +27,5 @@ producer = KafkaProducer(bootstrap_servers='localhost:9092')
 while True:
     raw_object = socket.recv()
     event_msg = napalm_logs.utils.unserialize(raw_object)
-    yang_mess = event_msg['yang_message']
     topic = event_msg['error']
-    producer.send(topic, json.dumps(yang_mess))
+    producer.send(topic, json.dumps(event_msg))
