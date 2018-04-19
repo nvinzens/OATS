@@ -29,3 +29,5 @@ streamprocessor/target
 streaming_telemetry/*.pyc
 
 kafka/*.pyc
+
+kafka/helpers/*.pyc
