@@ -23,7 +23,8 @@ for msg in consumer:
     message = event_msg['message_details']
     event_error = event_msg['error']
     opt_arg = __get_interface_status(yang_message=yang_mess)
-    salt_event.send_salt_event(yang_mess, host, ip, event_tag, message, event_error, opt_arg)
+    salt_event.send_salt_event(data=yang_mess, host=host, origin_ip=ip, tag=event_tag,
+                               message_details=message, error=event_error, opt_arg=opt_arg)
 
 
 
