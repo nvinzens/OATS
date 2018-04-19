@@ -2,6 +2,7 @@
 Description=napalm-logs service for normalizing syslog messages, part of OATS
 After=oats.target
 Before=oatsclient.service
+PartOf=oats.target
 
 [Service]
 Type=simple

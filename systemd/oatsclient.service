@@ -1,6 +1,7 @@
 [Unit]
 Description=napalm-logs client that extracts the relevant data for OATS
 After=oats.target napalm-logs.service
+PartOf=oats.target
 
 [Service]
 Type=simple
