@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 from helpers import salt_event
 
+
 def __extract_data(message):
     host = None
     timestamp = None
