@@ -1,5 +1,5 @@
 from kafka import KafkaConsumer
-#from salt_event import send_salt_event
+from salt_event import send_salt_event
 
 def __extract_data(message):
     host = None
