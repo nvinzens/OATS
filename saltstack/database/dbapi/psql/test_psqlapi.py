@@ -208,3 +208,78 @@ def close_connection(conn, cur):
     conn.commit()
     cur.close()
     conn.close()
+
+
+def test_connect():
+    connect = None
+    cursor = None
+    connect = connect_to_db()
+    cursor = create_cursor(connect)
+    close_connection(connect, cursor)
+    assert connect is not None and cursor is not None
+
+
+def test_key_gen():
+    key1 = key_gen()
+    key2 = key_gen()
+    key_difference = key1 != key2
+    key_length = len(key1) == 12
+    assert key_difference == key_length
+
+
+def test_create_and_delete_case():
+    caseid = None
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    deleted = delete_case(caseid)
+    assert deleted is True and caseid is not None
+
+
+def test_update_case():
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    updated = update_case(caseid, solution='New stuff', test=False)
+    deleted = delete_case(caseid)
+    assert updated is not None and caseid is not None and deleted is True
+
+
+def test_update_case_state():
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    updated = update_case(caseid, solution='New stuff', status=Status.ONHOLD.value, test=False)
+    deleted = delete_case(caseid)
+    assert updated is not None and caseid is not None and deleted is True
+
+
+def test_take_case():
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    tech_id = take_case(case_id=caseid, technician='techy')
+    deleted = delete_case(caseid)
+    assert caseid is not None and tech_id is not None and deleted is True
+
+
+def test_get_solutions_as_string():
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    sol = []
+    sol = get_solutions_as_string(caseid, test=False)
+    print sol
+    deleted = delete_case(caseid)
+    assert sol is not None and caseid is not None and deleted is True
+
+
+def test_cases_of_last_day():
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    cases = show_cases_of_last_day()
+    deleted = delete_case(caseid)
+    assert caseid is not None and len(cases) >= 1 and deleted is True
+
+
+def test_open_cases():
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    cases = numb_open_cases()
+    deleted = delete_case(caseid)
+    assert caseid is not None and cases >= 1 and deleted is True
+
+
+def test_open_cases_nr():
+    caseid = create_case(error='test', host='test', description='Test', status=Status.NEW.value, test=False)
+    cases = show_open_cases_nr()
+    deleted = delete_case(caseid)
+    assert caseid is not None and len(cases) >= 1 and deleted is True

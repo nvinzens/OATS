@@ -17,6 +17,7 @@ DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 KEY_LEN = 12
 
+
 class Status(Enum):
     NEW = 'new'
     WORKING = 'solution_deployed'
@@ -24,8 +25,10 @@ class Status(Enum):
     TECH = 'technician_on_case'
     DONE = 'resolved'
 
+
 def base_str():
     return string.letters+string.digits
+
 
 def key_gen():
     '''
@@ -34,6 +37,7 @@ def key_gen():
     '''
     keylist = [random.choice(base_str()) for i in range(KEY_LEN)]
     return ''.join(keylist)
+
 
 def create_case(error, host, solution=None, description=None, status=Status.NEW.value, test=False):
     '''
@@ -80,6 +84,7 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
 
     return case_id
 
+
 def update_case(case_id, solution, status=None, test=False):
     '''
     Updates a case in the database (via oats db).
@@ -120,6 +125,7 @@ def update_case(case_id, solution, status=None, test=False):
         )
     return case_id
 
+
 def close_case(case_id, test=False):
     '''
     Puts the status of a case to 'resolved and closes it in the database (via oats db).
@@ -141,6 +147,7 @@ def close_case(case_id, test=False):
         }
     )
     return case_id
+
 
 def take_case(case_id, technician, test=False):
     '''
@@ -166,6 +173,7 @@ def take_case(case_id, technician, test=False):
     )
     return case_id
 
+
 def get_ospf_neighbors(host, case=None, test=False):
     '''
     Get all the OSPF neighbors of the host (via oats db).
@@ -186,6 +194,7 @@ def get_ospf_neighbors(host, case=None, test=False):
     if case:
         update_case(case, 'Get OSPF neighbors of ' + host + ' from oats database.')
     return ospf_neighbors
+
 
 def get_solutions_as_string(case_id, test=False):
     '''
@@ -208,6 +217,7 @@ def get_solutions_as_string(case_id, test=False):
 
     return solution_strings
 
+
 def get_vrf_ip(host, test=False):
     '''
     Get the VRF IP of the defined host (via oats db).
@@ -223,6 +233,7 @@ def get_vrf_ip(host, test=False):
     for link in links:
         if link['neighbor'] == MASTER:
             return link['ip']
+
 
 def get_interface_neighbor(host, interface, case=None, test=False):
     '''
@@ -267,6 +278,7 @@ def get_neighbors(host, case=None, test=False):
         update_case(case, 'Get neighbors of ' + host + ' from oats database.')
     return neighbors
 
+
 def show_cases_of_last_day(test=False):
     '''
     Prints out a list of all the cases which were last updated in the last 24 hours.
@@ -284,6 +296,7 @@ def show_cases_of_last_day(test=False):
         print('Case Event: ' + cas['Event'])
         print('Case Description: ' + cas['Description'])
         print('Case Status: ' + cas['Status'])
+
 
 def numb_open_cases(status=None, test=False):
     '''
@@ -313,6 +326,7 @@ def numb_open_cases(status=None, test=False):
         print('\nNumber of Cases with Status "technician_on_case": ' + str(tech_cases))
 
     return open_cases
+
 
 def show_open_cases_nr(test=False):
     '''
@@ -344,6 +358,7 @@ def show_open_cases_nr(test=False):
 
     except Exception, e:
         print(str(e))
+
 
 def get_interface(error, yang_message):
     '''
