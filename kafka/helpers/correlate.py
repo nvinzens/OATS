@@ -45,7 +45,7 @@ def aggregate(yang_message, minion, origin_ip, tag, message_details, error,
     global cache
     lock.acquire()
 
-    if error not in cache and cache is None:
+    if cache is None or error not in cache:
         # first thread initializes and populates dict
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
         cache[error] = {}
