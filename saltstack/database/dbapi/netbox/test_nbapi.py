@@ -7,7 +7,6 @@ def connect(url=None, token=None):
         url = 'http://152.96.193.117:8000'
     if not token:
         token = '427aa3baf14652867311f7421a6aa4aa192c59fe'
-
     nb = pynetbox.api(
         url=url,
         token=token
@@ -75,6 +74,20 @@ def test_connect():
     test_nb = None
     test_nb = connect()
     assert test_nb is not None
+
+
+def test_device():
+    test_nb = connect()
+    x = {
+        'name': 'test',
+        'device_role': '1',
+        'site': '2',
+        'device_type': '2'
+    }
+    device = nb.dcim.devices.create(x)
+    id = device['id']
+
+    assert True
 
 
 def test_ospf_neighbors():
