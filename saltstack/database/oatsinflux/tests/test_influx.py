@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
+from oatsinflux import oatsinflux
 import datetime
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
@@ -26,7 +27,7 @@ def write(measurement, host, interface, region, value, time=None, db=None, clien
     if not db:
         db = 'timedb'
     if not client:
-        client = connect_influx_client(host=None, port=None, user=None, password=None, dbname=db)
+        client = oatsinflux.connect_influx_client(host=None, port=None, user=None, password=None, dbname=db)
 
     measure = measurement
     device = host
@@ -80,7 +81,7 @@ def test_connect():
 
     db = 'test'
 
-    client = connect_influx_client(dbname=db)
+    client = oatsinflux.connect_influx_client(dbname=db)
 
     client.create_database(db)
 
@@ -116,11 +117,11 @@ def test_write_no_time():
     reg = 'test_reg'
     val = 1
 
-    cl = connect_influx_client(dbname=db)
+    cl = oatsinflux.connect_influx_client(dbname=db)
 
     cl.create_database(db)
 
-    success = write(measurement=measure, host=host, interface=interface, region=reg, value=val, time=None, db=db, client=cl)
+    success = oatsinflux.write(measurement=measure, host=host, interface=interface, region=reg, value=val, time=None, db=db, client=cl)
 
     cl.drop_database(db)
 
@@ -139,11 +140,11 @@ def test_write_with_time():
     time = datetime.datetime.utcnow()
     val = 1
 
-    cl = connect_influx_client(dbname=db)
+    cl = oatsinflux.connect_influx_client(dbname=db)
 
     cl.create_database(db)
 
-    success = write(measurement=measure, host=host, interface=interface, region=reg, value=val, time=time, db=db, client=cl)
+    success = oatsinflux.write(measurement=measure, host=host, interface=interface, region=reg, value=val, time=time, db=db, client=cl)
 
     cl.drop_database(db)
 

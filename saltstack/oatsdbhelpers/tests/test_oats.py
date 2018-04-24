@@ -10,6 +10,7 @@ import random
 DB_CLIENT = MongoClient()
 DB = DB_CLIENT.oatsdb
 
+
 def case_setup():
     new_case = {
         'case_nr': '1234',
@@ -28,6 +29,7 @@ def case_setup():
 
     except Exception, e:
         print(str(e))
+
 
 def net_setup():
     new_device = {
@@ -48,6 +50,7 @@ def net_setup():
     except Exception, e:
         print(str(e))
 
+
 def teardown():
     try:
         DB.test.delete_many({})
@@ -56,7 +59,8 @@ def teardown():
     except Exception, e:
         print(str(e))
 
-#Test for KeyID generator
+
+# Test for KeyID generator
 def test_key_gen():
     key1 = oats.key_gen()
     key2 = oats.key_gen()
@@ -64,13 +68,15 @@ def test_key_gen():
     key_length = len(key1) == 12
     assert key_difference == key_length
 
-#Tests for simple Database Access functions
+
+# Tests for simple Database Access functions
 def test_create_case():
     no_case = DB.test.find({'Event': 'Test'}).count()
     oats.create_case('Test', 'Test', solution='testsol', description='test desc', test=True)
     case = DB.test.find({'Event': 'Test'}).count()
     teardown()
     assert no_case != case
+
 
 def test_update_case():
     case_setup()
@@ -80,6 +86,7 @@ def test_update_case():
     teardown()
     assert no_up != up
 
+
 def test_close_case():
     case_setup()
     no_done = DB.test.find({'Status': 'resolved'}).count()
@@ -87,6 +94,7 @@ def test_close_case():
     done = DB.test.find({'Status': 'resolved'}).count()
     teardown()
     assert done != no_done
+
 
 def test_take_case():
     case_setup()
@@ -98,7 +106,8 @@ def test_take_case():
     teardown()
     assert no_tech != tech and no_tech2 != tech2
 
-#Tests for advanced Database Access functions
+
+# Tests for advanced Database Access functions
 def test_vrf_ip():
     net_setup()
     master_ip = oats.get_vrf_ip('TEST',test=True)
@@ -106,11 +115,13 @@ def test_vrf_ip():
     teardown()
     assert master_ip == master_ips
 
+
 def test_open_cases():
     case_setup()
     number = oats.numb_open_cases(status=None, test=True)
     teardown()
     assert number > 0
+
 
 def test_neighbor():
     net_setup()
@@ -118,11 +129,13 @@ def test_neighbor():
     teardown()
     assert neighb[0] == 'TEST2'
 
+
 def test_interface_neighbor():
     net_setup()
     neighif = oats.get_interface_neighbor('TEST', 'TestIF1', case=None, test=True)
     teardown()
     assert neighif == 'master'
+
 
 def test_ospf_neighbor():
     net_setup()
