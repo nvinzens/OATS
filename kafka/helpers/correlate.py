@@ -65,11 +65,11 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
     if cache[error]['counter'] == n_of_events:
         __print_correlation_result(cache[error]['counter'], error, salt_id)
         salt_event.send_salt_event(yang_message, host, message_details=message_details,
-                                   error=error, opt_arg=salt_id, case=cache['error']['case'])
+                                   error=error, opt_arg=salt_id, case=cache[error]['case'])
     else:
         __print_correlation_result(cache[error]['counter'], error, alternative_id)
         salt_event.send_salt_event(yang_message, host, message_details=message_details,
-                                   error=error, opt_arg=alternative_id, case=cache['error']['case'])
+                                   error=error, opt_arg=alternative_id, case=cache[error]['case'])
 
 def __print_correlation_result(counter, error, optional_arg):
     print ('Time passed. {0} event counter is {1}. Sending {0}:'
