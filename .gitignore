@@ -20,6 +20,8 @@ saltstack/oatsdbhelpers/.cache/
 
 saltstack/oatsdbhelpers/tests/__pycache__/
 
+saltstack/database/oatsinflux/tests/__pycache__/
+
 streaming_telemetry/tests/.pytest_cache/
 
 streaming_telemetry/tests/__pycache__/

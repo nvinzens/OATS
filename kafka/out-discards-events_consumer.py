@@ -20,7 +20,7 @@ consumer = KafkaConsumer('out-discards-events')
 for msg in consumer:
     print (msg)
     host, timestamp, data = __extract_data(msg)
-    salt_event.send_salt_event(data, host, timestamp)
+    salt_event.send_salt_event(data=data, host=host, timestamp=timestamp)
 
 
 

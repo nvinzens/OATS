@@ -1,0 +1,12 @@
+[
+  "tests/test_oatspsql.py::test_connect", 
+  "tests/test_oatspsql.py::test_key_gen", 
+  "tests/test_oatspsql.py::test_create_and_delete_case", 
+  "tests/test_oatspsql.py::test_update_case", 
+  "tests/test_oatspsql.py::test_update_case_state", 
+  "tests/test_oatspsql.py::test_take_case", 
+  "tests/test_oatspsql.py::test_get_solutions_as_string", 
+  "tests/test_oatspsql.py::test_cases_of_last_day", 
+  "tests/test_oatspsql.py::test_open_cases", 
+  "tests/test_oatspsql.py::test_open_cases_nr"
+]
