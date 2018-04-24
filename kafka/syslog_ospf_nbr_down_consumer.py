@@ -10,6 +10,17 @@ def __get_n_of_events(error, yang_message, current_case=None):
     root_host = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
     return len(oatsdbhelpers.get_ospf_neighbors(host, case=current_case))
 
+def __get_ospf_change_reason(yang_message):
+    for k, v in sorted(yang_message.items()):
+        if k == 'state':
+            if v['adjacency-state-change-reason-message'] == 'Dead timer expired':
+                return 'dead_timer_expired'
+            return ''
+        if v:
+            return __get_ospf_change_reason(v)
+        else:
+            return ''
+
 consumer = KafkaConsumer('OSPF_NEIGHBOR_DOWN')
 
 for msg in consumer:
@@ -26,11 +37,14 @@ for msg in consumer:
 
     n_of_required_events = __get_n_of_events(event_error, yang_mess, current_case=current_case)
 
-    thread = Thread(target=correlate.aggregate,
-                    args=(yang_mess, host, ip, event_tag, message, event_error, "dead_timer_expired",
-                          n_of_required_events, "interface_down", 10, current_case))
-    thread.daemon = True
-    thread.start()
+    salt_id = __get_ospf_change_reason(yang_mess)
+
+    if salt_id == "dead_timer_expired":
+        thread = Thread(target=correlate.aggregate,
+                        args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
+                              n_of_required_events, "interface_down", 10, current_case))
+        thread.daemon = True
+        thread.start()
 
 
 
