@@ -21,7 +21,7 @@ cache = None
 lock = threading.Lock()
 
 
-def aggregate(yang_message, minion, origin_ip, tag, message_details, error,
+def aggregate(yang_message, host, origin_ip, tag, message_details, error,
               salt_id, n_of_events, alternative_id, count_for, current_case):
     '''
     Aggregates the event (given by the error) to other events that occured
@@ -33,7 +33,7 @@ def aggregate(yang_message, minion, origin_ip, tag, message_details, error,
     Should be executed asynchronous, since the method will block for
     MAX_AGE time.
     :param yang_message: passed through for the workflow in salt
-    :param minion: The host from which the event originated
+    :param host: The host from which the event originated
     :param origin_ip: The hosts IP address
     :param tag: The event tag
     :param message_details: passed through for the workflow in salt
@@ -64,13 +64,12 @@ def aggregate(yang_message, minion, origin_ip, tag, message_details, error,
 
     if cache[error]['counter'] == n_of_events:
         __print_correlation_result(cache[error]['counter'], error, salt_id)
-        salt_event.send_salt_event(yang_message, minion, origin_ip, tag, message_details,
-                                   error, salt_id, case=cache[error]['case'])
+        salt_event.send_salt_event(yang_message, host, message_details=message_details,
+                                   error=error, opt_arg=salt_id, case=cache['error']['case'])
     else:
         __print_correlation_result(cache[error]['counter'], error, alternative_id)
-        salt_event.send_salt_event(yang_message, minion, origin_ip, tag, message_details,
-                                   error, alternative_id, case=cache[error]['case'])
-
+        salt_event.send_salt_event(yang_message, host, message_details=message_details,
+                                   error=error, opt_arg=alternative_id, case=cache['error']['case'])
 
 def __print_correlation_result(counter, error, optional_arg):
     print ('Time passed. {0} event counter is {1}. Sending {0}:'
