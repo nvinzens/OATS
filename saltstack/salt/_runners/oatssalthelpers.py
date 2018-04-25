@@ -162,3 +162,17 @@ def count_event(tag, error, amount, wait=10, case=None):
     success = counter >= amount
     oatsdbhelpers.update_case(case, solution='Result: {0} events. Wait success: {1}.'.format(counter, success))
     return success
+
+
+def wait_for_event(tag, error, amount, wait=10, case=None):
+    opts = salt.config.client_config('/etc/salt/master')
+
+    event = salt.utils.event.get_event(
+        'master',
+        sock_dir=opts['sock_dir'],
+        transport=opts['transport'],
+        opts=opts)
+    data = event.get_event(wait=wait, tag=tag)
+    if data:
+        return True
+    return False

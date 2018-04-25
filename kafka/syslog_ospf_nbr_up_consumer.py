@@ -1,5 +1,9 @@
 from kafka import KafkaConsumer
+from oats import oatsdbhelpers
 from helpers import salt_event
+from threading import Thread
+from helpers import correlate
+from helpers import utils
 import json
 
 def __get_interface_status(yang_message):
@@ -22,9 +26,16 @@ for msg in consumer:
     event_tag = event_msg['message_details']['tag']
     message = event_msg['message_details']
     event_error = event_msg['error']
-    opt_arg = 'ospf_nbr_up'
-    salt_event.send_salt_event(data=yang_mess, host=host, origin_ip=ip, tag=event_tag,
-                               message_details=message, error=event_error, opt_arg=opt_arg)
+    salt_id = 'ospf_nbrs_up'
+
+    current_case = oatsdbhelpers.create_case(event_error, host, solution='Case started in kafka event consumer.')
+    n_of_required_events = utils.get_n_of_events(event_error, yang_mess, current_case=current_case)
+
+    thread = Thread(target=correlate.aggregate,
+                    args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
+                          n_of_required_events+3, "no event", 10, current_case))
+    thread.daemon = True
+    thread.start()
 
 
 

@@ -3,12 +3,8 @@ import json
 from oats import oatsdbhelpers
 from threading import Thread
 from helpers import correlate
+from helpers import utils
 
-
-def __get_n_of_events(error, yang_message, current_case=None):
-    interface = oatsdbhelpers.get_interface(event_error, yang_mess)
-    root_host = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
-    return len(oatsdbhelpers.get_ospf_neighbors(host, case=current_case))
 
 def __get_ospf_change_reason(yang_message):
     for k, v in sorted(yang_message.items()):
@@ -36,7 +32,7 @@ for msg in consumer:
 
     if salt_id == "dead_timer_expired":
         current_case = oatsdbhelpers.create_case(event_error, host, solution='Case started in kafka event consumer.')
-        n_of_required_events = __get_n_of_events(event_error, yang_mess, current_case=current_case)
+        n_of_required_events = utils.get_n_of_events(event_error, host, yang_mess, current_case=current_case)
 
         thread = Thread(target=correlate.aggregate,
                         args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
