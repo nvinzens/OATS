@@ -32,10 +32,10 @@ for msg in consumer:
 
     if salt_id == "dead_timer_expired":
         current_case = oatsdbhelpers.create_case(event_error, host, solution='Case started in kafka event consumer.')
-        n_of_required_events = utils.get_n_of_events(event_error, host, yang_mess, current_case=current_case)
+        n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess, current_case=current_case)
 
         thread = Thread(target=correlate.aggregate,
-                        args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
+                        args=(yang_mess, root_host, ip, event_tag, message, event_error, salt_id,
                               n_of_required_events, "interface_down", 10, current_case))
         thread.daemon = True
         thread.start()
