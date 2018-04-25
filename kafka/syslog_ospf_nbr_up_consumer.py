@@ -19,7 +19,6 @@ consumer = KafkaConsumer('OSPF_NEIGHBOR_UP')
 
 for msg in consumer:
     event_msg = json.loads(msg.value)
-    print (event_msg)
     yang_mess = event_msg['yang_message']
     host = event_msg['host']
     ip = event_msg['ip']
