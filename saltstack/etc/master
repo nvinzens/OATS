@@ -16,7 +16,7 @@ reactor:
     - /srv/saltstack/reactor/ospf_neighbor_down_workflow.sls
   - 'napalm/syslog/*/OSPF_NEIGHBOR_DOWN/interface_down/disabled':
     - /srv/saltstack/reactor/ifdown_workflow.sls
-  - 'kafka/streaming-telemetry/*/out-discard-event'
+  - 'kafka/streaming-telemetry/*/out-discard-event':
     - /srv/saltstack/reactor/out_discards_exceeded_workflow.sls
 
 slack:

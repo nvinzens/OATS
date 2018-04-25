@@ -32,14 +32,12 @@ for msg in consumer:
     event_tag = event_msg['message_details']['tag']
     message = event_msg['message_details']
     event_error = event_msg['error']
-
-    current_case = oatsdbhelpers.create_case(event_error, host, solution='Case started in kafka event consumer.')
-
-    n_of_required_events = __get_n_of_events(event_error, yang_mess, current_case=current_case)
-
     salt_id = __get_ospf_change_reason(yang_mess)
 
     if salt_id == "dead_timer_expired":
+        current_case = oatsdbhelpers.create_case(event_error, host, solution='Case started in kafka event consumer.')
+        n_of_required_events = __get_n_of_events(event_error, yang_mess, current_case=current_case)
+
         thread = Thread(target=correlate.aggregate,
                         args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
                               n_of_required_events, "interface_down", 10, current_case))

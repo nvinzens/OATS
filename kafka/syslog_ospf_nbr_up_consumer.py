@@ -11,7 +11,7 @@ def __get_interface_status(yang_message):
         else:
             return ''
 
-consumer = KafkaConsumer('OSPF_NEIGHBOR_DOWN')
+consumer = KafkaConsumer('OSPF_NEIGHBOR_UP')
 
 for msg in consumer:
     event_msg = json.loads(msg.value)
