@@ -29,7 +29,7 @@ for msg in consumer:
     salt_id = 'ospf_nbrs_up'
 
     current_case = oatsdbhelpers.create_case(event_error, host, solution='Case started in kafka event consumer.')
-    n_of_required_events = utils.get_n_of_events(event_error, yang_mess, current_case=current_case)
+    n_of_required_events = utils.get_n_of_events(event_error, host, yang_mess, current_case=current_case)
 
     thread = Thread(target=correlate.aggregate,
                     args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
