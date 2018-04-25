@@ -101,13 +101,14 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     else:
         oatsdbhelpers.update_case(current_case, 'Unable to restart OSPF process on host {0}. Host might be offline.'
                                        '. Technician needed.'.format(interface_neighbor), oatsdbhelpers.Status.ONHOLD.value)
-    oatssalthelpers.post_slack(comment, case=current_case)
+    slack_post = oatssalthelpers.post_slack(comment, case=current_case)
 
     ret = {
         'error': error,
         'tag': tag,
         'comment': comment,
         'changes': conf,
+        'slack-post-status:': slack_post,
         'success': success
     }
 
