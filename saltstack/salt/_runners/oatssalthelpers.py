@@ -2,6 +2,7 @@ from oats import oatsdbhelpers
 import time
 import salt.config
 import salt.utils.event
+import yaml
 
 
 # TODO: add behaviour for calling methods without current_case id
@@ -16,13 +17,19 @@ def post_slack(message, case=None):
     channel = '#testing'
     user = 'OATS'
     #Use the slack api key for your workspace
-    api_key = '12345'
+    api_key = __load_api_key('/etc/salt/master')
     solutions = 'No linked workflow.'
     if case is not None:
         oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status=oatsdbhelpers.Status.ONHOLD.value)
         solutions = oatsdbhelpers.get_solutions_as_string(case)
         message += "\nExecuted workflow:\n" + solutions
     return __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
+
+
+def __load_api_key(filepath):
+    file = open(filepath)
+    masterconf = yaml.load(file)
+    return masterconf['slack']['api_key']
 
 
 def ping(source, destination, case=None, check_connectivity=False):
@@ -108,7 +115,7 @@ def ospf_noshutdown(minion, process_number, case=None):
                     result (bool), comment (str, a message for the user), already_configured (bool)
                     loaded_config (str), diff (str)
         '''
-    template_name = 'shutdown_ospf'
+    template_name = 'no_shutdown_ospf'
     template_source = 'router ospf {0}\n  no shutdown\nend'.format(process_number)
     config = {'template_name': template_name, 'template_source': template_source}
     oatsdbhelpers.update_case(case, solution='Trying to apply no shutdown to OSPF process {0}.'.format(process_number))

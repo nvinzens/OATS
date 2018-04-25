@@ -96,11 +96,11 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     success = async_result.get()
     if success:
         oatsdbhelpers.update_case(current_case, 'Successfully restarted OSPF process on host {0}.'
-                                    .format(host), oatsdbhelpers.Status.DONE.value)
+                                    .format(interface_neighbor), oatsdbhelpers.Status.DONE.value)
         comment += ' OSPF process restarted successfully.'
     else:
         oatsdbhelpers.update_case(current_case, 'Unable to restart OSPF process on host {0}. Host might be offline.'
-                                       '. Technician needed.'.format(host), oatsdbhelpers.Status.ONHOLD.value)
+                                       '. Technician needed.'.format(interface_neighbor), oatsdbhelpers.Status.ONHOLD.value)
     slack_post = oatssalthelpers.post_slack(comment, case=current_case)
 
     ret = {
