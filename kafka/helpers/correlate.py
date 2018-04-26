@@ -7,22 +7,16 @@ import threading
 import salt_event
 
 
-# CONSTANTS (move to DB?)
-INTERFACE_CHANGED = 'INTERFACE_CHANGED'
-OSPF_NEIGHBOR_DOWN = 'OSPF_NEIGHBOR_DOWN'
-OSPF_NEIGHBOR_UP = 'OSPF_NEIGHBOR_UP'
-AGGREGATE_EVENTS = [OSPF_NEIGHBOR_DOWN]
-EVENT_OPTIONAL_ARGS = {OSPF_NEIGHBOR_DOWN: 'dead_timer_expired'}
 CACHE_SIZE = 1000
-DEFAULT_COUNT_FOR = 10
 
-# cache for recognizing if a given event has occured in a given timeframe
+# cache for recognizing if an event has occured in a given timeframe
 cache = None
+current_case = None
 lock = threading.Lock()
 
 
 def aggregate(yang_message, host, origin_ip, tag, message_details, error,
-              salt_id, n_of_events, alternative_id, count_for, current_case):
+              salt_id, n_of_events, alternative_id, count_for, create_oats_case):
     '''
     Aggregates the event (given by the error) to other events that occured
     in a given time frame. For every recognized event in the system that
@@ -50,7 +44,10 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
         cache[error] = {}
         cache[error]['counter'] = 1
-        cache[error]['case'] = current_case
+        if create_oats_case:
+            global current_case
+            current_case = oatsdbhelpers.create_case(error, host, solution='Case started in kafka event consumer:'
+                                                                           ' aggregate.correlate().')
     else:
         # later threads increment counter
         cache[error]['counter'] += 1
@@ -65,13 +62,15 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
     if cache[error]['counter'] == n_of_events:
         __print_correlation_result(cache[error]['counter'], error, salt_id)
         salt_event.send_salt_event(yang_message, host, message_details=message_details,
-                                   error=error, opt_arg=salt_id, case=cache[error]['case'])
+                                   error=error, opt_arg=salt_id, case=current_case)
     else:
         __print_correlation_result(cache[error]['counter'], error, alternative_id)
         salt_event.send_salt_event(yang_message, host, message_details=message_details,
-                                   error=error, opt_arg=alternative_id, case=cache[error]['case'])
+                                   error=error, opt_arg=alternative_id, case=current_case)
+
 
 def __print_correlation_result(counter, error, optional_arg):
     print ('Time passed. {0} event counter is {1}. Sending {0}:'
            '{2} event to salt master'.format(error, counter, optional_arg))
+
 

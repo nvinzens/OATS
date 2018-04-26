@@ -29,13 +29,14 @@ for msg in consumer:
     event_error = event_msg['error']
     salt_id = __get_ospf_change_reason(yang_mess)
 
+    # only start aggregation once the dead timer is expired
     if salt_id == "dead_timer_expired":
-        current_case = oatsdbhelpers.create_case(event_error, host, solution='Case started in kafka event consumer.')
-        n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess, current_case=current_case)
+
+        n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess)
 
         thread = Thread(target=correlate.aggregate,
                         args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
-                              n_of_required_events, "interface_down", 10, current_case))
+                              n_of_required_events, "interface_down", 10, True))
         thread.daemon = True
         thread.start()
 

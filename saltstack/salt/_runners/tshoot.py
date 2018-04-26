@@ -85,13 +85,15 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     pool = ThreadPool(processes=1)
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
     if current_case is None or current_case == 'None':
-        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt tshoot.ospf_nbr_down.')
+        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt: tshoot.ospf_nbr_down().')
     interface = oatsdbhelpers.get_interface(error, yang_message)
     interface_neighbor = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
     n_of_neighbors = len(oatsdbhelpers.get_ospf_neighbors(interface_neighbor, case=current_case))
     oatssalthelpers.ospf_shutdown(interface_neighbor, process_number, case=current_case)
-    async_result = pool.apply_async(oatssalthelpers.wait_for_event, ('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbrs_up',
-                                                                     'OSPF_NEIGHBOR_UP', n_of_neighbors+3, 60, current_case))
+    async_result = pool.apply_async(
+        oatssalthelpers.wait_for_event, ('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbrs_up',
+                                         'OSPF_NEIGHBOR_UP', n_of_neighbors+3, 60, current_case)
+    )
     conf = oatssalthelpers.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
     success = async_result.get()
     if success:
@@ -115,8 +117,9 @@ def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, cur
     return ret
 
 
-def out_discards_exceeded(data, host, timestamp):
-    current_case = oatsdbhelpers.create_case("out-discards-exceeded", host, solution='Case created in salt tshoot.out_discards_exceeded.')
+def out_discards_exceeded(data, host, timestamp, current_case=None):
+    if current_case is None or current_case == 'None':
+        current_case = oatsdbhelpers.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: tshoot.out_discards_exceeded().')
     eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
     comment = "Discarded pakets on host {0} on egress interface {1} exceeds threshhold. Time of Event: {2}".format(host, data['ifaceName'], eventTime)
     ret = oatssalthelpers.post_slack(comment, case=current_case)
