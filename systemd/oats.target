@@ -1,3 +1,5 @@
 [Unit]
 Description=Starts all relevant scripts and services for OATS
-Requires=napalm-logs.service oatsclient.service
+Requires=oats-napalm-logs.service oats-client.service kafka_syslog_ifchanged_consumer.service
+Requires=kafka_syslog_ospf_nbr_down_consumer.service kafka_syslog_ospf_nbr_up_consumer.service
+
