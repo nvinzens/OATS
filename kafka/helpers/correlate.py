@@ -54,7 +54,7 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
         lock.release()
         return
     lock.release()
-    print ('{0} event detected: Waiting for {1} seconds to gather event data. Required amount of events: {2}'.
+    print ('{0} event detected: Waiting for {1} seconds to aggregate events. Required amount of events: {2}'.
            format(error, count_for, n_of_events))
     # wait for additional events
     time.sleep(count_for)

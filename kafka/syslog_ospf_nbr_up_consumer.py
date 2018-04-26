@@ -31,7 +31,7 @@ for msg in consumer:
     #start aggregation of event
     thread = Thread(target=correlate.aggregate,
                     args=(yang_mess, root_host, ip, event_tag, message, event_error, salt_id,
-                          n_of_required_events+3, "no event", 10, True))
+                          n_of_required_events+3, "no event", 10, False))
     thread.daemon = True
     thread.start()
 

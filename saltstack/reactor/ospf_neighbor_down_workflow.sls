@@ -1,6 +1,6 @@
 {% set event_data = data['data'] %}
 
-ifdown_workflow:
+ospf_nbr_down_workflow:
   runner.tshoot.ospf_nbr_down:
     - host: {{ event_data['minion'] }}
     - origin_ip: {{ event_data['origin_ip'] }}

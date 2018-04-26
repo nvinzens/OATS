@@ -25,7 +25,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, current_case=None):
     interface = oatsdbhelpers.get_interface(error, yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
     if current_case is None or current_case == 'None':
-        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt tshoot.ifdown.')
+        current_case = oatsdbhelpers.create_case(error, host, solution='Case created in salt: tshoot.ifdown().')
     interface_neighbor = oatsdbhelpers.get_interface_neighbor(host, interface, case=current_case)
 
     neighbors = oatsdbhelpers.get_neighbors(interface_neighbor, case=current_case)
@@ -66,7 +66,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, current_case=None):
     }
 
 
-def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, current_case=None):
+def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, current_case):
     '''
     Once this function is called it has already been determined that a specific OSPF
     process needs to be restarted. Most of the data gathering happened in the napalm-logs
