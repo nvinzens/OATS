@@ -6,6 +6,8 @@ napalm/scripts/*.pyc
 
 .idea/
 
+.pytest_cache/
+
 saltstack/database/python_classes/__init__.py
 
 saltstack/database/python_classes/.cache
