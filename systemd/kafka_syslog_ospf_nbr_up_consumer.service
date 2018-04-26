@@ -1,0 +1,11 @@
+[Unit]
+Description=Kafka consumer for syslog ospf neighbor up events
+After=oats.target napalm-logs.service
+PartOf=oats.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/OATS/kafka/syslog_ospf_nbr_up_consumer.py
+
+[Install]
+WantedBy=oats.target

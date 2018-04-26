@@ -1,0 +1,11 @@
+[Unit]
+Description=Kafka consumer for syslog interface changed events
+After=oats.target napalm-logs.service
+PartOf=oats.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/OATS/kafka/syslog_ifchanged_consumer.py
+
+[Install]
+WantedBy=oats.target

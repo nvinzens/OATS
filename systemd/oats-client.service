@@ -5,7 +5,7 @@ PartOf=oats.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /home/OATS/napalm/scripts/oatsclient.py
+ExecStart=/usr/bin/python /home/OATS/napalm/scripts/oats_napalm_logs_client.py
 
 [Install]
 WantedBy=oats.target
