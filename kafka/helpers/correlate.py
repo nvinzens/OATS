@@ -16,7 +16,7 @@ lock = threading.Lock()
 
 
 def aggregate(yang_message, host, origin_ip, tag, message_details, error,
-              salt_id, n_of_events, alternative_id, count_for, create_oats_case):
+              salt_id, n_of_events, alternative_id, count_for, use_oats_case):
     '''
     Aggregates the event (given by the error) to other events that occured
     in a given time frame. For every recognized event in the system that
@@ -44,7 +44,7 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
         cache[error] = {}
         cache[error]['counter'] = 1
-        if create_oats_case:
+        if use_oats_case:
             global current_case
             current_case = oatsdbhelpers.create_case(error, host, solution='Case started in kafka event consumer:'
                                                                            ' aggregate.correlate().')
@@ -54,23 +54,28 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
         lock.release()
         return
     lock.release()
-    print ('{0} event detected: Waiting for {1} seconds to aggregate events. Required amount of events: {2}'.
-           format(error, count_for, n_of_events))
+    if use_oats_case:
+        oatsdbhelpers.update_case(current_case,
+                                  solution='Waiting for {0} seconds to aggregate events.'
+                                           ' Required amount of events: {1}'.format(count_for, n_of_events))
     # wait for additional events
     time.sleep(count_for)
 
     if cache[error]['counter'] == n_of_events:
-        __print_correlation_result(cache[error]['counter'], error, salt_id)
+        if use_oats_case:
+            __update_db_case(cache[error]['counter'], error, salt_id)
         salt_event.send_salt_event(yang_message, host, message_details=message_details,
                                    error=error, opt_arg=salt_id, case=current_case)
     else:
-        __print_correlation_result(cache[error]['counter'], error, alternative_id)
+        if use_oats_case:
+            __update_db_case(cache[error]['counter'], error, alternative_id)
         salt_event.send_salt_event(yang_message, host, message_details=message_details,
                                    error=error, opt_arg=alternative_id, case=current_case)
 
 
-def __print_correlation_result(counter, error, optional_arg):
-    print ('Time passed. {0} event counter is {1}. Sending {0}:'
-           '{2} event to salt master'.format(error, counter, optional_arg))
+def __update_db_case(counter, error, identifier):
+    oatsdbhelpers.update_case(current_case,
+                              solution='Time passed. {0} event counter is {1}. Sending {0}:'
+                                       '{2} event to salt master'.format(error, counter, identifier))
 
 
