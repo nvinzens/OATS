@@ -1,6 +1,0 @@
-{
-  "tech_id": "1",
-  "first_name": "$INSERT_FIRST_NAME$",
-  "last_name": "$INSERT_LASTL_NAME$",
-  "slack_channel": "#$INSERT_SLACK_CHANNEL$"
-}
