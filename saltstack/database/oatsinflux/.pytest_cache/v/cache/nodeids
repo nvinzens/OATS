@@ -1,0 +1,5 @@
+[
+  "tests/test_influx.py::test_connect", 
+  "tests/test_influx.py::test_write_no_time", 
+  "tests/test_influx.py::test_write_with_time"
+]

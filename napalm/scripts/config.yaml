@@ -1,0 +1,24 @@
+syslog-errors:
+  - error: INTERFACE_CHANGED
+    salt_event_lookup_key: oper_status
+  - error: OSPF_NEIGHBOR_DOWN
+    salt_event_lookup_value: adjacency-state-change-reason-message
+    salt_event_lookup_value_match: 'Dead timer expired'
+    counter: 3
+    count_for: 10
+    alternative_event: interface_down
+  - error: OSPF_NEIGHBOR_UP
+    salt_event: ospf_nbr_up
+
+
+
+
+
+
+
+INTERFACE_CHANGED = 'INTERFACE_CHANGED'
+OSPF_NEIGHBOR_DOWN = 'OSPF_NEIGHBOR_DOWN'
+OSPF_NEIGHBOR_UP = 'OSPF_NEIGHBOR_UP'
+AGGREGATE_EVENTS = [OSPF_NEIGHBOR_DOWN]
+EVENT_OPTIONAL_ARGS = {OSPF_NEIGHBOR_DOWN: 'dead_timer_expired'}
+MAX_AGE = 10

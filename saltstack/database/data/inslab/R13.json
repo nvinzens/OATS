@@ -1,0 +1,18 @@
+{
+  "host_name": "R13",
+  "ip_address": "10.20.1.13",
+  "MAC_address": "",
+  "Class": "Router",
+  "Role": "Core",
+  "connections": [
+    { "interface": "GigabitEthernet1", "ip": "10.20.1.13", "neighbor": "master", "ospf_area":"" },
+    { "interface": "GigabitEthernet2", "ip": "unassigned", "neighbor": "", "ospf_area":"" },
+    { "interface": "GigabitEthernet2.12", "ip": "unassigned", "neighbor": "", "ospf_area":"" },
+    { "interface": "GigabitEthernet2.13", "ip": "172.16.13.3", "neighbor": "R11", "ospf_area":"" },
+    { "interface": "GigabitEthernet2.23", "ip": "172.16.23.3", "neighbor": "R12", "ospf_area":"" },
+    { "interface": "GigabitEthernet2.23", "ip": "unassigned", "neighbor": "", "ospf_area":"" },
+    { "interface": "GigabitEthernet2.34", "ip": "172.16.34.3", "neighbor": "R14", "ospf_area":"1" },
+    { "interface": "GigabitEthernet2.35", "ip": "172.16.35.3", "neighbor": "R15", "ospf_area":"1" },
+    { "interface": "GigabitEthernet2.36", "ip": "172.16.36.3", "neighbor": "R16", "ospf_area":"1" }
+  ]
+}

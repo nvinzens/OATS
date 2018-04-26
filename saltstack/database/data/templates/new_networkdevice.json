@@ -1,0 +1,10 @@
+{
+  "host_name": "$INSERT_HOST_NAME$",
+  "ip_address": "$INSERT_IP_ADDRESS$",
+  "MAC_address": "$INSERT_MAC_ADDRESS$",
+  "Class": "$INSERT_CLASS$",
+  "Role": "$INSERT_ROLE$",
+  "connections": [
+    { "interface": "$INSERT_INTERFACE$", "ip": "INSERT_IP_ADDRESS", "neighbor": "$INSERT_NEIGHBOR$","ospf_area":"1" }
+  ]
+}
