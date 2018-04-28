@@ -3,26 +3,18 @@ hosts:
     port: 830
     username: ins
     password: ins@lab
-    subscriptions:
-        - subscription:
-            xpath: /if:interfaces-state/interface/statistics/out-discards
-            period: 1000
-            kafka_publish_topic: interfaces-out-discards
-            threshold:
-              - value: 100000
-              - operator: greater_than
-              - event: kafka/streaming-telemetry/*/out-discard-event
-
   - host: 10.20.1.21
     port: 830
     username: ins
     password: ins@lab
-    subscriptions:
-        - subscription:
-            xpath: /if:interfaces-state/interface/statistics/out-discards
-            period: 1000
-            kafka_publish_topic: interfaces-out-discards
-            threshold:
-              - value: 100000
-              - operator: greater_than
-              - event: kafka/streaming-telemetry/*/out-discard-event
+
+subscriptions:
+  - subscription:
+      xpath: /if:interfaces-state/interface/statistics/out-discards
+      period: 1000
+      kafka_publish_topic: interfaces-out-discards
+      kafka_streams_eval: true
+      threshold:
+        - value: 100000
+        - operator: greater_than
+        - event: streaming-telemetry/*/out-discard-event
