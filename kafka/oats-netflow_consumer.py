@@ -88,12 +88,16 @@ field_types = {
     88: 'FRAGMENT_OFFSET',
     89: 'FORWARDING STATUS',
     152: 'TIMESTAMP',
-    153: 'TIMESTAMP'
+    153: 'TIMESTAMP',
     352: 'COUNTER_LAYER2_BYTES'
 }
 
 consumer = KafkaConsumer('oats-netflow')
 for msg in consumer:
     netflow_data = json.loads(msg.value)
-    print (netflow_data)
+    for list in netflow_data:
+        for dict in list:
+            if dict['I'] == 2:
+                if dict['V'] > 50:
+                    print (netflow_data['DataSets'])
 
