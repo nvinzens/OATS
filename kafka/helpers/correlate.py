@@ -4,7 +4,7 @@ from oats import oatsdbhelpers
 from expiringdict import ExpiringDict #pip install expiringdict
 import time
 import threading
-import salt_event
+import EventProcessor
 
 
 CACHE_SIZE = 1000
@@ -15,7 +15,7 @@ current_case = None
 lock = threading.Lock()
 
 
-def aggregate(yang_message, host, origin_ip, tag, message_details, error,
+def aggregate(data, host, timestamp, severity, error,
               salt_id, n_of_events, alternative_id, count_for, use_oats_case):
     '''
     Aggregates the event (given by the error) to other events that occured
@@ -26,7 +26,7 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
     which workflow needs to be executed.
     Should be executed asynchronous, since the method will block for
     MAX_AGE time.
-    :param yang_message: passed through for the workflow in salt
+    :param data: passed through for the workflow in salt
     :param host: The host from which the event originated
     :param origin_ip: The hosts IP address
     :param tag: The event tag
@@ -64,13 +64,17 @@ def aggregate(yang_message, host, origin_ip, tag, message_details, error,
     if cache[error]['counter'] == n_of_events:
         if use_oats_case:
             __update_db_case(cache[error]['counter'], error, salt_id)
-        salt_event.send_salt_event(yang_message, host, message_details=message_details,
-                                   error=error, opt_arg=salt_id, case=current_case)
+        event_name = 'napalm/syslog/*/' + error + '/' + salt_id
+        EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
+                                     type='syslog', event_name=event_name, severity=severity,
+                                     case=current_case)
     else:
         if use_oats_case:
             __update_db_case(cache[error]['counter'], error, alternative_id)
-        salt_event.send_salt_event(yang_message, host, message_details=message_details,
-                                   error=error, opt_arg=alternative_id, case=current_case)
+        event_name = 'napalm/syslog/*/' + error + '/' + alternative_id
+        EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
+                                     type='syslog', event_name=event_name, severity=severity,
+                                     case=current_case)
 
 
 def __update_db_case(counter, error, identifier):

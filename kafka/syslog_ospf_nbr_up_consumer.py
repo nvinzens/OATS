@@ -1,6 +1,6 @@
 from kafka import KafkaConsumer
 from oats import oatsdbhelpers
-from helpers import salt_event
+from helpers import EventProcessor
 from threading import Thread
 from helpers import correlate
 from helpers import utils

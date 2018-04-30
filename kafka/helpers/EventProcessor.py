@@ -4,7 +4,7 @@ import salt.utils.event
 import salt.client
 
 
-def send_salt_event(data, host, timestamp, type, event_name, severity, case=None):
+def process_event(data, host, timestamp, type, event_name, severity, case=None, start_tshoot=True):
     '''
     Sends all the given data to the salt event bus.
     The data is used by different workflows in the salt system.
@@ -18,14 +18,18 @@ def send_salt_event(data, host, timestamp, type, event_name, severity, case=None
     :param case: the optional oatsdb case-id
     :return: None
     '''
-    caller = salt.client.Caller()
-    caller.sminion.functions['event.send'](
-        event_name,
-        {'data': data,
-         'host': host,
-         'timestamp': timestamp,
-         'type': type,
-         'severity': severity,
-         'case': case
-         }
-    )
+    if start_tshoot:
+        caller = salt.client.Caller()
+        caller.sminion.functions['event.send'](
+            event_name,
+            {'data': data,
+             'host': host,
+             'timestamp': timestamp,
+             'type': type,
+             'severity': severity,
+             'case': case
+             }
+        )
+    # TODO: store in DB
+    else:
+        pass

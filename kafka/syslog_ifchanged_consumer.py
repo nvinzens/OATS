@@ -1,5 +1,5 @@
 from kafka import KafkaConsumer
-from helpers import salt_event
+from helpers import EventProcessor
 import json
 
 def __get_interface_status(yang_message):
@@ -24,8 +24,8 @@ for msg in consumer:
     opt_arg = __get_interface_status(yang_mess)
     event_name = 'napalm/syslog/*/' + error + '/' + opt_arg
 
-    salt_event.send_salt_event(data=event_msg, host=host, timestamp=timestamp,
-                               type='syslog', event_name=event_name, severity=severity)
+    EventProcessor.process_event(data=event_msg, host=host, timestamp=timestamp,
+                                 type='syslog', event_name=event_name, severity=severity)
 
 
 

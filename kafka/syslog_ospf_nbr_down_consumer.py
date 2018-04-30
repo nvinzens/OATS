@@ -23,9 +23,8 @@ for msg in consumer:
     event_msg = json.loads(msg.value)
     yang_mess = event_msg['yang_message']
     host = event_msg['host']
-    ip = event_msg['ip']
-    event_tag = event_msg['message_details']['tag']
-    message = event_msg['message_details']
+    timestamp = event_msg['timestamp']
+    severity = event_msg['severity']
     event_error = event_msg['error']
     salt_id = __get_ospf_change_reason(yang_mess)
 
@@ -35,7 +34,7 @@ for msg in consumer:
         n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess)
 
         thread = Thread(target=correlate.aggregate,
-                        args=(yang_mess, host, ip, event_tag, message, event_error, salt_id,
+                        args=(yang_mess, host, timestamp, severity, event_error, salt_id,
                               n_of_required_events, "interface_down", 10, True))
         thread.daemon = True
         thread.start()
