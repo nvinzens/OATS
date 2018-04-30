@@ -21,17 +21,16 @@ for msg in consumer:
     event_msg = json.loads(msg.value)
     yang_mess = event_msg['yang_message']
     host = event_msg['host']
-    ip = event_msg['ip']
-    event_tag = event_msg['message_details']['tag']
-    message = event_msg['message_details']
+    timestamp = event_msg['timestamp']
+    severity = event_msg['severity']
     event_error = event_msg['error']
     salt_id = 'ospf_nbrs_up'
     n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess)
 
     #start aggregation of event
     thread = Thread(target=correlate.aggregate,
-                    args=(event_msg, root_host, ip, event_tag, message, event_error, salt_id,
-                          n_of_required_events+3, "no event", 10, False))
+                    args=(yang_mess, host, timestamp, severity, event_error, salt_id,
+                          n_of_required_events, "no event", 10, True))
     thread.daemon = True
     thread.start()
 
