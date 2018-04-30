@@ -1,4 +1,5 @@
 from kafka import KafkaConsumer
+import json
 
 field_types = {
     1: 'IN_BYTES',
@@ -88,9 +89,11 @@ field_types = {
     89: 'FORWARDING STATUS',
     152: 'TIMESTAMP',
     153: 'TIMESTAMP'
+    352: 'COUNTER_LAYER2_BYTES'
 }
 
 consumer = KafkaConsumer('oats-netflow')
 for msg in consumer:
-    print (msg)
+    netflow_data = json.loads(msg.value)
+    print (netflow_data)
 
