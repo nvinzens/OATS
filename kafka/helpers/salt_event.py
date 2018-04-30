@@ -4,8 +4,7 @@ import salt.utils.event
 import salt.client
 
 
-def send_salt_event(data, host, message_details=None, error=None, opt_arg=None,
-                    timestamp=None, origin_ip=None, tag=None, case=None):
+def send_salt_event(data, host, timestamp, type, event_name, severity, case=None):
     '''
     Sends all the given data to the salt event bus.
     The data is used by different workflows in the salt system.
@@ -20,24 +19,13 @@ def send_salt_event(data, host, message_details=None, error=None, opt_arg=None,
     :return: None
     '''
     caller = salt.client.Caller()
-    if error is None:
-        caller.sminion.functions['event.send'](
-            'kafka/streaming-telemetry/*/out-discard-event',
-            {'data': data,
-             'host': host,
-             'timestamp': timestamp,
-             'case': case
-             }
-        )
-    else:
-        caller.sminion.functions['event.send'](
-            'napalm/syslog/*/' + error + '/' + opt_arg,
-                {'minion': host,
-                 'origin_ip': origin_ip,
-                 'yang_message': data,
-                 'tag': tag,
-                 'error': error,
-                 'message_details': message_details,
-                 'case': case
-                 }
-            )
+    caller.sminion.functions['event.send'](
+        event_name,
+        {'data': data,
+         'host': host,
+         'timestamp': timestamp,
+         'type': type,
+         'severity': severity,
+         'case': case
+         }
+    )

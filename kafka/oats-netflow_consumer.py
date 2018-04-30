@@ -95,9 +95,9 @@ field_types = {
 consumer = KafkaConsumer('oats-netflow')
 for msg in consumer:
     netflow_data = json.loads(msg.value)
-    for list in netflow_data:
+    for list in netflow_data['DataSets']:
         for dict in list:
-            if dict['I'] == 2:
-                if dict['V'] > 50:
-                    print (netflow_data['DataSets'])
+            if dict['I'] == 1:
+                if dict['V'] > 1000:
+                    print (msg)
 

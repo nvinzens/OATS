@@ -17,13 +17,15 @@ for msg in consumer:
     event_msg = json.loads(msg.value)
     yang_mess = event_msg['yang_message']
     host = event_msg['host']
-    ip = event_msg['ip']
-    event_tag = event_msg['message_details']['tag']
-    message = event_msg['message_details']
-    event_error = event_msg['error']
-    opt_arg = __get_interface_status(yang_message=yang_mess)
-    salt_event.send_salt_event(data=yang_mess, host=host, origin_ip=ip, tag=event_tag,
-                               message_details=message, error=event_error, opt_arg=opt_arg)
+    timestamp = event_msg['timestamp']
+    severity = event_msg['severity']
+
+    error = event_msg['error']
+    opt_arg = __get_interface_status(yang_mess)
+    event_name = 'napalm/syslog/*/' + error + '/' + opt_arg
+
+    salt_event.send_salt_event(data=event_msg, host=host, timestamp=timestamp,
+                               type='syslog', event_name=event_name, severity=severity)
 
 
 

@@ -4,7 +4,7 @@ from multiprocessing.pool import ThreadPool
 import time
 
 
-def ifdown(host, origin_ip, yang_message, error, tag, current_case=None):
+def ifdown(host, yang_message, error, tag, current_case=None):
     '''
     Function that gathers data in the network and executes a workflow according to the data.
     Is triggered by the salt system once an INTERFACE_DOWN event arrives in the salt
@@ -66,7 +66,7 @@ def ifdown(host, origin_ip, yang_message, error, tag, current_case=None):
     }
 
 
-def ospf_nbr_down(host, origin_ip, yang_message, error, tag, process_number, current_case):
+def ospf_nbr_down(host, yang_message, error, tag, process_number, current_case):
     '''
     Once this function is called it has already been determined that a specific OSPF
     process needs to be restarted. Most of the data gathering happened in the napalm-logs
