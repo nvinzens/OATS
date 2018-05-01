@@ -4,7 +4,7 @@ from kafka import KafkaProducer
 from kafka.errors import KafkaError
 import json
 import xmltodict
-from SubscriptionConfig import SubscriptionConfig
+from OATSConfig import SubscriptionConfig
 from multiprocessing import Process, Lock
 
 YAML_FILE = 'config.yaml'

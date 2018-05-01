@@ -1,1 +1,1 @@
-from . import SubscriptionConfig
+from . import OATSConfig

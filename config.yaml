@@ -14,7 +14,11 @@ subscriptions:
       period: 1000
       kafka_publish_topic: interfaces-out-discards
       kafka_streams_eval: true
-      threshold:
+      event_threshold:
         - value: 100000
         - operator: greater_than
+        - kafka_event_topic: out-discards-events
         - event: streaming-telemetry/*/out-discard-event
+        - data_fields:
+          - xpath: /notification/push-update/datastore-contents-xml/interfaces-state/interface/name
+          - xpath: /notification/push-update/datastore-contents-xml/interfaces-state/interface/statistics/out-discards

@@ -1,0 +1,27 @@
+package client.model;
+
+public enum Operator {
+
+
+    GREATER_THAN, SMALLER_THAN, EQUALS,
+    GREATER_OR_EQUAL, SMALLER_OR_EQUAL;
+
+
+    public static Operator getOperator(String code) {
+
+        switch (code) {
+            case "greater_than":
+                return GREATER_THAN;
+            case "smaller_than":
+                return SMALLER_THAN;
+            case "equals":
+                return EQUALS;
+            case "greater_or_equal":
+                return GREATER_OR_EQUAL;
+            case "smaller_or_equal":
+                return SMALLER_OR_EQUAL;
+            default:
+                throw new EnumConstantNotPresentException(Operator.class, "Operator " + code + " provided in config file is invalid.");
+        }
+    }
+}

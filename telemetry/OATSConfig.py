@@ -1,4 +1,6 @@
 import yaml
+import Host
+import TelemetrySubscription
 
 class SubscriptionConfig:
 
@@ -14,7 +16,7 @@ class SubscriptionConfig:
 
     def get_subscriptions(self, host_config):
         subs = []
-        for sub in host_config['subscriptions']:
+        for sub in self.config['subscriptions']:
             subs.append(sub)
         return subs
 
@@ -38,4 +40,6 @@ class SubscriptionConfig:
 
     def get_xpath(self, subscription):
         return subscription['subscription']['xpath']
+
+
 
