@@ -20,7 +20,7 @@ def connect_influx_client(host=None, port=None, user=None, password=None, dbname
     return client
 
 
-def write_event(host, hostip, timestamp, type, event_name, severity, data, db=None, client=None):
+def write_event(host, timestamp, type, event_name, severity, data, db=None, client=None):
 
     if not db:
         db = 'timedb'
@@ -29,34 +29,101 @@ def write_event(host, hostip, timestamp, type, event_name, severity, data, db=No
 
     try:
         if type == 'syslog':
-            __write_syslog(client)
+            __write_syslog(host, timestamp, type, event_name, severity, data, client)
         elif type == 'api':
-            __write_api(client)
+            __write_api(host, timestamp, type, event_name, severity, data, client)
         elif type == 'netflow':
-            __write_netflow(client)
+            __write_netflow(host, timestamp, type, event_name, severity, data, client)
         elif type == 'streaming-telemetry':
-            __write_stream(client)
+            __write_stream(host, timestamp, type, event_name, severity, data, client)
         else:
             raise ValueError('Invalid Event Type')
     except Exception as error:
         print('Caught this error: ' + repr(error))
 
 
-def __write_syslog(client):
+def __write_syslog(host, timestamp, type, event_name, severity, data, client):
 
-    return 0
+    success = False
+    metrics = {}
+    metrics['measurement'] = "oats_timeseries_data"
+    metrics['tags'] = {}
+    metrics['fields'] = {}
+    metrics['tags']['host'] = str(host)
+    metrics['tags']['type'] = str(type)
+    metrics['tags']['event_name'] = str(event_name)
+    metrics['time'] = timestamp
+    metrics['fields']['severity'] = severity
 
-def __write_api(client):
+    try:
+        success = client.write_points([metrics])
+    except AttributeError as err:
+        print err.args
 
-    return 0
+    return success
 
-def __write_netflow(client):
 
-    return 0
+def __write_api(host, timestamp, type, event_name, severity, data, client):
 
-def __write_stream(client):
+    success = False
+    metrics = {}
+    metrics['measurement'] = "oats_timeseries_data"
+    metrics['tags'] = {}
+    metrics['fields'] = {}
+    metrics['tags']['host'] = str(host)
+    metrics['tags']['type'] = str(type)
+    metrics['tags']['event_name'] = str(event_name)
+    metrics['time'] = timestamp
+    metrics['fields']['severity'] = severity
 
-    return 0
+    try:
+        success = client.write_points([metrics])
+    except AttributeError as err:
+        print err.args
+
+    return success
+
+
+def __write_netflow(host, timestamp, type, event_name, severity, data, client):
+
+    success = False
+    metrics = {}
+    metrics['measurement'] = "oats_timeseries_data"
+    metrics['tags'] = {}
+    metrics['fields'] = {}
+    metrics['tags']['host'] = str(host)
+    metrics['tags']['type'] = str(type)
+    metrics['tags']['event_name'] = str(event_name)
+    metrics['time'] = timestamp
+    metrics['fields']['severity'] = severity
+
+    try:
+        success = client.write_points([metrics])
+    except AttributeError as err:
+        print err.args
+
+    return success
+
+
+def __write_stream(host, timestamp, type, event_name, severity, data, client):
+
+    success = False
+    metrics = {}
+    metrics['measurement'] = "oats_timeseries_data"
+    metrics['tags'] = {}
+    metrics['fields'] = {}
+    metrics['tags']['host'] = str(host)
+    metrics['tags']['type'] = str(type)
+    metrics['tags']['event_name'] = str(event_name)
+    metrics['time'] = timestamp
+    metrics['fields']['severity'] = severity
+
+    try:
+        success = client.write_points([metrics])
+    except AttributeError as err:
+        print err.args
+
+    return success
 
 
 def write(measurement, host, interface, region, value, time=None, db=None, client=None):
