@@ -7,7 +7,7 @@ from SubscriptionConfig import SubscriptionConfig
 # setup
 FILE = 'test_config.yaml'
 config = SubscriptionConfig(FILE)
-host_configs = config.get_host_configs()
+host_configs = config.get_raw_hosts()
 first_host_config = host_configs[0]
 second_host_config = host_configs[1]
 
@@ -77,54 +77,54 @@ def test_get_host_config():
 def test_get_username():
     first_username = 'user'
     second_username = 'user2'
-    assert first_username == config.get_username(first_host_config)
-    assert second_username == config.get_username(second_host_config)
+    assert first_username == config.__get_username(first_host_config)
+    assert second_username == config.__get_username(second_host_config)
 
 
 def test_get_password():
     first_password = 'guest'
     second_password = 'guest2'
-    assert first_password == config.get_password(first_host_config)
-    assert second_password == config.get_password(second_host_config)
+    assert first_password == config.__get_password(first_host_config)
+    assert second_password == config.__get_password(second_host_config)
 
 
 def test_get_host():
     first_host = '10.20.1.21'
     second_host = '10.20.1.22'
-    assert first_host == config.get_host(first_host_config)
-    assert second_host == config.get_host(second_host_config)
+    assert first_host == config.__get_host(first_host_config)
+    assert second_host == config.__get_host(second_host_config)
 
 
 def test_get_port():
     port = 830
-    assert port == config.get_port(first_host_config)
-    assert port == config.get_port(second_host_config)
+    assert port == config.__get_port(first_host_config)
+    assert port == config.__get_port(second_host_config)
 
 
 def test_get_subscriptions():
     #test setup
-    assert subcriptions == config.get_subscriptions(first_host_config)
+    assert subcriptions == config.get_telemetry_subs(first_host_config)
 
 
 def test_get_kafka_topic():
     first_topic = 'oats'
     second_topic = 'oats2'
-    assert first_topic == config.get_kafka_topic(first_sub)
-    assert second_topic == config.get_kafka_topic(second_sub)
+    assert first_topic == config.__get_kafka_topic(first_sub)
+    assert second_topic == config.__get_kafka_topic(second_sub)
 
 
 def test_get_period():
     first_period = 1000
     second_period = 990
-    assert first_period == config.get_publish_period(first_sub)
-    assert second_period == config.get_publish_period(second_sub)
+    assert first_period == config.__get_publish_period(first_sub)
+    assert second_period == config.__get_publish_period(second_sub)
 
 
 def test_get_xpath():
     first_xpath = '/memory-ios-xe-oper:memory-statistics/memory-statistic/free-memory'
     second_xpath = '/memory-ios-xe-oper:memory-statistics/memory-statistic/used-memory'
-    assert first_xpath == config.get_xpath(first_sub)
-    assert second_xpath == config.get_xpath(second_sub)
+    assert first_xpath == config.__get_xpath(first_sub)
+    assert second_xpath == config.__get_xpath(second_sub)
 
 
 

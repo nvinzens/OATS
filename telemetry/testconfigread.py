@@ -4,13 +4,11 @@ from kafka import KafkaProducer
 from kafka.errors import KafkaError
 import json
 import xmltodict
-from OATSConfig import SubscriptionConfig
+from OATSConfig import OATSConfig
 from multiprocessing import Process, Lock
 
 
 if __name__ == '__main__':
-    config = SubscriptionConfig("/home/nvinzens/Desktop/OATS/config.yaml")
-    host_configs = config.get_host_configs()
-    subs = config.get_subscriptions(config)
-    #print host_configs
-    print subs
+    config = OATSConfig("/home/nvinzens/Desktop/OATS/config.yaml")
+    for sub in config.get_telemetry_subs():
+        print sub.event_threshold

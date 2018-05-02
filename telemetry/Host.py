@@ -1,12 +1,6 @@
 
 
-
-class Host:
-    hostname = ''
-    port = 830
-    username = 'ins'
-    password = 'ins@lab'
-
+class OATSHost:
 
     def __init__(self, hostname, port, username, password):
         self.hostname = hostname

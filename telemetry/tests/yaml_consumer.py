@@ -6,9 +6,9 @@ sys.path.append("..")
 from SubscriptionConfig import SubscriptionConfig
 
 config = SubscriptionConfig('test_config.yaml')
-host_configs = config.get_host_configs()
+host_configs = config.get_raw_hosts()
 host_config = host_configs[0]
-sub1 = config.get_subscriptions(host_config)[1]
+sub1 = config.get_telemetry_subs(host_config)[1]
 print sub1
 #for host_config in host_configs:
     #print (config.get_username(host_config))
