@@ -7,7 +7,7 @@ import xmltodict
 from OATSConfig import OATSConfig
 from multiprocessing import Process, Lock
 
-YAML_FILE = '/home/OATS/confiig.yaml'
+YAML_FILE = '/home/OATS/config.yaml'
 
 def errback(notif):
     pass
