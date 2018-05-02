@@ -1,14 +1,14 @@
 CREATE TABLE public.cases
 (
     case_nr character varying NOT NULL,
-    "Event" text,
-    "Description" text,
-    "Status" character varying,
+    event text,
+    description text,
+    status character varying,
     created timestamp without time zone,
     last_updated timestamp without time zone,
     technician character varying,
-    "Sender_Device" character varying,
-    "Solution" text[],
+    sender_Device character varying,
+    solution text[],
     PRIMARY KEY (last_updated)
 )
 WITH (
