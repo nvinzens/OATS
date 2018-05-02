@@ -64,16 +64,16 @@ def __create_subscriptions(subscription, host_config):
 if __name__ == '__main__':
     config = OATSConfig(YAML_FILE)
     host_configs = config.get_host_configs()
-    for host_config in host_configs:
-        p = Process(target=__process_host_config, args=(host_config, config))
-        p.start()
+    #for host_config in host_configs:
+    #    p = Process(target=__process_host_config, args=(host_config, config))
+    #    p.start()
     # TODO: start kafka-streams clients
     subscriptions = config.get_telemetry_subs()
     for sub in subscriptions:
         if sub.kafka_streams_eval:
             p = Process(target=subprocess.call, args=([
                 'java', '-jar', sub.jar_location, sub.kafka_publish_topic,
-                sub.kafka_event_topic, sub.event_threshold, sub.operator,
+                sub.kafka_event_topic, str(sub.event_threshold), sub.operator,
                 sub.root_xpath, sub.name_xpath, sub.data_xpath
             ],))
             p.start()

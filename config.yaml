@@ -22,5 +22,5 @@ subscriptions:
         - event: streaming-telemetry/*/out-discard-event
         - data_xpaths:
           - root_xpath: /notification/push-update/datastore-contents-xml/interfaces-state/interface
-          - name_xpath: name
-          - data_xpath: statistics/out-discards
+          - name_xpath: /name
+          - data_xpath: /statistics/out-discards
