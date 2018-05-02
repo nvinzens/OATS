@@ -1,0 +1,6 @@
+
+interface_changed: down
+{'yang_message': {'interfaces': {'interface': {'GigabitEthernet2.12': {'state': {'oper_status': 'down'}}}}}, 'message_details': {'severity': 3, 'facility': 23, 'messageId': '1282', 'pri': '187', 'host': 'R11', 'tag': 'LINK-3-UPDOWN', 'time': '06:02:36', 'date': 'May  2', 'message': 'Interface GigabitEthernet2.12, changed state to down', 'milliseconds': '.523'}, 'facility': 23, 'ip': '10.20.1.11', 'error': 'INTERFACE_CHANGED', 'host': 'R11', 'yang_model': 'openconfig-interfaces', 'timestamp': 1525240956, 'os': 'ios', 'severity': 3}
+
+interface_changed: up
+{'yang_message': {'interfaces': {'interface': {'GigabitEthernet2.12': {'state': {'oper_status': 'up'}}}}}, 'message_details': {'severity': 3, 'facility': 23, 'messageId': '1283', 'pri': '187', 'host': 'R11', 'tag': 'LINK-3-UPDOWN', 'time': '06:04:32', 'date': 'May  2', 'message': 'Interface GigabitEthernet2.12, changed state to up', 'milliseconds': '.893'}, 'facility': 23, 'ip': '10.20.1.11', 'error': 'INTERFACE_CHANGED', 'host': 'R11', 'yang_model': 'openconfig-interfaces', 'timestamp': 1525241072, 'os': 'ios', 'severity': 3}

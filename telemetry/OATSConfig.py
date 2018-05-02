@@ -2,7 +2,8 @@ import yaml
 import Host
 import TelemetrySubscription
 
-class SubscriptionConfig:
+class OATSConfigReader:
+
 
     def __init__(self, yaml_file_name):
         file = open(yaml_file_name)
