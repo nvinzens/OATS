@@ -1,6 +1,6 @@
 package client.processor;
 
-import client.OATSStatisticsClient;
+import client.model.OATSArgs;
 import client.model.Statistic;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.Transformer;
@@ -12,16 +12,16 @@ public class StatisticTransformer implements Transformer<String, Statistic, KeyV
     private ProcessorContext context;
     private KeyValueStore<String, Statistic> statStore;
 
-    private long threshold;
+    private OATSArgs args;
 
-    public StatisticTransformer(long threshold) {
-        this.threshold = threshold;
+    public StatisticTransformer(OATSArgs args) {
+        this.args = args;
     }
 
     @Override
     public void init(ProcessorContext processorContext) {
         this.context = processorContext;
-        statStore = (KeyValueStore) context.getStateStore(OATSStatisticsClient.STAT_STATESTORE);
+        statStore = (KeyValueStore) context.getStateStore(args.getStatStateStore());
     }
 
     @SuppressWarnings("deprecation")
@@ -33,17 +33,40 @@ public class StatisticTransformer implements Transformer<String, Statistic, KeyV
 
     @Override
     public KeyValue<String, Statistic> transform(String key, Statistic newStat) {
-        Statistic oldStat = statStore.get(key+newStat.getIfaceName());
+        Statistic oldStat = statStore.get(key+newStat.getName());
         if (oldStat == null) {
             oldStat = new Statistic();
-            oldStat.setIfaceName(newStat.getIfaceName());
-            oldStat.setOutDiscards(0);
+            oldStat.setName(newStat.getName());
+            oldStat.setValue(0);
         }
-        if ((newStat.getOutDiscards() - oldStat.getOutDiscards()) > threshold) {
-            statStore.put(key+newStat.getIfaceName(), newStat);
-            return new KeyValue<>(key, newStat);
+        switch(args.getOperator()) {
+            case EQUALS:
+                if ((newStat.getValue() - oldStat.getValue()) == args.getThreshold()) {
+                    statStore.put(key+newStat.getName(), newStat);
+                    return new KeyValue<>(key, newStat);
+                }
+            case GREATER_THAN:
+                if ((newStat.getValue() - oldStat.getValue()) > args.getThreshold()) {
+                    statStore.put(key + newStat.getName(), newStat);
+                    return new KeyValue<>(key, newStat);
+                }
+            case SMALLER_THAN:
+                if ((newStat.getValue() - oldStat.getValue()) < args.getThreshold()) {
+                    statStore.put(key+newStat.getName(), newStat);
+                    return new KeyValue<>(key, newStat);
+                }
+            case GREATER_OR_EQUAL:
+                if ((newStat.getValue() - oldStat.getValue()) >= args.getThreshold()) {
+                    statStore.put(key+newStat.getName(), newStat);
+                    return new KeyValue<>(key, newStat);
+                }
+            case SMALLER_OR_EQUAL:
+                if ((newStat.getValue() - oldStat.getValue()) <= args.getThreshold()) {
+                    statStore.put(key+newStat.getName(), newStat);
+                    return new KeyValue<>(key, newStat);
+                }
         }
-        statStore.put(key+newStat.getIfaceName(), newStat);
+        statStore.put(key+newStat.getName(), newStat);
         return new KeyValue<>(null, null);
     }
 }

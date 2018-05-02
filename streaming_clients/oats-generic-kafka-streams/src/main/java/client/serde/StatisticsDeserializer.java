@@ -1,5 +1,6 @@
 package client.serde;
 
+import client.model.OATSArgs;
 import client.model.Statistic;
 import client.model.Statistics;
 import com.fasterxml.jackson.core.JsonParser;
@@ -23,21 +24,21 @@ public class StatisticsDeserializer extends StdDeserializer<Statistics>  {
 
     @Override
     public Statistics deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
-        JsonNode ifaceNode = jsonParser.getCodec().readTree(jsonParser);
+        JsonNode statNode = jsonParser.getCodec().readTree(jsonParser);
         Statistics stats = new Statistics();
 
-        //String et = ifaceNode.at("/notification/eventTime").asText();
-        //stats.setEventTime(et);
+        String et = statNode.at("/notification/eventTime").asText();
+        stats.setEventTime(et);
 
-        ArrayNode array = (ArrayNode)ifaceNode.at("/notification/push-update/datastore-contents-xml/interfaces-state/interface");
+        ArrayNode array = (ArrayNode)statNode.at(OATSArgs.rootXpath);
         List<Statistic> list = new ArrayList<>();
         for (JsonNode node : array) {
             Statistic stat = new Statistic();
-            stat.setIfaceName(node.get("name").asText());
-            //stat.setOutDiscards(node.at("/statistics/out-discards").asLong());
+            stat.setName(node.get(OATSArgs.nameXpath).asText());
+            stat.setValue(node.at(OATSArgs.dataXpath).asLong());
             list.add(stat);
         }
-        stats.setIfaceStatistics(list);
+        stats.setStatistics(list);
 
         return stats;
     }

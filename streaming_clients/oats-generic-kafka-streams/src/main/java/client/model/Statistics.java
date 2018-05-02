@@ -9,7 +9,7 @@ import java.util.List;
 public class Statistics {
 
     private Instant eventTime;
-    private List<Statistic> ifaceStatistics;
+    private List<Statistic> statistics;
 
     public void setEventTime(String eventTime) {
         this.eventTime = Instant.parse(eventTime);
@@ -19,11 +19,11 @@ public class Statistics {
         return eventTime;
     }
 
-    public void setIfaceStatistics(List<Statistic> ifaceStatistics) {
-        this.ifaceStatistics = ifaceStatistics;
+    public void setStatistics(List<Statistic> statistics) {
+        this.statistics = statistics;
     }
 
-    public List<Statistic> getIfaceStatistics() {
-        return ifaceStatistics;
+    public List<Statistic> getStatistics() {
+        return statistics;
     }
 }

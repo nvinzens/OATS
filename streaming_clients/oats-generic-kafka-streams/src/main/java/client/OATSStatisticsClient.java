@@ -16,6 +16,7 @@
  */
 package client;
 
+import client.model.OATSArgs;
 import client.model.Statistic;
 import client.model.Statistics;
 import client.processor.StatisticTransformer;
@@ -24,7 +25,6 @@ import client.serde.JsonPOJODeserializer;
 import client.serde.JsonPOJOSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -44,25 +44,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 
-/**
- * In this example, we implement a simple LineSplit program using the high-level Streams DSL
- * that reads from a source topic "streams-plaintext-input", where the values of messages represent lines of text,
- * and writes the messages as-is into a sink topic "streams-pipe-output".
- */
+
 public class OATSStatisticsClient {
 
-    private static final long THRESHOLD =  100000;
-    private static final String INPUTTOPIC = "interfaces-out-discards";
-    private static final String OUTPUTTOPIC = "out-discards-events";
-    public static final String STAT_STATESTORE = "iface-stat-statestore";
 
     public static void main(String[] args) throws Exception {
-        // read OATS-Config
-        ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
-
+        OATSArgs arguments = new OATSArgs(args);
 
         Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "iface-stats-client");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, arguments.getInputTopic() + "-client");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
@@ -76,34 +66,36 @@ public class OATSStatisticsClient {
         final StreamsBuilder builder = new StreamsBuilder();
         Map<String, Object> serdeProps = new HashMap<>();
 
-        final Serializer<Statistics> ifaceStatsSerializer = new JsonPOJOSerializer<>();
+        /**
+        final Serializer<Statistics> StatsSerializer = new JsonPOJOSerializer<>();
         serdeProps.put("JsonPOJOClass", Statistics.class);
-        ifaceStatsSerializer.configure(serdeProps, false);
+        StatsSerializer.configure(serdeProps, false);
 
-        final Deserializer<Statistics> ifaceStatsDeserializer = new JsonPOJODeserializer<>();
+        final Deserializer<Statistics> StatsDeserializer = new JsonPOJODeserializer<>();
         serdeProps.put("JsonPOJOClass", Statistics.class);
-        ifaceStatsDeserializer.configure(serdeProps, false);
+        StatsDeserializer.configure(serdeProps, false);
 
-        final Serde<Statistics> ifaceStatsSerde = Serdes.serdeFrom(ifaceStatsSerializer, ifaceStatsDeserializer);
+        final Serde<Statistics> StatsSerde = Serdes.serdeFrom(StatsSerializer, StatsDeserializer);
+         **/
 
-        final Serializer<Statistic> ifaceStatSerializer = new JsonPOJOSerializer<>();
+        final Serializer<Statistic> StatSerializer = new JsonPOJOSerializer<>();
         serdeProps.put("JsonPOJOClass", Statistic.class);
-        ifaceStatSerializer.configure(serdeProps, false);
+        StatSerializer.configure(serdeProps, false);
 
-        final Deserializer<Statistic> ifaceStatDeserializer = new JsonPOJODeserializer<>();
+        final Deserializer<Statistic> StatDeserializer = new JsonPOJODeserializer<>();
         serdeProps.put("JsonPOJOClass", Statistic.class);
-        ifaceStatDeserializer.configure(serdeProps, false);
+        StatDeserializer.configure(serdeProps, false);
 
-        final Serde<Statistic> ifaceStatSerde = Serdes.serdeFrom(ifaceStatSerializer, ifaceStatDeserializer);
+        final Serde<Statistic> StatSerde = Serdes.serdeFrom(StatSerializer, StatDeserializer);
 
-        StoreBuilder<KeyValueStore<String, Statistic>> ifaceStatSupplier = Stores.keyValueStoreBuilder(
+        StoreBuilder<KeyValueStore<String, Statistic>> StatSupplier = Stores.keyValueStoreBuilder(
                 Stores.inMemoryKeyValueStore
-                        (STAT_STATESTORE),
+                        (arguments.getStatStateStore()),
                         Serdes.String(),
-                        ifaceStatSerde);
-        builder.addStateStore(ifaceStatSupplier);
+                        StatSerde);
+        builder.addStateStore(StatSupplier);
 
-        KStream<String, String> raw = builder.stream(INPUTTOPIC);
+        KStream<String, String> raw = builder.stream(arguments.getInputTopic());
         KStream<String, Statistics> statsStream = raw.map((KeyValueMapper<String, String, KeyValue<String, Statistics>>) (key, value) -> {
             Statistics stat = new Statistics();
             try {
@@ -114,17 +106,17 @@ public class OATSStatisticsClient {
             return new KeyValue<>(key, stat);
         });
 
-        KStream<String, Statistic> ifaceStatStream = statsStream
-                .flatMapValues(value -> value.getIfaceStatistics())
+        KStream<String, Statistic> StatStream = statsStream
+                .flatMapValues(value -> value.getStatistics())
                 .map((key, value) -> new KeyValue<>(key, value));
 
-        KStream<String, Statistic> eventStream = ifaceStatStream
-                .transform(() -> new StatisticTransformer(THRESHOLD), STAT_STATESTORE);
+        KStream<String, Statistic> eventStream = StatStream
+                .transform(() -> new StatisticTransformer(arguments), arguments.getStatStateStore());
 
 
         eventStream
                 .filter((key, value) -> key != null)
-                .to(OUTPUTTOPIC, Produced.with(Serdes.String(), ifaceStatSerde));
+                .to(arguments.getOutputTopic(), Produced.with(Serdes.String(), StatSerde));
 
         final Topology topology = builder.build();
         final KafkaStreams streams = new KafkaStreams(topology, props);

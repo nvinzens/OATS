@@ -31,7 +31,9 @@ class OATSConfig:
             kafka_publish_topic = self.__get_kafka_topic(raw_sub)
             evaluate = self.__get_kafka_eval(raw_sub)
             event_thresh_data = self.__get_event_thresh_data(raw_sub)
-            sub = OATSTelemetrySubscription(xpath, period, kafka_publish_topic, evaluate, event_thresh_data)
+            jar_location = self.__get_jar_location(raw_sub)
+            sub = OATSTelemetrySubscription(xpath, period, kafka_publish_topic, evaluate,
+            jar_location, event_thresh_data)
             tel_subs.append(sub)
         return tel_subs
 
@@ -68,10 +70,11 @@ class OATSConfig:
     def __get_xpath(self, subscription):
         return subscription['subscription']['xpath']
 
-
     def __get_kafka_eval(self, subscription):
         return subscription['subscription']['kafka_streams_eval']
 
+    def __get_jar_location(self, subscription):
+        return subscription['subscription']['kafka_streams_jar_location']
 
     def __get_event_thresh_data(self, subscription):
         return subscription['subscription']['event_threshold_data']

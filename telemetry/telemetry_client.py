@@ -1,7 +1,7 @@
 from ncclient import manager
 import time
 from kafka import KafkaProducer
-from kafka.errors import KafkaError
+import subprocess
 import json
 import xmltodict
 from OATSConfig import OATSConfig
@@ -67,7 +67,17 @@ if __name__ == '__main__':
     for host_config in host_configs:
         p = Process(target=__process_host_config, args=(host_config, config))
         p.start()
+    # TODO: start kafka-streams clients
+    subscriptions = config.get_telemetry_subs()
+    for sub in subscriptions:
+        if sub.kafka_streams_eval:
+            p = Process(target=subprocess.call, args=([
+                'java', '-jar', 'temp.jar', sub.kafka_publish_topic,
+                sub.kafka_event_topic, sub.event_threshold, sub.operator,
+                sub.root_xpath, sub.name_xpath, sub.data_xpath
+            ]))
 
+    # TODO: start kafka-streams consumers
     #for subcription in config.get_telemetry_subs():
      #   pass
 

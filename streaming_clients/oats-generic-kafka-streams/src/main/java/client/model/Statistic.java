@@ -2,30 +2,30 @@ package client.model;
 
 public class Statistic {
 
-    private String ifaceName;
-    private long outDiscards;
+    private String name;
+    private long value;
 
-    public long getOutDiscards() {
-        return outDiscards;
+    public long getValue() {
+        return value;
     }
 
-    public String getIfaceName() {
-        return ifaceName;
+    public String getName() {
+        return name;
     }
 
-    public void setIfaceName(String ifaceName) {
-        this.ifaceName = ifaceName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setOutDiscards(long outDiscards) {
-        this.outDiscards = outDiscards;
+    public void setValue(long value) {
+        this.value = value;
     }
 
     public static boolean filterNonZero(String key, Statistic stat) {
-        return stat.getOutDiscards() != 0 && key != null;
+        return stat.getValue() != 0 && key != null;
     }
 
     public boolean isAboveThreshold(Statistic oldStat, long threshold) {
-        return (this.getOutDiscards() - oldStat.getOutDiscards()) > threshold;
+        return (this.getValue() - oldStat.getValue()) > threshold;
     }
 }

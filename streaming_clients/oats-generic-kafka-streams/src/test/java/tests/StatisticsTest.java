@@ -53,11 +53,11 @@ public class StatisticsTest {
         long firstOutDiscards = 5;
         String secondInterface = "GigabitEthernet1/0/1";
         long secondOutDiscards = 10;
-        List<Statistic> list = stat.getIfaceStatistics();
-        assertEquals(firstInterface, list.get(0).getIfaceName());
-        assertEquals(firstOutDiscards, list.get(0).getOutDiscards());
-        assertEquals(secondInterface, list.get(1).getIfaceName());
-        assertEquals(secondOutDiscards, list.get(1).getOutDiscards());
+        List<Statistic> list = stat.getStatistics();
+        assertEquals(firstInterface, list.get(0).getName());
+        assertEquals(firstOutDiscards, list.get(0).getValue());
+        assertEquals(secondInterface, list.get(1).getName());
+        assertEquals(secondOutDiscards, list.get(1).getValue());
     }
 
 }
