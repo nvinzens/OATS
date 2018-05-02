@@ -5,7 +5,15 @@ python:
 install:
   - pip install xmltodict
   - pip install pymongo
-  - pip install /home/travis/build/nvinzens/OATS/saltstack/oatsdbhelpers
+  - pip install influxdb
+  - pip install pynetbox
+  - pip install psycopg2
+  - pip install pyyaml
+  - pip install /home/travis/build/rjoehl/oatstest/streaming_telemetry/.
+  - pip install /home/travis/build/rjoehl/oatstest/saltstack/oatsdbhelpers/.
+  - pip install /home/travis/build/rjoehl/oatstest/saltstack/database/oatsinflux/.
+  - pip install /home/travis/build/rjoehl/oatstest/saltstack/database/oatsnb/.
+  - pip install /home/travis/build/rjoehl/oatstest/saltstack/database/oatspsql/.
   - pip install pytest
   - pip install --upgrade pip enum34
 
