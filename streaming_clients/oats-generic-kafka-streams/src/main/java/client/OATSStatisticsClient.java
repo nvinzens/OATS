@@ -46,10 +46,15 @@ import java.util.concurrent.CountDownLatch;
 
 
 public class OATSStatisticsClient {
-
+    public static OATSArgs arguments;
+    public static boolean configLoaded = false;
 
     public static void main(String[] args) throws Exception {
-        OATSArgs arguments = new OATSArgs(args);
+        if (!configLoaded) {
+            arguments = new OATSArgs(args);
+            configLoaded = true;
+        }
+
 
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, arguments.getInputTopic() + "-client");

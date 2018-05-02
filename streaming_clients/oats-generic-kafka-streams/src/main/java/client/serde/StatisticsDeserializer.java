@@ -1,5 +1,6 @@
 package client.serde;
 
+import client.OATSStatisticsClient;
 import client.model.OATSArgs;
 import client.model.Statistic;
 import client.model.Statistics;
@@ -30,12 +31,12 @@ public class StatisticsDeserializer extends StdDeserializer<Statistics>  {
         String et = statNode.at("/notification/eventTime").asText();
         stats.setEventTime(et);
 
-        ArrayNode array = (ArrayNode)statNode.at(OATSArgs.rootXpath);
+        ArrayNode array = (ArrayNode)statNode.at(OATSStatisticsClient.arguments.getRootXpath());
         List<Statistic> list = new ArrayList<>();
         for (JsonNode node : array) {
             Statistic stat = new Statistic();
-            stat.setName(node.get(OATSArgs.nameXpath).asText());
-            stat.setValue(node.at(OATSArgs.dataXpath).asLong());
+            stat.setName(node.get(OATSStatisticsClient.arguments.getNameXpath()).asText());
+            stat.setValue(node.at(OATSStatisticsClient.arguments.getDataXpath()).asLong());
             list.add(stat);
         }
         stats.setStatistics(list);

@@ -7,7 +7,7 @@ import xmltodict
 from OATSConfig import OATSConfig
 from multiprocessing import Process, Lock
 
-YAML_FILE = '/home/OATS/config.yaml'
+YAML_FILE = '/home/OATS/confiig.yaml'
 
 def errback(notif):
     pass
@@ -72,10 +72,11 @@ if __name__ == '__main__':
     for sub in subscriptions:
         if sub.kafka_streams_eval:
             p = Process(target=subprocess.call, args=([
-                'java', '-jar', 'temp.jar', sub.kafka_publish_topic,
+                'java', '-jar', sub.jar_location, sub.kafka_publish_topic,
                 sub.kafka_event_topic, sub.event_threshold, sub.operator,
                 sub.root_xpath, sub.name_xpath, sub.data_xpath
             ]))
+            p.start()
 
     # TODO: start kafka-streams consumers
     #for subcription in config.get_telemetry_subs():
