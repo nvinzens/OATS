@@ -35,3 +35,7 @@ streaming_telemetry/*.pyc
 kafka/*.pyc
 
 kafka/helpers/*.pyc
+
+telemetry/*.pyc
+
+saltstack/database/oatsnb/tests/__pycache__/
