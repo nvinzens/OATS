@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
+import jmespath
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
@@ -56,9 +57,17 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
     metrics['fields']['severity'] = severity
     metrics['fields']['error'] = data['error']
     metrics['fields']['os'] = data['os']
-    #metrics['fields']['interface'] = syslog['yang_message']["network-instances"]["network-instance"]["global"]
-    # ["protocols"]["protocol"]
-    #metrics['fields']['neighbor'] =
+
+    pathif = jmespath.search('yang_message.*.*.*.*.*.*.*.*.*.*.*.*', data)
+    pathifs = pathif[0][0][0][0][0][0][0][0][0][0][0][0]
+    for key, value in pathifs.iteritems():
+        metrics['fields']['interface'] = key
+
+    pathnb = jmespath.search('yang_message.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*', syslog)
+    pathnbs = pathnb[0][0][0][0][0][0][0][0][0][0][0][0][0][0][0]
+    for key, value in pathnbs.iteritems():
+        metrics['fields']['neighbor'] = key
+
     #metrics['fields']['state'] =
 
     try:
