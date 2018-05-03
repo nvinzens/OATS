@@ -1,4 +1,5 @@
 from kafka import KafkaConsumer
+from kafka import TopicPartition
 import json
 
 field_types = {
@@ -94,9 +95,12 @@ field_types = {
 
 
 def consume_kafka():
-    consumer = KafkaConsumer('oats-netflow')
+    consumer = KafkaConsumer('localhost:9092')
+    partition = TopicPartition('oats-netflow', 0)
+    consumer.assign([partition])
+
     consumer.seek_to_end()
-    lastOffset = consumer.position()
+    last_offset = consumer.position()
     consumer.seek_to_beginning()
     for msg in consumer:
         netflow_data = json.loads(msg.value)
@@ -106,10 +110,9 @@ def consume_kafka():
                     if dict['V'] > 1000:
                         # TODO: write to influx
                         print (msg)
-        if msg.offset == lastOffset - 1:
+        if msg.offset == last_offset - 1:
             break
 
 
 if __name__ == '__main__':
-
-
+    consume_kafka()
