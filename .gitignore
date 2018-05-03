@@ -39,3 +39,12 @@ kafka/helpers/*.pyc
 telemetry/*.pyc
 
 saltstack/database/oatsnb/tests/__pycache__/
+
+telemetry/Host.pyc
+
+telemetry/OATSConfig.pyc
+
+telemetry/TelemetrySubscription.pyc
+
+saltstack/database/oatspsql/tests/__pycache__/
+
