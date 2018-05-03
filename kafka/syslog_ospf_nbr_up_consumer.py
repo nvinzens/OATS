@@ -1,5 +1,4 @@
 from kafka import KafkaConsumer
-from oats import oatsdbhelpers
 from helpers import EventProcessor
 from threading import Thread
 from helpers import correlate

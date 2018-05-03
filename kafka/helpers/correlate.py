@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import with_statement
 from oats import oatsdbhelpers
+from oatspsql import oatspsql
 from expiringdict import ExpiringDict #pip install expiringdict
 import time
 import threading
@@ -46,7 +47,7 @@ def aggregate(data, host, timestamp, severity, error,
         cache[error]['counter'] = 1
         if use_oats_case:
             global current_case
-            current_case = oatsdbhelpers.create_case(error, host, solution='Case started in kafka event consumer:'
+            current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
                                                                            ' aggregate.correlate().')
     else:
         # later threads increment counter
@@ -55,7 +56,7 @@ def aggregate(data, host, timestamp, severity, error,
         return
     lock.release()
     if use_oats_case:
-        oatsdbhelpers.update_case(current_case,
+        oatspsql.update_case(current_case,
                                   solution='Waiting for {0} seconds to aggregate events.'
                                            ' Required amount of events: {1}'.format(count_for, n_of_events))
     # wait for additional events
@@ -78,7 +79,7 @@ def aggregate(data, host, timestamp, severity, error,
 
 
 def __update_db_case(counter, error, identifier):
-    oatsdbhelpers.update_case(current_case,
+    oatspsql.update_case(current_case,
                               solution='Time passed. {0} event counter is {1}. Sending {0}:'
                                        '{2} event to salt master'.format(error, counter, identifier))
 
