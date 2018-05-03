@@ -1,8 +1,11 @@
 from oats import oatsdbhelpers
+from kafka import KafkaConsumer
+from kafka import TopicPartition
 import time
 import salt.config
 import salt.utils.event
 import yaml
+import json
 
 
 # TODO: add behaviour for calling methods without current_case id
@@ -198,3 +201,26 @@ def wait_for_event(tag, error, amount, wait=10, case=None):
     if case is not None:
         oatsdbhelpers.update_case(case, solution='Wait timeout: did not receive {0} event. Troubleshooting failed.'.format(tag))
     return False
+
+
+def consume_kafka_netflow(bootstrap_server, topic, partition):
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
+    partition = TopicPartition(topic, partition)
+    consumer.assign([partition])
+
+    tp = consumer.end_offsets([partition])
+    last_offset = -1
+    for key in tp:
+        last_offset = tp[key]
+    consumer.seek_to_beginning(partition)
+    flows = []
+    for msg in consumer:
+        netflow_data = json.loads(msg.value)
+        for list in netflow_data['DataSets']:
+            for dict in list:
+                if dict['I'] == 1:
+                    if dict['V'] > 1000:
+                        flows.append(msg)
+        if msg.offset == last_offset - 1:
+            return flows
+

@@ -95,31 +95,29 @@ field_types = {
 }
 
 
-def consume_kafka():
-    consumer = KafkaConsumer(bootstrap_servers='localhost:9092')
-    partition = TopicPartition('oats-netflow', 0)
+def consume_kafka_netflow(bootstrap_server, topic, partition):
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
+    partition = TopicPartition(topic, partition)
     consumer.assign([partition])
 
     tp = consumer.end_offsets([partition])
     last_offset = -1
     for key in tp:
         last_offset = tp[key]
-    print last_offset
     consumer.seek_to_beginning(partition)
+    flows = []
     for msg in consumer:
-        print "current offset: " + str(msg.offset)
         netflow_data = json.loads(msg.value)
         for list in netflow_data['DataSets']:
             for dict in list:
                 if dict['I'] == 1:
                     if dict['V'] > 1000:
-                        # TODO: write to influx
-                        print (msg)
+                        flows.append(msg)
         if msg.offset == last_offset - 1:
-            break
+            return flows
 
 
 if __name__ == '__main__':
-    while True:
-        consume_kafka()
-        time.sleep(15)
+    flows = consume_kafka_netflow('localhost:9092', 'oats-netflow', 0)
+    for flow in flows:
+        print (flow)
