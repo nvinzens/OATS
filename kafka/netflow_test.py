@@ -115,9 +115,9 @@ def consume_kafka_netflow(bootstrap_server, topic, partition):
                     if dict['V'] > 1000:
                         flows.append(msg)
                 print last_offset, msg.offset
-                if msg.offset == last_offset - 1:
-                    consumer.close(partition)
-                    return flows
+        if msg.offset == last_offset:
+            consumer.close(partition)
+            return flows
 
 
 if __name__ == '__main__':
