@@ -101,6 +101,10 @@ def consume_kafka_netflow(bootstrap_server, topic, partition):
     partition = TopicPartition(topic, partition)
     consumer.assign([partition])
     consumer.poll()
+    tp = consumer.end_offsets([partition])
+    last_offset = -1
+    for key in tp:
+        last_offset = tp[key]
     consumer.seek_to_end(partition)
     flows = []
     for msg in consumer:
@@ -110,8 +114,10 @@ def consume_kafka_netflow(bootstrap_server, topic, partition):
                 if dict['I'] == 1:
                     if dict['V'] > 1000:
                         flows.append(msg)
-    consumer.close(partition)
-    return flows
+                print last_offset, msg.offset
+                if msg.offset == last_offset - 1:
+                    consumer.close(partition)
+                    return flows
 
 
 if __name__ == '__main__':
