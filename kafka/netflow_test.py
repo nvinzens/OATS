@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 from kafka import TopicPartition
 import json
+import time
 
 field_types = {
     1: 'IN_BYTES',
@@ -95,14 +96,16 @@ field_types = {
 
 
 def consume_kafka():
-    consumer = KafkaConsumer('localhost:9092')
+    consumer = KafkaConsumer(bootstrap_servers='localhost:9092')
     partition = TopicPartition('oats-netflow', 0)
     consumer.assign([partition])
 
-    consumer.seek_to_end()
-    last_offset = consumer.position()
-    consumer.seek_to_beginning()
+    consumer.seek_to_end(partition)
+    last_offset = consumer.position(partition)
+    print "last offset: " + str(last_offset)
+    consumer.seek_to_beginning(partition)
     for msg in consumer:
+        print "current offset: " + str(msg.offset)
         netflow_data = json.loads(msg.value)
         for list in netflow_data['DataSets']:
             for dict in list:
@@ -115,4 +118,6 @@ def consume_kafka():
 
 
 if __name__ == '__main__':
-    consume_kafka()
+    while True:
+        consume_kafka()
+        time.sleep(15)
