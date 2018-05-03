@@ -5,9 +5,9 @@ from oatspsql import oatspsql
 
 def connect(url=None, token=None):
     if not url:
-        url = 'http://152.96.193.117:8000'
+        url = 'http://10.20.1.10'
     if not token:
-        token = '427aa3baf14652867311f7421a6aa4aa192c59fe'
+        token = 'IA*a&Q4NSi_ZqxmJ%TGnEXCRt70f#kzFchdVH38-U(6j)@l+=g'
     nb = pynetbox.api(
         url=url,
         token=token
