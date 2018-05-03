@@ -60,8 +60,8 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
         solution = ['Case created without automated Solution']
 
     try:
-        cur.execute("""INSERT INTO cases (case_nr, "Event", "Description", "Status", "created", "last_updated", "technician",
-      "Sender_device", "solution") VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s )""",
+        cur.execute("""INSERT INTO cases (case_nr, "event", "description", "status", "created", "last_updated", "technician",
+      "sender_device", "solution") VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s )""",
                     (v1, error, description, status, v5, v6, v7, host, solution))
         print('\nCase inserted successfully\n')
     except Exception, e:
@@ -80,7 +80,7 @@ def update_case(case_id, solution, status=None, test=False):
     if status == str(Status.ONHOLD.value) or status == str(Status.WORKING.value) or status == str(Status.TECH.value) \
             or status == str(Status.DONE.value):
         try:
-            cur.execute("""UPDATE cases SET "Status" = %s, "last_updated" = %s WHERE case_nr = %s::varchar;""",
+            cur.execute("""UPDATE cases SET "status" = %s, "last_updated" = %s WHERE case_nr = %s::varchar;""",
                         (status, v1, case_id))
             print('\nCase updated successfully\n')
         except Exception, e:

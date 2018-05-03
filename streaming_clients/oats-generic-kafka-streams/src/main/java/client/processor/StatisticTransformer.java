@@ -45,26 +45,31 @@ public class StatisticTransformer implements Transformer<String, Statistic, KeyV
                     statStore.put(key+newStat.getName(), newStat);
                     return new KeyValue<>(key, newStat);
                 }
+                break;
             case GREATER_THAN:
                 if ((newStat.getValue() - oldStat.getValue()) > args.getThreshold()) {
                     statStore.put(key + newStat.getName(), newStat);
                     return new KeyValue<>(key, newStat);
                 }
+                break;
             case SMALLER_THAN:
                 if ((newStat.getValue() - oldStat.getValue()) < args.getThreshold()) {
                     statStore.put(key+newStat.getName(), newStat);
                     return new KeyValue<>(key, newStat);
                 }
+                break;
             case GREATER_OR_EQUAL:
                 if ((newStat.getValue() - oldStat.getValue()) >= args.getThreshold()) {
                     statStore.put(key+newStat.getName(), newStat);
                     return new KeyValue<>(key, newStat);
                 }
+                break;
             case SMALLER_OR_EQUAL:
                 if ((newStat.getValue() - oldStat.getValue()) <= args.getThreshold()) {
                     statStore.put(key+newStat.getName(), newStat);
                     return new KeyValue<>(key, newStat);
                 }
+                break;
         }
         statStore.put(key+newStat.getName(), newStat);
         return new KeyValue<>(null, null);

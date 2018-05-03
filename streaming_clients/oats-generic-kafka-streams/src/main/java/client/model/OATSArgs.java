@@ -15,6 +15,7 @@ public class OATSArgs {
 
     public OATSArgs(String[] args) {
         try {
+
             inputTopic = args[0];
             outputTopic = args[1];
             threshold = Long.parseLong(args[2]);
@@ -24,8 +25,9 @@ public class OATSArgs {
             dataXpath = args[6];
             statStateStore = inputTopic + "-statestore";
         } catch (Exception e) {
+            System.out.println(e.toString());
             System.err.println("Exception while reading arguments. Order or amount of arguments might be wrong");
-            System.err.println("Jar expects 6 args. Given args: " + args.length);
+            System.err.println("Jar expects 7 args. Given args: " + args.length);
             System.exit(1);
         }
     }

@@ -112,8 +112,8 @@ public class OATSStatisticsClient {
         });
 
         KStream<String, Statistic> StatStream = statsStream
-                .flatMapValues(value -> value.getStatistics())
-                .map((key, value) -> new KeyValue<>(key, value));
+                .flatMapValues(Statistics::getStatistics)
+                .map(KeyValue::new);
 
         KStream<String, Statistic> eventStream = StatStream
                 .transform(() -> new StatisticTransformer(arguments), arguments.getStatStateStore());

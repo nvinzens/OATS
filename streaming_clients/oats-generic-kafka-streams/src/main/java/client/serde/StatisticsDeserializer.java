@@ -30,12 +30,11 @@ public class StatisticsDeserializer extends StdDeserializer<Statistics>  {
 
         String et = statNode.at("/notification/eventTime").asText();
         stats.setEventTime(et);
-
         ArrayNode array = (ArrayNode)statNode.at(OATSStatisticsClient.arguments.getRootXpath());
         List<Statistic> list = new ArrayList<>();
         for (JsonNode node : array) {
             Statistic stat = new Statistic();
-            stat.setName(node.get(OATSStatisticsClient.arguments.getNameXpath()).asText());
+            stat.setName(node.at(OATSStatisticsClient.arguments.getNameXpath()).asText());
             stat.setValue(node.at(OATSStatisticsClient.arguments.getDataXpath()).asLong());
             list.add(stat);
         }
