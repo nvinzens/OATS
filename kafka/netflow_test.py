@@ -1,5 +1,7 @@
 from kafka import KafkaConsumer
+from kafka import TopicPartition
 import json
+import time
 
 field_types = {
     1: 'IN_BYTES',
@@ -92,13 +94,26 @@ field_types = {
     352: 'COUNTER_LAYER2_BYTES'
 }
 
-consumer = KafkaConsumer('oats-netflow')
-for msg in consumer:
-    netflow_data = json.loads(msg.value)
-    for list in netflow_data['DataSets']:
-        for dict in list:
-            if dict['I'] == 1:
-                if dict['V'] > 1000:
-                    # TODO: write to influx
-                    print (msg)
 
+def consume_kafka_netflow(bootstrap_server, topic, partition):
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
+    partition = TopicPartition(topic, partition)
+    consumer.assign([partition])
+    consumer.poll(partition)
+    consumer.seek_to_end(partition)
+    flows = []
+    for msg in consumer:
+        netflow_data = json.loads(msg.value)
+        for list in netflow_data['DataSets']:
+            for dict in list:
+                if dict['I'] == 1:
+                    if dict['V'] > 1000:
+                        flows.append(msg)
+    consumer.close(partition)
+    return flows
+
+
+if __name__ == '__main__':
+    flows = consume_kafka_netflow('localhost:9092', 'oats-netflow', 0)
+    for flow in flows:
+        print (flow)

@@ -61,7 +61,6 @@ def __create_subscriptions(subscription, host_config):
             first = False
 
 
-
 if __name__ == '__main__':
     config = OATSConfig(YAML_FILE)
 
