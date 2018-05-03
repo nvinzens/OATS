@@ -96,10 +96,10 @@ field_types = {
 
 
 def consume_kafka_netflow(bootstrap_server, topic, partition):
-    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server, auto_offset_reset='latest')
     partition = TopicPartition(topic, partition)
     consumer.assign([partition])
-    consumer.poll(partition)
+    consumer.poll()
     consumer.seek_to_end(partition)
     flows = []
     for msg in consumer:
