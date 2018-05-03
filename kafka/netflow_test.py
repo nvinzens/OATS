@@ -96,7 +96,8 @@ field_types = {
 
 
 def consume_kafka_netflow(bootstrap_server, topic, partition):
-    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server, auto_offset_reset='latest')
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server, auto_offset_reset='latest',
+                             enable_auto_commit=False)
     partition = TopicPartition(topic, partition)
     consumer.assign([partition])
     consumer.poll()
