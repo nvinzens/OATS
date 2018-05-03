@@ -19,7 +19,7 @@ class Status(Enum):
 
 def connect_to_db():
     try:
-        conn = psycopg2.connect("dbname='casedb' user='netbox' host='localhost' password='oatsadmin69'")
+        conn = psycopg2.connect("dbname='casedb' user='netbox' host='localhost' password='oatsnetbox'")
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     return conn
