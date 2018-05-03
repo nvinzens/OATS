@@ -100,7 +100,10 @@ def consume_kafka():
     partition = TopicPartition('oats-netflow', 0)
     consumer.assign([partition])
 
-    last_offset = consumer.end_offsets(partition)
+    tp = consumer.end_offsets([partition])
+    last_offset = -1
+    for key in tp:
+        last_offset = tp[key]
     print last_offset
     consumer.seek_to_beginning(partition)
     for msg in consumer:
