@@ -92,13 +92,24 @@ field_types = {
     352: 'COUNTER_LAYER2_BYTES'
 }
 
-consumer = KafkaConsumer('oats-netflow')
-for msg in consumer:
-    netflow_data = json.loads(msg.value)
-    for list in netflow_data['DataSets']:
-        for dict in list:
-            if dict['I'] == 1:
-                if dict['V'] > 1000:
-                    # TODO: write to influx
-                    print (msg)
+
+def consume_kafka():
+    consumer = KafkaConsumer('oats-netflow')
+    consumer.seek_to_end()
+    lastOffset = consumer.position()
+    consumer.seek_to_beginning()
+    for msg in consumer:
+        netflow_data = json.loads(msg.value)
+        for list in netflow_data['DataSets']:
+            for dict in list:
+                if dict['I'] == 1:
+                    if dict['V'] > 1000:
+                        # TODO: write to influx
+                        print (msg)
+        if msg.offset == lastOffset - 1:
+            break
+
+
+if __name__ == '__main__':
+
 
