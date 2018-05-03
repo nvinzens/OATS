@@ -101,6 +101,39 @@ def update_case(case_id, solution, status=None, test=False):
     return case_id
 
 
+def close_case(case_id, solution, status=None, test=False):
+    conn = connect_to_db()
+    cur = create_cursor(conn)
+
+    v1 = datetime.datetime.utcnow()
+    status = str(Status.DONE.value)
+    try:
+        cur.execute("""UPDATE cases SET "status" = %s, "last_updated" = %s WHERE case_nr = %s::varchar;""",
+                    (status, v1, case_id))
+        print('\nCase closed successfully\n')
+    except Exception, e:
+        print(str(e))
+    close_connection(conn, cur)
+    return case_id
+
+
+def take_case(case_id, technician, test=False):
+    conn = connect_to_db()
+    cur = create_cursor(conn)
+
+    v1 = datetime.datetime.utcnow()
+
+    try:
+        cur.execute("""UPDATE cases SET "last_updated" = %s, "technician" = %s WHERE case_nr = %s::varchar;""",
+                    (v1, technician, case_id))
+        print('\nTechnician assigned successfully\n')
+    except Exception, e:
+        print(str(e))
+
+    close_connection(conn, cur)
+    return case_id
+
+
 def take_case(case_id, technician, test=False):
     conn = connect_to_db()
     cur = create_cursor(conn)
