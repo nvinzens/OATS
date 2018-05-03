@@ -1,5 +1,129 @@
 ospf_nbr_down: dead timer expired
-{'yang_message': {'network-instances': {'network-instance': {'global': {'protocols': {'protocol': {'ospf': {'ospfv2': {'areas': {'area': {'area': {'interfaces': {'interface': {'GigabitEthernet2.35': {'neighbors': {'neighbor': {'172.16.56.5': {'state': {'adjacency-state-change-reason': 'DEAD', 'adjacency-state-change-reason-message': 'Dead timer expired', 'adjacency-state': 'DOWN'}}}}}}}}}}}}}}}}}}, 'message_details': {'severity': 5, 'facility': 23, 'time': '06:06:02', 'pri': '189', 'host': 'R13', 'tag': 'OSPF-5-ADJCHG', 'messageId': '807', 'date': 'May  2', 'message': 'Nbr 172.16.56.5 on GigabitEthernet2.35 from INIT to DOWN, Neighbor Down: Dead timer expired', 'milliseconds': '.617', 'processnumber': '1'}, 'facility': 23, 'ip': '10.20.1.13', 'error': 'OSPF_NEIGHBOR_DOWN', 'host': 'R13', 'yang_model': 'openconfig-ospf', 'timestamp': 1525241162, 'os': 'ios', 'severity': 5}
+{"yang_message": {"network-instances": {"network-instance": {"global": {"protocols": {"protocol": {"ospf": {"ospfv2": {"areas": {"area": {"area": {"interfaces": {"interface": {"GigabitEthernet2.35": {"neighbors": {"neighbor": {"172.16.56.5": {"state": {"adjacency-state-change-reason": "DEAD", "adjacency-state-change-reason-message": "Dead timer expired", "adjacency-state": "DOWN"}}}}}}}}}}}}}}}}}}, "message_details": {"severity": 5, "facility": 23, "time": "06:06:02", "pri": "189", "host": "R13", "tag": "OSPF-5-ADJCHG", "messageId": "807", "date": "May  2", "message": "Nbr 172.16.56.5 on GigabitEthernet2.35 from INIT to DOWN, Neighbor Down: Dead timer expired", "milliseconds": ".617", "processnumber": "1"}, "facility": 23, "ip": "10.20.1.13", "error": "OSPF_NEIGHBOR_DOWN", "host": "R13", "yang_model": "openconfig-ospf", "timestamp": 1525241162, "os": "ios", "severity": 5}
+
+ospf_nbr_down:dead timer expired{
+   "yang_message":{
+      "network-instances":{
+         "network-instance":{
+            "global":{
+               "protocols":{
+                  "protocol":{
+                     "ospf":{
+                        "ospfv2":{
+                           "areas":{
+                              "area":{
+                                 "area":{
+                                    "interfaces":{
+                                       "interface":{
+                                          "GigabitEthernet2.35":{
+                                             "neighbors":{
+                                                "neighbor":{
+                                                   "172.16.56.5":{
+                                                      "state":{
+                                                         "adjacency-state-change-reason":"DEAD",
+                                                         "adjacency-state-change-reason-message":"Dead timer expired",
+                                                         "adjacency-state":"DOWN"
+                                                      }
+                                                   }
+                                                }
+                                             }
+                                          }
+                                       }
+                                    }
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   },
+   "message_details":{
+      "severity":5,
+      "facility":23,
+      "time":"06:06:02",
+      "pri":"189",
+      "host":"R13",
+      "tag":"OSPF-5-ADJCHG",
+      "messageId":"807",
+      "date":"May  2",
+      "message":"Nbr 172.16.56.5 on GigabitEthernet2.35 from INIT to DOWN, Neighbor Down: Dead timer expired",
+      "milliseconds":".617",
+      "processnumber":"1"
+   },
+   "facility":23,
+   "ip":"10.20.1.13",
+   "error":"OSPF_NEIGHBOR_DOWN",
+   "host":"R13",
+   "yang_model":"openconfig-ospf",
+   "timestamp":1525241162,
+   "os":"ios",
+   "severity":5
+}
 
 ospf_nbr_up
-{'yang_message': {'network-instances': {'network-instance': {'global': {'protocols': {'protocol': {'ospf': {'ospfv2': {'areas': {'area': {'area': {'interfaces': {'interface': {'GigabitEthernet2.56': {'neighbors': {'neighbor': {'172.16.56.6': {'state': {'adjacency-state': 'UP'}}}}}}}}}}}}}}}}}}, 'message_details': {'severity': 5, 'facility': 23, 'time': '06:07:31', 'pri': '189', 'host': 'R15', 'tag': 'OSPF-5-ADJCHG', 'messageId': '150', 'date': 'May  2', 'message': 'Nbr 172.16.56.6 on GigabitEthernet2.56 from LOADING to FULL, Loading Done', 'milliseconds': '.781', 'processnumber': '1'}, 'facility': 23, 'ip': '10.20.1.15', 'error': 'OSPF_NEIGHBOR_UP', 'host': 'R15', 'yang_model': 'openconfig-ospf', 'timestamp': 1525241251, 'os': 'ios', 'severity': 5}
+{"yang_message": {"network-instances": {"network-instance": {"global": {"protocols": {"protocol": {"ospf": {"ospfv2": {"areas": {"area": {"area": {"interfaces": {"interface": {"GigabitEthernet2.56": {"neighbors": {"neighbor": {"172.16.56.6": {"state": {"adjacency-state": "UP"}}}}}}}}}}}}}}}}}}, "message_details": {"severity": 5, "facility": 23, "time": "06:07:31", "pri": "189", "host": "R15", "tag": "OSPF-5-ADJCHG", "messageId": "150", "date": "May  2", "message": "Nbr 172.16.56.6 on GigabitEthernet2.56 from LOADING to FULL, Loading Done", "milliseconds": ".781", "processnumber": "1"}, "facility": 23, "ip": "10.20.1.15", "error": "OSPF_NEIGHBOR_UP", "host": "R15", "yang_model": "openconfig-ospf", "timestamp": 1525241251, "os": "ios", "severity": 5}
+
+ospf_nbr_up{
+   "yang_message":{
+      "network-instances":{
+         "network-instance":{
+            "global":{
+               "protocols":{
+                  "protocol":{
+                     "ospf":{
+                        "ospfv2":{
+                           "areas":{
+                              "area":{
+                                 "area":{
+                                    "interfaces":{
+                                       "interface":{
+                                          "GigabitEthernet2.56":{
+                                             "neighbors":{
+                                                "neighbor":{
+                                                   "172.16.56.6":{
+                                                      "state":{
+                                                         "adjacency-state":"UP"
+                                                      }
+                                                   }
+                                                }
+                                             }
+                                          }
+                                       }
+                                    }
+                                 }
+                              }
+                           }
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
+   },
+   "message_details":{
+      "severity":5,
+      "facility":23,
+      "time":"06:07:31",
+      "pri":"189",
+      "host":"R15",
+      "tag":"OSPF-5-ADJCHG",
+      "messageId":"150",
+      "date":"May  2",
+      "message":"Nbr 172.16.56.6 on GigabitEthernet2.56 from LOADING to FULL, Loading Done",
+      "milliseconds":".781",
+      "processnumber":"1"
+   },
+   "facility":23,
+   "ip":"10.20.1.15",
+   "error":"OSPF_NEIGHBOR_UP",
+   "host":"R15",
+   "yang_model":"openconfig-ospf",
+   "timestamp":1525241251,
+   "os":"ios",
+   "severity":5
+}
