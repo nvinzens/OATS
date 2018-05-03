@@ -7,7 +7,7 @@ import xmltodict
 from OATSConfig import OATSConfig
 from multiprocessing import Process, Lock
 
-YAML_FILE = '/home/OATS/confiig.yaml'
+YAML_FILE = '/home/nvinzens/Desktop/OATS/config.yaml'
 
 def errback(notif):
     pass
@@ -24,7 +24,7 @@ def callback_kafka_publish(notif, topic, host):
     json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
     producer.send(topic, key=host, value=json_string)
     producer.flush()
-    print (json_string)
+    #print (json_string)
 
 
 def __process_host_config(host_config, config):
@@ -63,24 +63,30 @@ def __create_subscriptions(subscription, host_config):
 
 if __name__ == '__main__':
     config = OATSConfig(YAML_FILE)
-    host_configs = config.get_host_configs()
-    #for host_config in host_configs:
-    #    p = Process(target=__process_host_config, args=(host_config, config))
-    #    p.start()
-    # TODO: start kafka-streams clients
+
+    # start kafka streams clients and consumers
     subscriptions = config.get_telemetry_subs()
     for sub in subscriptions:
         if sub.kafka_streams_eval:
-            p = Process(target=subprocess.call, args=([
-                'java', '-jar', sub.jar_location, sub.kafka_publish_topic,
-                sub.kafka_event_topic, str(sub.event_threshold), sub.operator,
-                sub.root_xpath, sub.name_xpath, sub.data_xpath
-            ],))
-            p.start()
+            kstreams_process = Process(target=subprocess.call, args=([
+                                                          'java', '-jar', sub.jar_location, sub.kafka_publish_topic,
+                                                          sub.kafka_event_topic, str(sub.event_threshold), sub.operator,
+                                                          sub.root_xpath, sub.name_xpath, sub.data_xpath
+                                                      ],))
+            kstreams_process.start()
 
-    # TODO: start kafka-streams consumers
-    #for subcription in config.get_telemetry_subs():
-     #   pass
+            kconsumer_process = Process(target=subprocess.call, args=(['python',
+                                                                       '../kafka/generic-kafka-streams_consumer.py',
+                                                                       '-t', sub.kafka_event_topic,
+                                                                       '-e', sub.event],))
+            kconsumer_process.start()
+
+    # establish telemetry subscriptions
+    host_configs = config.get_host_configs()
+    for host_config in host_configs:
+        p = Process(target=__process_host_config, args=(host_config, config))
+        p.start()
+
 
 
 
