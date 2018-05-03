@@ -99,9 +99,8 @@ def consume_kafka():
     partition = TopicPartition('oats-netflow', 0)
     consumer.assign([partition])
 
-    consumer.seek_to_end()
-    last_offset = consumer.position()
-    consumer.seek_to_beginning()
+    last_offset = consumer.end_offsets(partition)
+    consumer.seek_to_beginning(partition)
     for msg in consumer:
         netflow_data = json.loads(msg.value)
         for list in netflow_data['DataSets']:
