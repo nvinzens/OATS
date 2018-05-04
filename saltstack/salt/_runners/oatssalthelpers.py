@@ -207,7 +207,7 @@ def wait_for_event(tag, error, amount, wait=10, case=None):
     return False
 
 
-def consume_kafka_netflow(bootstrap_server, topic, partition):
+def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, threshold=1000, timeout=3):
     consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
     partition = TopicPartition(topic, partition)
     consumer.assign([partition])
@@ -218,13 +218,15 @@ def consume_kafka_netflow(bootstrap_server, topic, partition):
         last_offset = tp[key]
     consumer.seek_to_beginning(partition)
     flows = []
+    # kafka-python bug workaround
+    timeout = time.time() + timeout
     for msg in consumer:
         netflow_data = json.loads(msg.value)
         for list in netflow_data['DataSets']:
             for dict in list:
-                if dict['I'] == 1:
-                    if dict['V'] > 1000:
+                if dict['I'] == netflow_field:
+                    if dict['V'] > threshold:
                         flows.append(msg)
-        if msg.offset == last_offset - 1:
+        if msg.offset == last_offset - 1 or time.time() > timeout:
             return flows
 
