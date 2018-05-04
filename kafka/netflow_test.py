@@ -96,31 +96,25 @@ field_types = {
 
 
 def consume_kafka_netflow(bootstrap_server, topic, partition):
-    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server, auto_offset_reset='earliest')
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
     partition = TopicPartition(topic, partition)
     consumer.assign([partition])
 
     tp = consumer.end_offsets([partition])
-    #last_offset = -1
-    #for key in tp:
-    #    last_offset = tp[key]
-    #consumer.seek_to_beginning(partition)
-    consumer.poll(500)
-    print (consumer)
+    last_offset = -1
+    for key in tp:
+        last_offset = tp[key]
+    consumer.seek_to_beginning(partition)
     flows = []
-    # TODO: set start and stop time (3sec)
     for msg in consumer:
-        print ("analyzing flow...")
         netflow_data = json.loads(msg.value)
         for list in netflow_data['DataSets']:
             for dict in list:
                 if dict['I'] == 1:
                     if dict['V'] > 1000:
                         flows.append(msg)
-                        print ("flow detected")
-        #if msg.offset == last_offset - 1:
-    print ("found " + len(flows) + " relevant flows")
-    return flows
+        if msg.offset == last_offset - 1:
+            return flows
 
 
 if __name__ == '__main__':
