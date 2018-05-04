@@ -61,9 +61,11 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
     data_nested = data["yang_message"]
     metrics['fields']['interface'] = __get_syslog_interface(data_nested)[0]
     metrics['fields']['neighbor'] = __get_syslog_neighbor(data_nested)[0]
-    metrics['fields']['state_change'] = __get_state_change(data_nested)
-    metrics['fields']['state_change_msg'] = __get_state_change_msg(data_nested)
 
+    state_msgs = __get_state_msg(data_nested)
+    for k,v in state_msgs.items():
+        metrics['fields'][str(k)] = str(v)
+        
     try:
         success = client.write_points([metrics])
     except AttributeError as err:
@@ -72,26 +74,12 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
     return success
 
 
-def __get_state_change_msg(yang_message):
+def __get_state_msg(yang_message):
     for k, v in sorted(yang_message.items()):
         if k == 'state':
-            if v.get('adjacency-state-change-reason-message') is not None:
-                return v['adjacency-state-change-reason-message']
-            return ''
+            return v
         if v:
-            return __get_state_change_msg(v)
-        else:
-            return ''
-
-
-def __get_state_change(yang_message):
-    for k, v in sorted(yang_message.items()):
-        if k == 'state':
-            if v['adjacency-state']:
-                return v['adjacency-state']
-            return ''
-        if v:
-            return __get_state_change(v)
+            return __get_state_msg(v)
         else:
             return ''
 
