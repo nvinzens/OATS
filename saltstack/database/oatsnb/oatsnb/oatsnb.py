@@ -7,7 +7,7 @@ def connect(url=None, token=None):
     if not url:
         url = 'http://10.20.1.10'
     if not token:
-        token = 'IA*a&Q4NSi_ZqxmJ%TGnEXCRt70f#kzFchdVH38-U(6j)@l+=g'
+        token = '20b9f6f9963f94e627198069cc27bc822a84e320'
     nb = pynetbox.api(
         url=url,
         token=token

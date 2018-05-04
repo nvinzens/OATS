@@ -1,6 +1,7 @@
 from kafka import KafkaConsumer
 from kafka import TopicPartition
 import json
+import time
 
 field_types = {
     1: 'IN_BYTES',
@@ -94,25 +95,35 @@ field_types = {
 }
 
 
-def consume_kafka():
-    consumer = KafkaConsumer('localhost:9092')
-    partition = TopicPartition('oats-netflow', 0)
+def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, threshold=1000, timeout=3):
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
+    partition = TopicPartition(topic, partition)
     consumer.assign([partition])
 
-    consumer.seek_to_end()
-    last_offset = consumer.position()
-    consumer.seek_to_beginning()
+    tp = consumer.end_offsets([partition])
+    last_offset = -1
+    for key in tp:
+        last_offset = tp[key]
+    consumer.seek_to_beginning(partition)
+    flows = []
+    # kafka-python bug workaround
+    timeout = time.time() + timeout
     for msg in consumer:
         netflow_data = json.loads(msg.value)
         for list in netflow_data['DataSets']:
             for dict in list:
-                if dict['I'] == 1:
-                    if dict['V'] > 1000:
-                        # TODO: write to influx
-                        print (msg)
-        if msg.offset == last_offset - 1:
-            break
+                if dict['I'] == netflow_field:
+                    if dict['V'] > threshold:
+                        print ("Packets in detected flow: " + str(dict['V']))
+                        flows.append(msg)
+        if msg.offset == last_offset - 1 or time.time() > timeout:
+            return flows
 
 
 if __name__ == '__main__':
-    consume_kafka()
+    flows = consume_kafka_netflow('localhost:9092', 'oats-netflow-ingress', 0)
+    if not flows:
+        print ("no flows detected")
+    for flow in flows:
+        pass
+        #print (flow)

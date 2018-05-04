@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
+import jmespath
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
@@ -54,6 +55,20 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['event_name'] = str(event_name)
     metrics['time'] = timestamp
     metrics['fields']['severity'] = severity
+    metrics['fields']['error'] = data['error']
+    metrics['fields']['os'] = data['os']
+
+    pathif = jmespath.search('yang_message.*.*.*.*.*.*.*.*.*.*.*.*', data)
+    pathifs = pathif[0][0][0][0][0][0][0][0][0][0][0][0]
+    for key, value in pathifs.iteritems():
+        metrics['fields']['interface'] = key
+
+    pathnb = jmespath.search('yang_message.*.*.*.*.*.*.*.*.*.*.*.*.*.*.*', syslog)
+    pathnbs = pathnb[0][0][0][0][0][0][0][0][0][0][0][0][0][0][0]
+    for key, value in pathnbs.iteritems():
+        metrics['fields']['neighbor'] = key
+
+    #metrics['fields']['state'] =
 
     try:
         success = client.write_points([metrics])
@@ -96,6 +111,24 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['event_name'] = str(event_name)
     metrics['time'] = timestamp
     metrics['fields']['severity'] = severity
+    metrics['fields']['58'] = data["DataSets"][0][0]["V"]
+    metrics['fields']['56'] = data["DataSets"][0][1]["V"]
+    metrics['fields']['80'] = data["DataSets"][0][2]["V"]
+    metrics['fields']['8'] = data["DataSets"][0][3]["V"]
+    metrics['fields']['12'] = data["DataSets"][0][4]["V"]
+    metrics['fields']['7'] = data["DataSets"][0][5]["V"]
+    metrics['fields']['11'] = data["DataSets"][0][6]["V"]
+    metrics['fields']['6'] = data["DataSets"][0][7]["V"]
+    metrics['fields']['10'] = data["DataSets"][0][8]["V"]
+    metrics['fields']['14'] = data["DataSets"][0][9]["V"]
+    metrics['fields']['61'] = data["DataSets"][0][10]["V"]
+    metrics['fields']['1'] = data["DataSets"][0][11]["V"]
+    metrics['fields']['2'] = data["DataSets"][0][12]["V"]
+    metrics['fields']['152'] = data["DataSets"][0][13]["V"]
+    metrics['fields']['153'] = data["DataSets"][0][14]["V"]
+    metrics['fields']['352'] = data["DataSets"][0][15]["V"]
+    metrics['fields']['5'] = data["DataSets"][0][16]["V"]
+    metrics['fields']['4'] = data["DataSets"][0][17]["V"]
 
     try:
         success = client.write_points([metrics])

@@ -1,8 +1,13 @@
 from oats import oatsdbhelpers
+from oatspsql import oatspsql
+from oatsnb import oatsnb
+from kafka import KafkaConsumer
+from kafka import TopicPartition
 import time
 import salt.config
 import salt.utils.event
 import yaml
+import json
 
 
 # TODO: add behaviour for calling methods without current_case id
@@ -20,8 +25,8 @@ def post_slack(message, case=None):
     api_key = __load_api_key('/etc/salt/master')
     solutions = 'No linked workflow.'
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Workflow finished. Case-ID: ' + case, status=oatsdbhelpers.Status.ONHOLD.value)
-    solutions = oatsdbhelpers.get_solutions_as_string(case)
+        oatspsql.update_case(case, solution='Workflow finished. Case-ID: ' + case, status=oatspsql.Status.ONHOLD.value)
+    solutions = oatspsql.get_solutions_as_string(case)
     message += "\nExecuted workflow:\n" + solutions
     return __salt__['salt.cmd'](fun='slack.post_message', channel=channel, message=message, from_name=user, api_key=api_key)
 
@@ -42,16 +47,16 @@ def ping(source, destination, case=None, check_connectivity=False):
     :return: The results of the ping as a dict. Will be empty if the ping wasn't successful.
     '''
     if check_connectivity:
-        vrf_dest = {'destination': oatsdbhelpers.get_vrf_ip(destination), 'vrf': 'mgmt'}
+        vrf_dest = {'destination': oatsnb.get_vrf_ip(destination), 'vrf': 'mgmt'}
         ping_result = __salt__['salt.execute'](source, 'net.ping', kwarg=vrf_dest)
         if case is not None:
-            oatsdbhelpers.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
-            bool(ping_result)))
+            oatspsql.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(
+                bool(ping_result)))
         return ping_result[source]['out']['success']['results']
     else:
         ping_result = __salt__['salt.execute'](source, 'net.ping', {destination})
         if case is not None:
-            oatsdbhelpers.update_case(case, solution ='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
+            oatspsql.update_case(case, solution='Ping from ' + source + ' to ' + destination + '. Result: ' + str(bool(ping_result)) + ' //always true in lab env')
     return ping_result[source]['out']['success']['results']
 
 
@@ -70,7 +75,7 @@ def if_noshutdown(host, interface, case=None):
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name, 'template_source': template_source}
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Trying to apply no shutdown to interface {0} on host {1}.'.format(interface, host))
+        oatspsql.update_case(case, solution='Trying to apply no shutdown to interface {0} on host {1}.'.format(interface, host))
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
@@ -89,7 +94,7 @@ def if_shutdown(host, interface, case=None):
     template_source = 'interface {0}\n  shutdown\nend'.format(interface)
     config = {'template_name': template_name,'template_source': template_source}
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to interface {0} on host {1}.'.format(interface, host))
+        oatspsql.update_case(case, solution='Trying to apply shutdown to interface {0} on host {1}.'.format(interface, host))
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
@@ -107,8 +112,9 @@ def ospf_shutdown(minion, process_number, case=None):
     template_source = 'router ospf {0}\n  shutdown\nend'.format(process_number)
     config = {'template_name': template_name, 'template_source': template_source}
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Trying to apply shutdown to OSPF process {0}.'.format(process_number))
+        oatspsql.update_case(case, solution='Trying to apply shutdown to OSPF process {0}.'.format(process_number))
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+
 
 def ospf_noshutdown(minion, process_number, case=None):
     '''
@@ -124,8 +130,9 @@ def ospf_noshutdown(minion, process_number, case=None):
     template_source = 'router ospf {0}\n  no shutdown\nend'.format(process_number)
     config = {'template_name': template_name, 'template_source': template_source}
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Trying to apply no shutdown to OSPF process {0}.'.format(process_number))
+        oatspsql.update_case(case, solution='Trying to apply no shutdown to OSPF process {0}.'.format(process_number))
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
+
 
 def check_device_connectivity(neighbors, host, case=None):
     '''
@@ -140,7 +147,7 @@ def check_device_connectivity(neighbors, host, case=None):
     for neighbor in neighbors:
         connected = ping(neighbor, host, check_connectivity=True)
         if case is not None:
-            oatsdbhelpers.update_case(case,
+            oatspsql.update_case(case,
                                       solution='Checking connectivity from {0} to {1}. Result: {2}'
                                       .format(neighbor, host,str(bool(connected))))
         if connected:
@@ -170,13 +177,13 @@ def count_event(tag, error, amount, wait=10, case=None):
     counter = 0
     timeout = time.time() + wait
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Waiting for {0} {1} events.'.format(amount, error))
+        oatspsql.update_case(case, solution='Waiting for {0} {1} events.'.format(amount, error))
     while time.time() < timeout:
         if event.get_event(wait=3, tag=tag):
             counter += 1
     success = counter >= amount
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Result: {0} events. Wait success: {1}.'.format(counter, success))
+        oatspsql.update_case(case, solution='Result: {0} events. Wait success: {1}.'.format(counter, success))
     return success
 
 
@@ -190,11 +197,36 @@ def wait_for_event(tag, error, amount, wait=10, case=None):
         opts=opts)
     data = event.get_event(wait=wait, tag=tag)
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Waiting for {0} event...'.format(tag))
+        oatspsql.update_case(case, solution='Waiting for {0} event...'.format(tag))
     if data:
         if case is not None:
-            oatsdbhelpers.update_case(case, solution='Received {0} event: Wait was successful.'.format(tag))
+            oatspsql.update_case(case, solution='Received {0} event: Wait was successful.'.format(tag))
         return True
     if case is not None:
-        oatsdbhelpers.update_case(case, solution='Wait timeout: did not receive {0} event. Troubleshooting failed.'.format(tag))
+        oatspsql.update_case(case, solution='Wait timeout: did not receive {0} event. Troubleshooting failed.'.format(tag))
     return False
+
+
+def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, threshold=1000, timeout=3):
+    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
+    partition = TopicPartition(topic, partition)
+    consumer.assign([partition])
+
+    tp = consumer.end_offsets([partition])
+    last_offset = -1
+    for key in tp:
+        last_offset = tp[key]
+    consumer.seek_to_beginning(partition)
+    flows = []
+    # kafka-python bug workaround
+    timeout = time.time() + timeout
+    for msg in consumer:
+        netflow_data = json.loads(msg.value)
+        for list in netflow_data['DataSets']:
+            for dict in list:
+                if dict['I'] == netflow_field:
+                    if dict['V'] > threshold:
+                        flows.append(msg)
+        if msg.offset == last_offset - 1 or time.time() > timeout:
+            return flows
+

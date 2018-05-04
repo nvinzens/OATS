@@ -1,4 +1,5 @@
 from kafka import KafkaConsumer
+from kafka import KafkaProducer
 import json
 
 field_types = {
@@ -93,12 +94,16 @@ field_types = {
 }
 
 consumer = KafkaConsumer('oats-netflow')
+producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
+
 for msg in consumer:
     netflow_data = json.loads(msg.value)
     for list in netflow_data['DataSets']:
         for dict in list:
-            if dict['I'] == 1:
-                if dict['V'] > 1000:
-                    # TODO: write to influx
-                    print (msg)
+            if dict['I'] == 61:
+                if dict['V'] == 0:
+                    producer.send('oats-netflow-ingress', netflow_data)
+                if dict['V'] == 1:
+                    producer.send('oats-netflow-egress', netflow_data)
+
 
