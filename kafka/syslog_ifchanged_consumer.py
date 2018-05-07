@@ -22,7 +22,7 @@ for msg in consumer:
 
     error = event_msg['error']
     opt_arg = __get_interface_status(yang_mess)
-    event_name = 'napalm/syslog/*/' + error + '/' + opt_arg
+    event_name = 'syslog/*/' + error + '/' + opt_arg
 
     EventProcessor.process_event(data=event_msg, host=host, timestamp=timestamp,
                                  type='syslog', event_name=event_name, severity=severity)
