@@ -1,6 +1,5 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
-import jmespath
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
