@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from __future__ import with_statement
+from oatsinflux import oatsinflux
 import salt.utils.event
 import salt.client
 
@@ -30,6 +31,6 @@ def process_event(data, host, timestamp, type, event_name, severity, case=None, 
              'case': case
              }
         )
-    # TODO: store in DB
-    else:
-        pass
+
+     # write all events to influx
+    oatsinflux.write_event(host, timestamp, type, event_name, severity, data)
