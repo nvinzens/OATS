@@ -1,6 +1,7 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
 import time
+from datetime import datetime
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
@@ -164,7 +165,8 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['host'] = str(host)
     metrics['tags']['type'] = str(type)
     metrics['tags']['event_name'] = str(event_name)
-    metrics['time'] = timestamp
+    sttime = datetime.strptime(str(timestamp), "%Y-%m-%dT%H:%M:%S.%fZ")
+    metrics['time'] = sttime + '000'
     metrics['fields']['severity'] = severity
 
     try:
