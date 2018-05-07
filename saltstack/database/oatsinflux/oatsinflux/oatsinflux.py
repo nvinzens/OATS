@@ -141,7 +141,7 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['type'] = str(type)
     metrics['tags']['event_name'] = str(event_name)
 
-    nano = '000000000'
+    nano = '.000000000'
     metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+nano, time.localtime(timestamp))
     metrics['fields']['severity'] = severity
     for netflow in data["DataSets"][0]:
@@ -165,9 +165,14 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['host'] = str(host)
     metrics['tags']['type'] = str(type)
     metrics['tags']['event_name'] = str(event_name)
-    sttime = datetime.strptime(str(timestamp), "%Y-%m-%dT%H:%M:%S.%fZ")
-    metrics['time'] = sttime + '000'
+
+    time_format = datetime.strptime(str(timestamp), "%Y-%m-%dT%H:%M:%S.%fZ")
+    milli = timestamp[-4:-1]
+    epoch = (time_format - datetime(1970, 1, 1)).total_seconds()
+    millis = '.' + milli + '000000'
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.localtime(epoch))
     metrics['fields']['severity'] = severity
+    metrics['fields'][data['name']] = data['value']
 
     try:
         success = client.write_points([metrics])
