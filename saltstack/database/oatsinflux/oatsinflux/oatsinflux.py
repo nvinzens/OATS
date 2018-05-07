@@ -136,7 +136,7 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['event_name'] = str(event_name)
     metrics['time'] = timestamp
     metrics['fields']['severity'] = severity
-    for netflow in data["DataSets"][0]:
+    for netflow in data[0]:
         metrics['fields'][netflow["I"]] = netflow["V"]
 
     try:
