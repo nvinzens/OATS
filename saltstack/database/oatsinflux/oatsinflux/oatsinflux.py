@@ -68,7 +68,7 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
     try:
         success = client.write_points([metrics])
     except AttributeError as err:
-        print err.args
+        print (err.args)
 
     return success
 
@@ -119,7 +119,7 @@ def __write_api(host, timestamp, type, event_name, severity, data, client):
     try:
         success = client.write_points([metrics])
     except AttributeError as err:
-        print err.args
+        print (err.args)
 
     return success
 
@@ -163,12 +163,12 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     try:
         success = client.write_points([metrics])
     except AttributeError as err:
-        print err.args
+        print (err.args)
 
     return success
 
 
-def write(measurement, host, interface, region, value, time=None, db=None, client=None):
+def __write(measurement, host, interface, region, value, time=None, db=None, client=None):
 
     if not db:
         db = 'timedb'
