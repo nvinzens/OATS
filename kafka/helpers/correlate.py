@@ -65,14 +65,14 @@ def aggregate(data, host, timestamp, severity, error,
     if cache[error]['counter'] == n_of_events:
         if use_oats_case:
             __update_db_case(cache[error]['counter'], error, salt_id)
-        event_name = 'napalm/syslog/*/' + error + '/' + salt_id
+        event_name = 'syslog/*/' + error + '/' + salt_id
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type='syslog', event_name=event_name, severity=severity,
                                      case=current_case)
     else:
         if use_oats_case:
             __update_db_case(cache[error]['counter'], error, alternative_id)
-        event_name = 'napalm/syslog/*/' + error + '/' + alternative_id
+        event_name = 'syslog/*/' + error + '/' + alternative_id
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type='syslog', event_name=event_name, severity=severity,
                                      case=current_case)
