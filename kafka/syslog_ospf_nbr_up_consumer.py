@@ -28,8 +28,8 @@ for msg in consumer:
 
     #start aggregation of event
     thread = Thread(target=correlate.aggregate,
-                    args=(event_msg, host, timestamp, severity, event_error, salt_id,
-                          n_of_required_events+3, "no event", 10, False))
+                    args=(event_msg, host, timestamp, severity, event_error, 'syslog', salt_id,
+                          n_of_required_events+3, 'no event', 10, False))
     thread.daemon = True
     thread.start()
 

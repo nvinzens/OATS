@@ -12,7 +12,7 @@ def consume_kafka(topic, event_name):
         print (msg)
         host, timestamp, data = utils.extract_record_data(msg)
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     type='streaming_telemetry',
+                                     type='streaming-telemetry',
                                      event_name=event_name,
                                      severity=4)
 

@@ -29,13 +29,13 @@ for msg in consumer:
     salt_id = __get_ospf_change_reason(yang_mess)
 
     # only start aggregation once the dead timer is expired
-    if salt_id == "dead_timer_expired":
+    if salt_id == 'dead_timer_expired':
 
         n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess)
 
         thread = Thread(target=correlate.aggregate,
-                        args=(event_msg, host, timestamp, severity, event_error, salt_id,
-                              n_of_required_events, "interface_down", 10, True))
+                        args=(event_msg, host, timestamp, severity, event_error, 'syslog', salt_id,
+                              n_of_required_events, 'interface_down', 10, True))
         thread.daemon = True
         thread.start()
 
