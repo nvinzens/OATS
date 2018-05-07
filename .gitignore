@@ -24,19 +24,17 @@ saltstack/oatsdbhelpers/tests/__pycache__/
 
 saltstack/database/oatsinflux/tests/__pycache__/
 
-streaming_telemetry/tests/.pytest_cache/
+telemetry/tests/.pytest_cache/
 
-streaming_telemetry/tests/__pycache__/
+telemetry/tests/__pycache__/
 
 streamprocessor/target
 
-streaming_telemetry/*.pyc
+telemetry/*.pyc
 
 kafka/*.pyc
 
 kafka/helpers/*.pyc
-
-telemetry/*.pyc
 
 saltstack/database/oatsnb/tests/__pycache__/
 
