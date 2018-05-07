@@ -22,7 +22,7 @@ class OATSConfig:
             host_configs.append(host)
         return host_configs
 
-    def get_telemetry_subs(self):
+    def get_telemetry_subscriptions(self):
         raw_subs = self.__get_raw_subs()
         tel_subs = []
         for raw_sub in raw_subs:

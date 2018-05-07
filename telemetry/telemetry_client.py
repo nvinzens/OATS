@@ -29,7 +29,7 @@ def callback_kafka_publish(notif, topic, host):
 
 
 def __process_host_config(host_config, config):
-    subs = config.get_telemetry_subs()
+    subs = config.get_telemetry_subscriptions()
     for sub in subs:
         p = Process(target=__create_subscriptions, args=(sub, host_config))
         p.start()
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     config = OATSConfig(YAML_FILE)
 
     # start kafka streams clients and consumers
-    subscriptions = config.get_telemetry_subs()
+    subscriptions = config.get_telemetry_subscriptions()
     for sub in subscriptions:
         if sub.kafka_streams_eval:
             kstreams_process = Process(target=subprocess.call, args=([

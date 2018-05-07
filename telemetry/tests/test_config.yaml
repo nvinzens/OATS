@@ -1,26 +1,41 @@
 hosts:
-  - host: 10.20.1.21
-    port: 830
-    username: user
-    password: guest
-    subscriptions:
-      - subscription:
-          xpath: /memory-ios-xe-oper:memory-statistics/memory-statistic/free-memory
-          kafka_publish_topic: oats
-          period: 1000
-      - subscription:
-          xpath: /memory-ios-xe-oper:memory-statistics/memory-statistic/used-memory
-          kafka_publish_topic: oats2
-          period: 990
   - host: 10.20.1.22
-    port: 830
+    port: 999
+    username: user
+    password: pw
+  - host: 10.20.1.21
+    port: 1000
     username: user2
-    password: guest2
-    subscriptions:
-      - subscription:
-          xpath: /memory-ios-xe-oper:memory-statistics/memory-statistic/free-memory
-          kafka_publish_topic: oats
-          period: 1000
+    password: pw2
 
-
-
+subscriptions:
+  - subscription:
+      xpath: /if:interfaces-state/interface/statistics/out-discards
+      period: 1000
+      kafka_publish_topic: interfaces-out-discards
+      kafka_streams_eval: true
+      kafka_streams_jar_location: /home/nvinzens/Desktop/OATS/streaming_clients/oats-generic-kafka-streams/classes/artifacts/oats_generic_kafka_streams_jar/oats-generic-kafka-streams.jar
+      event_threshold_data:
+        - value: 100000
+        - operator: greater_than
+        - kafka_event_topic: out-discards-events
+        - event: streaming-telemetry/*/out-discard-event
+        - data_xpaths:
+          - root_xpath: /notification/push-update/datastore-contents-xml/interfaces-state/interface
+          - name_xpath: /name
+          - data_xpath: /statistics/out-discards
+  - subscription:
+     xpath: /if:interfaces-state/interface/statistics/out-discards
+     period: 100
+     kafka_publish_topic: interfaces-out-discards
+     kafka_streams_eval: true
+     kafka_streams_jar_location: /home/nvinzens/Desktop/OATS/streaming_clients/oats-generic-kafka-streams/classes/artifacts/oats_generic_kafka_streams_jar/oats-generic-kafka-streams.jar
+     event_threshold_data:
+       - value: 5
+       - operator: smaller_than
+       - kafka_event_topic: out-discards-events
+       - event: streaming-telemetry/*/out-discard-event
+       - data_xpaths:
+         - root_xpath: /notification/push-update/datastore-contents-xml/interfaces-state/interface
+         - name_xpath: /test
+         - data_xpath: /statistics/out-discards

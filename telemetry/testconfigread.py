@@ -10,5 +10,5 @@ from multiprocessing import Process, Lock
 
 if __name__ == '__main__':
     config = OATSConfig("/home/nvinzens/Desktop/OATS/config.yaml")
-    for sub in config.get_telemetry_subs():
+    for sub in config.get_telemetry_subscriptions():
        print sub.root_xpath, sub.name_xpath, sub.data_xpath
