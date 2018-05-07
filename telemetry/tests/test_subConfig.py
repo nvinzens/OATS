@@ -32,6 +32,7 @@ def test_get_host_configs():
     assert second_user == host_configs[1].username
     assert second_pw == host_configs[1].password
 
+
 def test_get_telemetry_subscriptions():
     config = OATSConfig(FILE)
     subscriptions = config.get_telemetry_subscriptions()

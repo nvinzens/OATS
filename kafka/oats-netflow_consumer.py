@@ -99,18 +99,11 @@ producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=la
 
 for msg in consumer:
     netflow_data = json.loads(msg.value)
-    data = netflow_data['DataSets']
     host = netflow_data['AgentID']
     timestamp = netflow_data['Header']['UNIXSecs']
     type = 'netflow'
     event_name = 'netflow/*/*/data'
     severity = 0
-    print ('data: ' + data)
-    print ('host: ' + host)
-    print ('timestamp: ' + timestamp)
-    print (' type: ' + type)
-    print ('event_name: ' + event_name)
-    print ('severity: ' + severity)
 
     for list in netflow_data['DataSets']:
         for dict in list:
@@ -119,7 +112,7 @@ for msg in consumer:
                     producer.send('oats-netflow-ingress', netflow_data)
                 if dict['V'] == 1:
                     producer.send('oats-netflow-egress', netflow_data)
-    EventProcessor.process_event(data=data, host=host, timestamp=timestamp, type=type, event_name=event_name,
+    EventProcessor.process_event(data=netflow_data, host=host, timestamp=timestamp, type=type, event_name=event_name,
                                  severity=severity, start_tshoot=False)
 
 
