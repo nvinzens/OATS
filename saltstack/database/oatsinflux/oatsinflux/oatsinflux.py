@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
+import time
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
@@ -52,7 +53,11 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['host'] = str(host)
     metrics['tags']['type'] = str(type)
     metrics['tags']['event_name'] = str(event_name)
-    metrics['time'] = timestamp
+
+    milli = data["message_details"]["milliseconds"]
+    millis = milli + '000000'
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.localtime(timestamp))
+
     metrics['fields']['severity'] = severity
     metrics['fields']['error'] = data['error']
     metrics['fields']['os'] = data['os']
@@ -134,9 +139,11 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['host'] = str(host)
     metrics['tags']['type'] = str(type)
     metrics['tags']['event_name'] = str(event_name)
-    metrics['time'] = timestamp
+
+    nano = '000000000'
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+nano, time.localtime(timestamp))
     metrics['fields']['severity'] = severity
-    for netflow in data[0]:
+    for netflow in data["DataSets"][0]:
         metrics['fields'][netflow["I"]] = netflow["V"]
 
     try:

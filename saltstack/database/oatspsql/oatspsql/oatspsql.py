@@ -164,7 +164,8 @@ def get_solutions_as_string(case_id, test=False):
     except Exception, e:
         print(str(e))
     close_connection(conn, cur)
-    return sol_string
+    solution_strings = ''.join(sol_string)
+    return solution_strings
 
 
 def delete_case(case_id):
