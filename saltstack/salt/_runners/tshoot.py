@@ -127,7 +127,7 @@ def out_discards_exceeded(data, host, timestamp, current_case=None):
     flow = oatssalthelpers.wait_for_event("netflow/*/high_traffic", "OUT_DISCARDS_EXCEEDED", 1, 10, current_case)
     eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
     comment = "Discarded pakets on host {0} on egress interface {1} exceeds threshhold. Time of Event: {2}".format(host, data['name'], eventTime)
-    comment += "/nSource flow: " + str(flow)
+    comment += "\nSource flow: " + str(flow)
     ret = oatssalthelpers.post_slack(comment, case=current_case)
     return ret
 
