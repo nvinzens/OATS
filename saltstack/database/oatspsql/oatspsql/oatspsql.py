@@ -58,6 +58,8 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
         description = 'No description'
     if not solution:
         solution = ['Case created without automated Solution']
+    else:
+        sol = [solution]
 
     try:
         cur.execute("""INSERT INTO cases (case_nr, "event", "description", "status", "created", "last_updated", "technician",
