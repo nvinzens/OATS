@@ -57,9 +57,9 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
     if not description:
         description = 'No description'
     if not solution:
-        sol = ['{Case created without automated Solution}']
+        sol = ['Case created without automated Solution']
     else:
-        curly = "{" + solution + "}"
+        curly = solution
         sol = [curly]
 
     try:
@@ -116,23 +116,6 @@ def close_case(case_id, solution=None, status=None, test=False):
         print('\nCase closed successfully\n')
     except Exception, e:
         print(str(e))
-    close_connection(conn, cur)
-    return case_id
-
-
-def take_case(case_id, technician, test=False):
-    conn = connect_to_db()
-    cur = create_cursor(conn)
-
-    v1 = datetime.datetime.utcnow()
-
-    try:
-        cur.execute("""UPDATE cases SET "last_updated" = %s, "technician" = %s WHERE case_nr = %s::varchar;""",
-                    (v1, technician, case_id))
-        print('\nTechnician assigned successfully\n')
-    except Exception, e:
-        print(str(e))
-
     close_connection(conn, cur)
     return case_id
 
