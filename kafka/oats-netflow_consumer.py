@@ -102,7 +102,7 @@ for msg in consumer:
     host = netflow_data['AgentID']
     timestamp = netflow_data['Header']['UNIXSecs']
     type = 'netflow'
-    event_name = 'netflow/*/*/data'
+    event_name = 'netflow/*/data'
     severity = 0
 
     for list in netflow_data['DataSets']:
