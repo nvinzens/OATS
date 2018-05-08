@@ -201,7 +201,7 @@ def wait_for_event(tag, error, amount, wait=10, case=None):
     if data:
         if case is not None:
             oatspsql.update_case(case, solution='Received {0} event: Wait was successful.'.format(tag))
-        return True
+        return data
     if case is not None:
         oatspsql.update_case(case, solution='Wait timeout: did not receive {0} event. Troubleshooting failed.'.format(tag))
     return False
