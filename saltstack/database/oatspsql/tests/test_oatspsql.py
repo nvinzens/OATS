@@ -34,6 +34,13 @@ def test_create_and_delete_case():
     assert deleted is True and caseid is not None
 
 
+def test_create_and_delete_case_with_solution():
+    caseid = None
+    caseid = oatspsql.create_case(error='test', host='test', solution='sol', description='Test', status='new', test=False)
+    deleted = oatspsql.delete_case(caseid)
+    assert deleted is True and caseid is not None
+
+
 def test_update_case():
     caseid = oatspsql.create_case(error='test', host='test', description='Test', status='new', test=False)
     updated = oatspsql.update_case(caseid, solution='New stuff', test=False)
