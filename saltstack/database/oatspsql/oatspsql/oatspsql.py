@@ -103,7 +103,7 @@ def update_case(case_id, solution, status=None, test=False):
     return case_id
 
 
-def close_case(case_id, solution, status=None, test=False):
+def close_case(case_id, solution=None, status=None, test=False):
     conn = connect_to_db()
     cur = create_cursor(conn)
 
