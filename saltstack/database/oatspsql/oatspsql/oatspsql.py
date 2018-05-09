@@ -150,11 +150,10 @@ def get_solutions_as_string(case_id, test=False):
         rows = cur.fetchall()
         for row in rows:
             sol_string.extend(row[8])
-            sol_string.append('\n')
     except Exception, e:
         print('Error in get_solutions_as_string: ' + str(e))
     close_connection(conn, cur)
-    solution_strings = ''.join(sol_string)
+    solution_strings = '\n'.join(sol_string)
     return solution_strings
 
 
