@@ -40,6 +40,7 @@ class Correlate:
         eg. 'dead_timer_expired' will execute tshoot.ospf_nbr_down
         :return: None
         '''
+        global cache
         cache_id = 'aggregate' + event_name
         lock = threading.Lock()
         lock.acquire()
@@ -81,6 +82,7 @@ class Correlate:
     @classmethod
     def compress(cls, data, host, timestamp, severity, error, sensor_type,
                  event_name, correlate_for=10, use_oats_case=False):
+        global cache
         cache_id = 'compress' + event_name
         lock = threading.Lock()
         lock.acquire()
