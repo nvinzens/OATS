@@ -10,7 +10,7 @@ import EventProcessor
 CACHE_SIZE = 1000
 
 # cache for recognizing if an event has occured in a given timeframe
-cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=10 + 3)
+cache = None
 
 
 class Correlate:
@@ -114,7 +114,8 @@ class Correlate:
     @staticmethod
     def __init_cache(self, error, cache_id, count_for=10):
         global cache
-
+        if cache is None:
+            cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
         cache[cache_id] = {}
         cache[cache_id][error] = {}
         cache[cache_id][error]['counter'] = 1
