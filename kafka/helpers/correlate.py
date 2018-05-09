@@ -13,7 +13,7 @@ CACHE_SIZE = 1000
 cache = None
 
 
-def aggregate(data, host, timestamp, severity, error, type,
+def aggregate(data, host, timestamp, severity, error, sensor_type,
               event_name, n_of_events=None, alternative_event_name=None, correlate_for=None, use_oats_case=False):
     '''
     Aggregates the event (given by the error) to other events that occured
@@ -60,22 +60,22 @@ def aggregate(data, host, timestamp, severity, error, type,
     if cache[cache_id][error]['counter'] == n_of_events:
         if use_oats_case:
             __update_db_case(current_case, cache[cache_id][error]['counter'], error, event_name)
-        event_name = type + '/*/' + error + '/' + event_name
+        event_name = sensor_type + '/*/' + error + '/' + event_name
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     type=type, event_name=event_name, severity=severity,
+                                     type=sensor_type, event_name=event_name, severity=severity,
                                      case=current_case)
     else:
         if use_oats_case:
 
             __update_db_case(current_case, cache[cache_id][error]['counter'], error, alternative_event_name)
-        event_name = type + '/*/' + error + '/' + alternative_event_name
+        event_name = sensor_type + '/*/' + error + '/' + alternative_event_name
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     type=type, event_name=event_name, severity=severity,
+                                     type=sensor_type, event_name=event_name, severity=severity,
                                      case=current_case)
 
 
-def compress(data, host, timestamp, severity, error, type,
+def compress(data, host, timestamp, severity, error, sensor_type,
              event_name, correlate_for=10, use_oats_case=False):
     cache_id = 'compress' + event_name
     lock = threading.Lock()
@@ -101,9 +101,9 @@ def compress(data, host, timestamp, severity, error, type,
 
     if use_oats_case:
         __update_db_case(current_case, cache[cache_id][error]['counter'], error, event_name)
-    event_name = type + '/*/' + error + '/' + event_name
+    event_name = sensor_type + '/*/' + error + '/' + event_name
     EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                 type=type, event_name=event_name, severity=severity,
+                                 type=sensor_type, event_name=event_name, severity=severity,
                                  case=current_case)
 
 
