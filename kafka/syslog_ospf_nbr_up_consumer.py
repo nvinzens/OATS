@@ -1,7 +1,7 @@
 from kafka import KafkaConsumer
 from helpers import EventProcessor
 from threading import Thread
-from helpers import correlate
+from helpers import oats_correlate
 from helpers import utils
 import json
 
@@ -29,7 +29,7 @@ for msg in consumer:
     n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess)
 
     #start aggregation of event
-    thread = Thread(target=correlate.aggregate,
+    thread = Thread(target=oats_correlate.aggregate,
                     args=(event_msg, host, timestamp, severity, event_error, 'syslog', event_name,
                           n_of_required_events+3, 'syslog/*/OSPF_NEIGHBOR_UP/no event', 10, False))
     thread.daemon = True
