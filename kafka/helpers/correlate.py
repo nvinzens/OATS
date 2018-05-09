@@ -35,7 +35,6 @@ def aggregate(data, host, timestamp, severity, error, type,
     eg. 'dead_timer_expired' will execute tshoot.ospf_nbr_down
     :return: None
     '''
-    global cache
     cache_id = 'aggregate' + salt_id
     lock = threading.Lock()
     lock.acquire()
@@ -51,7 +50,7 @@ def aggregate(data, host, timestamp, severity, error, type,
     lock.release()
     if use_oats_case:
         current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
-                                                                  ' aggregate.correlate().')
+                                                                  ' correlate.aggregate().')
         oatspsql.update_case(current_case,
                              solution='Waiting for {0} seconds to aggregate events.'
                                       ' Required amount of events: {1}'.format(count_for, n_of_events))
@@ -77,9 +76,36 @@ def aggregate(data, host, timestamp, severity, error, type,
                                      case=current_case)
 
 
-def compress(data, host, timestamp, severity, error,
-              event_name, use_oats_case=False):
-    pass
+def compress(data, host, timestamp, severity, error, type,
+             event_name, compress_for=10, use_oats_case=False):
+    cache_id = 'compress' + event_name
+    lock = threading.Lock()
+    lock.acquire()
+    current_case = None
+    if cache is None or cache_id not in cache or error not in cache[cache_id]:
+        # first thread initializes and populates dict
+        __init_cache(error, cache_id, compress_for)
+    else:
+        # later threads increment counter
+        cache[cache_id][error]['counter'] += 1
+        lock.release()
+        return
+    lock.release()
+    if use_oats_case:
+        current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
+                                                                  ' correlate.compress().')
+        oatspsql.update_case(current_case,
+                             solution='Waiting for {0} seconds to compress events.'.format(compress_for))
+
+    # compress events
+    time.sleep(compress_for)
+
+    if use_oats_case:
+        __update_db_case(current_case, cache[cache_id][error]['counter'], error, event_name)
+    event_name = type + '/*/' + error + '/' + event_name
+    EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
+                                 type=type, event_name=event_name, severity=severity,
+                                 case=current_case)
 
 
 def __init_cache(error, cache_id, count_for=10):
