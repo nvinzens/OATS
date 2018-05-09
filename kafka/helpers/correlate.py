@@ -11,8 +11,6 @@ CACHE_SIZE = 1000
 
 # cache for recognizing if an event has occured in a given timeframe
 cache = None
-current_case = None
-lock = threading.Lock()
 
 
 
@@ -39,18 +37,12 @@ def aggregate(data, host, timestamp, severity, error, type,
     '''
     global cache
     cache_id = 'aggregate' + salt_id
+    lock = threading.Lock()
     lock.acquire()
-
+    current_case = None
     if cache is None or cache_id not in cache or error not in cache[cache_id]:
         # first thread initializes and populates dict
-        cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
-        cache[cache_id] = {}
-        cache[cache_id][error] = {}
-        cache[cache_id][error]['counter'] = 1
-        if use_oats_case:
-            global current_case
-            current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
-                                                                      ' aggregate.correlate().')
+        __init_cache(error, cache_id, count_for)
     else:
         # later threads increment counter
         cache[cache_id][error]['counter'] += 1
@@ -58,15 +50,18 @@ def aggregate(data, host, timestamp, severity, error, type,
         return
     lock.release()
     if use_oats_case:
+        current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
+                                                                  ' aggregate.correlate().')
         oatspsql.update_case(current_case,
-                                  solution='Waiting for {0} seconds to aggregate events.'
-                                           ' Required amount of events: {1}'.format(count_for, n_of_events))
+                             solution='Waiting for {0} seconds to aggregate events.'
+                                      ' Required amount of events: {1}'.format(count_for, n_of_events))
+
     # wait for additional events
     time.sleep(count_for)
 
     if cache[cache_id][error]['counter'] == n_of_events:
         if use_oats_case:
-            __update_db_case(cache[cache_id][error]['counter'], error, salt_id)
+            __update_db_case(current_case, cache[cache_id][error]['counter'], error, salt_id)
         event_name = type + '/*/' + error + '/' + salt_id
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type=type, event_name=event_name, severity=severity,
@@ -74,7 +69,7 @@ def aggregate(data, host, timestamp, severity, error, type,
     else:
         if use_oats_case:
 
-            __update_db_case(cache[cache_id][error]['counter'], error, alternative_id)
+            __update_db_case(current_case, cache[cache_id][error]['counter'], error, alternative_id)
         event_name = type + '/*/' + error + '/' + alternative_id
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
@@ -87,8 +82,15 @@ def compress(data, host, timestamp, severity, error,
     pass
 
 
+def __init_cache(error, cache_id, count_for=10):
+    global cache
+    cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
+    cache[cache_id] = {}
+    cache[cache_id][error] = {}
+    cache[cache_id][error]['counter'] = 1
 
-def __update_db_case(counter, error, identifier):
+
+def __update_db_case(current_case, counter, error, identifier):
     oatspsql.update_case(current_case,
                               solution='Time passed. {0} event counter is {1}. Sending {0}:'
                                        '{2} event to salt master'.format(error, counter, identifier))
