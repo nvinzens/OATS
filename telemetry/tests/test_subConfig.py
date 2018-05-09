@@ -42,6 +42,9 @@ def test_get_telemetry_subscriptions():
     first_thresh_value = 100000
     first_thresh_operator = 'greater_than'
     first_thresh_name_xpath = '/name'
+    first_correlate = True
+    first_correlate_function = 'compress'
+    first_correlate_for = 10
 
     second_xpath = '/if:interfaces-state/interface/statistics/out-discards'
     second_period = 100
@@ -54,6 +57,9 @@ def test_get_telemetry_subscriptions():
     assert first_thresh_value == subscriptions[0].event_threshold
     assert first_thresh_operator == subscriptions[0].operator
     assert first_thresh_name_xpath == subscriptions[0].name_xpath
+    assert first_correlate == subscriptions[0].correlate
+    assert first_correlate_function == subscriptions[0].correlate_function
+    assert first_correlate_for == subscriptions[0].correlate_for
 
     assert second_xpath == subscriptions[1].xpath
     assert second_period == subscriptions[1].period

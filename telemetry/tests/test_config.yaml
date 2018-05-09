@@ -20,6 +20,10 @@ subscriptions:
         - operator: greater_than
         - kafka_event_topic: out-discards-events
         - event: streaming-telemetry/*/out-discard-event
+        - correlate_event: true
+        - correlate:
+           - function: compress
+           - correlation_time: 10
         - data_xpaths:
           - root_xpath: /notification/push-update/datastore-contents-xml/interfaces-state/interface
           - name_xpath: /name
