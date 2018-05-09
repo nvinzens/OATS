@@ -18,6 +18,7 @@ def consume_kafka(topic, event_name):
 
 
 if __name__ == '__main__':
+    # TODO: add option for correlation
     parser = argparse.ArgumentParser(description='Start OATS kafka event consumer')
     parser.add_argument('-t', '--topic', help='the kafka topic you want to consume from', required=True)
     parser.add_argument('-e', '--event_name', help='the event name used by oats', required=True)

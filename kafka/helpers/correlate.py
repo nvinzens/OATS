@@ -40,7 +40,7 @@ def aggregate(data, host, timestamp, severity, error, type,
     global cache
     lock.acquire()
 
-    if cache is None or error not in cache:
+    if cache is None or 'aggregate' not in cache or error not in cache['aggregate']:
         # first thread initializes and populates dict
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
         cache['aggregate'] = {}
