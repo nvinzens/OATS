@@ -17,7 +17,7 @@ lock = threading.Lock()
 
 
 def aggregate(data, host, timestamp, severity, error,
-              salt_id, n_of_events, alternative_id, count_for, use_oats_case):
+              salt_id, n_of_events, alternative_id, count_for, use_oats_case=False):
     '''
     Aggregates the event (given by the error) to other events that occured
     in a given time frame. For every recognized event in the system that
@@ -43,15 +43,16 @@ def aggregate(data, host, timestamp, severity, error,
     if cache is None or error not in cache:
         # first thread initializes and populates dict
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
-        cache[error] = {}
-        cache[error]['counter'] = 1
+        cache['aggregate'] = {}
+        cache['aggregate'][error] = {}
+        cache['aggregate'][error]['counter'] = 1
         if use_oats_case:
             global current_case
             current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
                                                                            ' aggregate.correlate().')
     else:
         # later threads increment counter
-        cache[error]['counter'] += 1
+        cache['aggregate'][error]['counter'] += 1
         lock.release()
         return
     lock.release()
@@ -62,20 +63,25 @@ def aggregate(data, host, timestamp, severity, error,
     # wait for additional events
     time.sleep(count_for)
 
-    if cache[error]['counter'] == n_of_events:
+    if cache['aggregate'][error]['counter'] == n_of_events:
         if use_oats_case:
-            __update_db_case(cache[error]['counter'], error, salt_id)
+            __update_db_case(cache['aggregate'][error]['counter'], error, salt_id)
         event_name = 'syslog/*/' + error + '/' + salt_id
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type='syslog', event_name=event_name, severity=severity,
                                      case=current_case)
     else:
         if use_oats_case:
-            __update_db_case(cache[error]['counter'], error, alternative_id)
+            __update_db_case(cache['aggregate'][error]['counter'], error, alternative_id)
         event_name = 'syslog/*/' + error + '/' + alternative_id
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type='syslog', event_name=event_name, severity=severity,
                                      case=current_case)
+
+
+def compress(data, host, timestamp, severity, error,
+              event_name, use_oats_case=False):
+
 
 
 def __update_db_case(counter, error, identifier):
