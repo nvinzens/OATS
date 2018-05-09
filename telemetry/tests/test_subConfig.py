@@ -57,7 +57,7 @@ def test_get_telemetry_subscriptions():
     assert first_thresh_value == subscriptions[0].event_threshold
     assert first_thresh_operator == subscriptions[0].operator
     assert first_thresh_name_xpath == subscriptions[0].name_xpath
-    assert first_correlate == subscriptions[0].correlate
+    assert first_correlate == subscriptions[0].correlate_event
     assert first_correlate_function == subscriptions[0].correlate_function
     assert first_correlate_for == subscriptions[0].correlate_for
 
