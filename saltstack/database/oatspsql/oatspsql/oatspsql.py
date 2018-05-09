@@ -57,12 +57,15 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
     if not description:
         description = 'No description'
     if not solution:
-        solution = ['Case created without automated Solution']
+        sol = ['Case created without automated Solution']
+    else:
+        curly = solution
+        sol = [curly]
 
     try:
         cur.execute("""INSERT INTO cases (case_nr, "event", "description", "status", "created", "last_updated", "technician",
       "sender_device", "solution") VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s )""",
-                    (v1, error, description, status, v5, v6, v7, host, solution))
+                    (v1, error, description, status, v5, v6, v7, host, sol))
         print('\nCase inserted successfully\n')
     except Exception, e:
         print(str(e))
@@ -101,7 +104,7 @@ def update_case(case_id, solution, status=None, test=False):
     return case_id
 
 
-def close_case(case_id, solution, status=None, test=False):
+def close_case(case_id, solution=None, status=None, test=False):
     conn = connect_to_db()
     cur = create_cursor(conn)
 
@@ -113,23 +116,6 @@ def close_case(case_id, solution, status=None, test=False):
         print('\nCase closed successfully\n')
     except Exception, e:
         print(str(e))
-    close_connection(conn, cur)
-    return case_id
-
-
-def take_case(case_id, technician, test=False):
-    conn = connect_to_db()
-    cur = create_cursor(conn)
-
-    v1 = datetime.datetime.utcnow()
-
-    try:
-        cur.execute("""UPDATE cases SET "last_updated" = %s, "technician" = %s WHERE case_nr = %s::varchar;""",
-                    (v1, technician, case_id))
-        print('\nTechnician assigned successfully\n')
-    except Exception, e:
-        print(str(e))
-
     close_connection(conn, cur)
     return case_id
 
@@ -164,7 +150,8 @@ def get_solutions_as_string(case_id, test=False):
     except Exception, e:
         print(str(e))
     close_connection(conn, cur)
-    return sol_string
+    solution_strings = ''.join(sol_string)
+    return solution_strings
 
 
 def delete_case(case_id):

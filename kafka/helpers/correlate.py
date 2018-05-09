@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 from __future__ import with_statement
-from oats import oatsdbhelpers
 from oatspsql import oatspsql
 from expiringdict import ExpiringDict #pip install expiringdict
 import time
@@ -16,7 +15,8 @@ current_case = None
 lock = threading.Lock()
 
 
-def aggregate(data, host, timestamp, severity, error,
+
+def aggregate(data, host, timestamp, severity, error, type,
               salt_id, n_of_events, alternative_id, count_for, use_oats_case=False):
     '''
     Aggregates the event (given by the error) to other events that occured
@@ -49,7 +49,7 @@ def aggregate(data, host, timestamp, severity, error,
         if use_oats_case:
             global current_case
             current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
-                                                                           ' aggregate.correlate().')
+                                                                      ' aggregate.correlate().')
     else:
         # later threads increment counter
         cache['aggregate'][error]['counter'] += 1
@@ -66,16 +66,18 @@ def aggregate(data, host, timestamp, severity, error,
     if cache['aggregate'][error]['counter'] == n_of_events:
         if use_oats_case:
             __update_db_case(cache['aggregate'][error]['counter'], error, salt_id)
-        event_name = 'syslog/*/' + error + '/' + salt_id
+        event_name = type + '/*/' + error + '/' + salt_id
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     type='syslog', event_name=event_name, severity=severity,
+                                     type=type, event_name=event_name, severity=severity,
                                      case=current_case)
     else:
         if use_oats_case:
+
             __update_db_case(cache['aggregate'][error]['counter'], error, alternative_id)
-        event_name = 'syslog/*/' + error + '/' + alternative_id
+        event_name = type + '/*/' + error + '/' + alternative_id
+
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     type='syslog', event_name=event_name, severity=severity,
+                                     type=type, event_name=event_name, severity=severity,
                                      case=current_case)
 
 
