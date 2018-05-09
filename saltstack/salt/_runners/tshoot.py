@@ -123,6 +123,7 @@ def out_discards_exceeded(data, host, timestamp, current_case=None):
         current_case = oatspsql.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: tshoot.out_discards_exceeded().')
 
     # TODO: determine source of traffic (async)
+    # TODO: clear iface counters
     flow = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)
     eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
     comment = "Discarded pakets on host {0} on egress interface {1} exceeds threshhold. Time of Event: {2}".format(host, data['name'], eventTime)

@@ -16,9 +16,9 @@ for msg in consumer:
                                  severity=4)
     '''
 
-    thread = Thread(target=correlate.aggregate,
+    thread = Thread(target=correlate.compress,
                     args=(data, host, timestamp, 6, "OUT_DISCARDS_EXCEEDED", 'syslog', "out_discard_event",
-                          1, 'out-discard-event', 10, True))
+                          10, True))
     thread.daemon = True
     thread.start()
 
