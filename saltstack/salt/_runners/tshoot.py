@@ -118,7 +118,7 @@ def ospf_nbr_down(host, yang_message, error, tag, process_number, current_case):
     return ret
 
 
-def out_discards_exceeded(data, host, timestamp, current_case=None):
+def out_discards_exceeded(data, host, timestamp, current_case):
     if current_case is None or current_case == 'None':
         current_case = oatspsql.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: tshoot.out_discards_exceeded().')
 
