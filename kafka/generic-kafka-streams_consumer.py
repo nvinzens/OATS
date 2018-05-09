@@ -36,5 +36,6 @@ if __name__ == '__main__':
     parser.add_argument('-ct', '--correlation-time', type=int,
                         help='optional: the amount of time to correlate for', required=False)
     args = vars(parser.parse_args())
-    consume_kafka(args['topic'], args['event_name'])
+    consume_kafka(args['topic'], args['event_name'],
+                  correlation_function=args['correlation_function'], correlation_time=args['correlation_time'])
 
