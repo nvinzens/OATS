@@ -38,21 +38,22 @@ def aggregate(data, host, timestamp, severity, error, type,
     :return: None
     '''
     global cache
+    cache_id = 'aggregate' + salt_id
     lock.acquire()
 
-    if cache is None or 'aggregate' not in cache or error not in cache['aggregate']:
+    if cache is None or cache_id not in cache or error not in cache[cache_id]:
         # first thread initializes and populates dict
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
-        cache['aggregate'] = {}
-        cache['aggregate'][error] = {}
-        cache['aggregate'][error]['counter'] = 1
+        cache[cache_id] = {}
+        cache[cache_id][error] = {}
+        cache[cache_id][error]['counter'] = 1
         if use_oats_case:
             global current_case
             current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
                                                                       ' aggregate.correlate().')
     else:
         # later threads increment counter
-        cache['aggregate'][error]['counter'] += 1
+        cache[cache_id][error]['counter'] += 1
         lock.release()
         return
     lock.release()
@@ -63,9 +64,9 @@ def aggregate(data, host, timestamp, severity, error, type,
     # wait for additional events
     time.sleep(count_for)
 
-    if cache['aggregate'][error]['counter'] == n_of_events:
+    if cache[cache_id][error]['counter'] == n_of_events:
         if use_oats_case:
-            __update_db_case(cache['aggregate'][error]['counter'], error, salt_id)
+            __update_db_case(cache[cache_id][error]['counter'], error, salt_id)
         event_name = type + '/*/' + error + '/' + salt_id
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type=type, event_name=event_name, severity=severity,
@@ -73,7 +74,7 @@ def aggregate(data, host, timestamp, severity, error, type,
     else:
         if use_oats_case:
 
-            __update_db_case(cache['aggregate'][error]['counter'], error, alternative_id)
+            __update_db_case(cache[cache_id][error]['counter'], error, alternative_id)
         event_name = type + '/*/' + error + '/' + alternative_id
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
