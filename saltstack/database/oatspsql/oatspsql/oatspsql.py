@@ -84,13 +84,14 @@ def update_case(case_id, solution, status=None, test=False):
             or status == str(Status.DONE.value):
         try:
             cur.execute("""UPDATE cases SET "status" = %s, "last_updated" = %s WHERE case_nr = %s::varchar;""",
-                        (str(status), v1, case_id))
+                        (str(status), v1, str(case_id)))
             print('\nCase updated successfully\n')
         except Exception, e:
             print('Error in update_case without solution: ' + str(e))
     else:
         try:
-            cur.execute("""UPDATE cases SET "last_updated" = %s WHERE case_nr = %s::varchar;""", (status, v1, case_id))
+            cur.execute("""UPDATE cases SET "last_updated" = %s WHERE case_nr = %s::varchar;""",
+                        (v1, str(case_id)))
             print('\nCase updated successfully\n')
         except Exception, e:
             print('Error in update_case without solution: ' + str(e))
