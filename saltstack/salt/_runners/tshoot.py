@@ -94,7 +94,7 @@ def ospf_nbr_down(host, yang_message, error, tag, process_number, current_case):
     oatssalthelpers.ospf_shutdown(interface_neighbor, process_number, case=current_case)
     async_result = pool.apply_async(
         oatssalthelpers.wait_for_event, ('napalm/syslog/*/OSPF_NEIGHBOR_UP/ospf_nbrs_up',
-                                         'OSPF_NEIGHBOR_UP', n_of_neighbors+3, 60, current_case)
+                                         'OSPF_NEIGHBOR_UP', n_of_neighbors+3, 120, current_case)
     )
     conf = oatssalthelpers.ospf_noshutdown(interface_neighbor, process_number, case=current_case)
     success = async_result.get()
