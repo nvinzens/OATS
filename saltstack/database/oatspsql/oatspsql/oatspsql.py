@@ -21,7 +21,7 @@ def connect_to_db():
     try:
         conn = psycopg2.connect("dbname='casedb' user='netbox' host='localhost' password='oatsnetbox'")
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        print('error in connect_to_db: ' + str(error))
     return conn
 
 
@@ -29,7 +29,7 @@ def create_cursor(conn):
     try:
         cur = conn.cursor()
     except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
+        print('Error in create_cursor: ' + str(error))
     return cur
 
 
@@ -59,16 +59,16 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
     if not solution:
         sol = ['Case created without automated Solution']
     else:
-        curly = solution
+        curly = str(solution)
         sol = [curly]
 
     try:
         cur.execute("""INSERT INTO cases (case_nr, "event", "description", "status", "created", "last_updated", "technician",
       "sender_device", "solution") VALUES ( %s, %s, %s, %s, %s, %s, %s, %s, %s )""",
-                    (v1, error, description, status, v5, v6, v7, host, sol))
+                    (str(v1), str(error), str(description), str(status), v5, v6, v7, str(host), sol))
         print('\nCase inserted successfully\n')
     except Exception, e:
-        print(str(e))
+        print('error in create_case: ' + str(e))
 
     close_connection(conn, cur)
     return v1
@@ -84,22 +84,25 @@ def update_case(case_id, solution, status=None, test=False):
             or status == str(Status.DONE.value):
         try:
             cur.execute("""UPDATE cases SET "status" = %s, "last_updated" = %s WHERE case_nr = %s::varchar;""",
-                        (status, v1, case_id))
+                        (str(status), v1, case_id))
             print('\nCase updated successfully\n')
         except Exception, e:
-            print(str(e))
+            print('Error in update_case without solution: ' + str(e))
     else:
         try:
             cur.execute("""UPDATE cases SET "last_updated" = %s WHERE case_nr = %s::varchar;""", (status, v1, case_id))
             print('\nCase updated successfully\n')
         except Exception, e:
-            print(str(e))
+            print('Error in update_case without solution: ' + str(e))
     close_connection(conn, cur)
     conn = connect_to_db()
     cur = create_cursor(conn)
     sql = "UPDATE cases SET solution = solution || %s WHERE case_nr = %s::varchar"
-    sol = '{' + solution + '}'
-    cur.execute(sql, (sol, case_id))
+    sol = '{' + str(solution) + '}'
+    try:
+        cur.execute(sql, (sol, case_id))
+    except Exception, e:
+        print('Error in update_case with solution: ' + str(e))
     close_connection(conn, cur)
     return case_id
 
@@ -115,7 +118,7 @@ def close_case(case_id, solution=None, status=None, test=False):
                     (status, v1, case_id))
         print('\nCase closed successfully\n')
     except Exception, e:
-        print(str(e))
+        print('Error in close_case: ' + str(e))
     close_connection(conn, cur)
     return case_id
 
@@ -131,7 +134,7 @@ def take_case(case_id, technician, test=False):
                     (v1, technician, case_id))
         print('\nTechnician assigned successfully\n')
     except Exception, e:
-        print(str(e))
+        print('Error in take_case: ' + str(e))
 
     close_connection(conn, cur)
     return case_id
@@ -148,9 +151,9 @@ def get_solutions_as_string(case_id, test=False):
         for row in rows:
             sol_string.extend(row[8])
     except Exception, e:
-        print(str(e))
+        print('Error in get_solutions_as_string: ' + str(e))
     close_connection(conn, cur)
-    solution_strings = ''.join(sol_string)
+    solution_strings = '\n'.join(sol_string)
     return solution_strings
 
 
@@ -164,7 +167,7 @@ def delete_case(case_id):
         cur.execute(delete_sql, (case_id,))
         exist = True
     except Exception, e:
-        print(str(e))
+        print('Error in delete_case: ' + str(e))
     close_connection(conn, cur)
     return exist
 
@@ -180,7 +183,7 @@ def show_cases_of_last_day(test=False):
         for row in rows:
             cases.append(row[0])
     except Exception, e:
-        print(str(e))
+        print('Error in show_cases_of_last_day: ' + str(e))
     close_connection(conn, cur)
     return cases
 
@@ -201,7 +204,7 @@ def numb_open_cases(status=None, test=False):
         rows = cur.fetchall()
         amount = len(rows)
     except Exception, e:
-        print(str(e))
+        print('Error in numb_open_cases: ' + str(e))
     close_connection(conn, cur)
     return amount
 
@@ -219,7 +222,7 @@ def show_open_cases_nr(test=False):
         for row in rows:
             cases.append(row[0])
     except Exception, e:
-        print(str(e))
+        print('Error in show_open_cases_nr: ' + str(e))
     close_connection(conn, cur)
     return cases
 
