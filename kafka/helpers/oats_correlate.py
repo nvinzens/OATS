@@ -7,13 +7,11 @@ import threading
 import EventProcessor
 
 
-CACHE_SIZE = 1000
-
-# cache for recognizing if an event has occured in a given timeframe
-cache = None
-
-
 class Correlate:
+
+    # cache for recognizing if an event has occured in a given timeframe
+    cache = None
+    CACHE_SIZE = 1000
 
     def __init__(self):
         raise Exception("Class Correlate is static and should never be initialized.")
@@ -40,7 +38,7 @@ class Correlate:
         eg. 'dead_timer_expired' will execute tshoot.ospf_nbr_down
         :return: None
         '''
-        global cache
+
         cache_id = 'aggregate-' + event_name
         lock = threading.Lock()
         lock.acquire()
@@ -82,7 +80,7 @@ class Correlate:
     @classmethod
     def compress(cls, data, host, timestamp, severity, error, sensor_type,
                  event_name, correlate_for=10, use_oats_case=False):
-        global cache
+
         cache_id = 'compress-' + event_name
         lock = threading.Lock()
         lock.acquire()
@@ -114,6 +112,7 @@ class Correlate:
     @staticmethod
     def __init_cache(self, error, cache_id, count_for=10):
         global cache
+        global CACHE_SIZE
         if cache is None:
             cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
         cache[cache_id] = {}
