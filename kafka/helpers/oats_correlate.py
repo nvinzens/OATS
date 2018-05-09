@@ -41,7 +41,7 @@ class Correlate:
         :return: None
         '''
         global cache
-        cache_id = 'aggregate' + event_name
+        cache_id = 'aggregate-' + event_name
         lock = threading.Lock()
         lock.acquire()
         current_case = None
@@ -83,7 +83,7 @@ class Correlate:
     def compress(cls, data, host, timestamp, severity, error, sensor_type,
                  event_name, correlate_for=10, use_oats_case=False):
         global cache
-        cache_id = 'compress' + event_name
+        cache_id = 'compress-' + event_name
         lock = threading.Lock()
         lock.acquire()
         current_case = None
@@ -114,7 +114,8 @@ class Correlate:
     @staticmethod
     def __init_cache(self, error, cache_id, count_for=10):
         global cache
-        cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
+        if cache is None:
+            cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
         cache[cache_id] = {}
         cache[cache_id][error] = {}
         cache[cache_id][error]['counter'] = 1
