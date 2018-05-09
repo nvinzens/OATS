@@ -61,6 +61,32 @@ def __create_subscriptions(subscription, host_config):
             first = False
 
 
+def __start_kafka_streams(subscription):
+    kstreams_process = Process(target=subprocess.call,
+                               args=([
+                                            'java', '-jar', subscription.jar_location,
+                                            subscription.kafka_publish_topic,
+                                            subscription.kafka_event_topic, str(subscription.event_threshold),
+                                            subscription.operator,
+                                            subscription.root_xpath, subscription.name_xpath, subscription.data_xpath
+                                    ],))
+    kstreams_process.start()
+
+    if subscription.correlate_event:
+        kconsumer_process = Process(target=subprocess.call, args=(['python',
+                                                                   '../kafka/generic-kafka-streams_consumer.py',
+                                                                   '-t', subscription.kafka_event_topic,
+                                                                   '-e', subscription.event,
+                                                                   '-cf', subscription.correlate_function,
+                                                                   '-ct', subscription.correlate_for],))
+    else:
+        kconsumer_process = Process(target=subprocess.call, args=(['python',
+                                                                   '../kafka/generic-kafka-streams_consumer.py',
+                                                                   '-t', subscription.kafka_event_topic,
+                                                                   '-e', subscription.event],))
+    kconsumer_process.start()
+
+
 if __name__ == '__main__':
     config = OATSConfig(YAML_FILE)
 
@@ -68,18 +94,7 @@ if __name__ == '__main__':
     subscriptions = config.get_telemetry_subscriptions()
     for sub in subscriptions:
         if sub.kafka_streams_eval:
-            kstreams_process = Process(target=subprocess.call, args=([
-                                                          'java', '-jar', sub.jar_location, sub.kafka_publish_topic,
-                                                          sub.kafka_event_topic, str(sub.event_threshold), sub.operator,
-                                                          sub.root_xpath, sub.name_xpath, sub.data_xpath
-                                                      ],))
-            kstreams_process.start()
-
-            kconsumer_process = Process(target=subprocess.call, args=(['python',
-                                                                       '../kafka/generic-kafka-streams_consumer.py',
-                                                                       '-t', sub.kafka_event_topic,
-                                                                       '-e', sub.event],))
-            kconsumer_process.start()
+            __start_kafka_streams(sub)
 
     # establish telemetry subscriptions
     host_configs = config.get_host_configs()
