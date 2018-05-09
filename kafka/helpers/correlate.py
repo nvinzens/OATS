@@ -60,7 +60,6 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
     if cache[cache_id][error]['counter'] == n_of_events:
         if use_oats_case:
             __update_db_case(current_case, cache[cache_id][error]['counter'], error, event_name)
-        event_name = sensor_type + '/*/' + error + '/' + event_name
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type=sensor_type, event_name=event_name, severity=severity,
                                      case=current_case)
@@ -68,10 +67,9 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
         if use_oats_case:
 
             __update_db_case(current_case, cache[cache_id][error]['counter'], error, alternative_event_name)
-        event_name = sensor_type + '/*/' + error + '/' + alternative_event_name
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     type=sensor_type, event_name=event_name, severity=severity,
+                                     type=sensor_type, event_name=alternative_event_name, severity=severity,
                                      case=current_case)
 
 
@@ -101,7 +99,6 @@ def compress(data, host, timestamp, severity, error, sensor_type,
 
     if use_oats_case:
         __update_db_case(current_case, cache[cache_id][error]['counter'], error, event_name)
-    event_name = sensor_type + '/*/' + error + '/' + event_name
     EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                  type=sensor_type, event_name=event_name, severity=severity,
                                  case=current_case)
