@@ -5,10 +5,11 @@ import subprocess
 import json
 import xmltodict
 from OATSConfig import OATSConfig
-from multiprocessing import Process, Lock
+from multiprocessing import Process
 
 
 YAML_FILE = '/home/OATS/config.yaml'
+
 
 def errback(notif):
     pass
@@ -78,7 +79,7 @@ def __start_kafka_streams(subscription):
                                                                    '-t', subscription.kafka_event_topic,
                                                                    '-e', subscription.event,
                                                                    '-cf', subscription.correlate_function,
-                                                                   '-ct', subscription.correlate_for],))
+                                                                   '-ct', str(subscription.correlate_for)],))
     else:
         kconsumer_process = Process(target=subprocess.call, args=(['python',
                                                                    '../kafka/generic-kafka-streams_consumer.py',
