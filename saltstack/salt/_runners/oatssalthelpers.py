@@ -187,7 +187,7 @@ def count_event(tag, error, amount, wait=10, case=None):
     return success
 
 
-def wait_for_event(tag, error, amount, wait=10, case=None):
+def wait_for_event(tag, wait=10, case=None):
     opts = salt.config.client_config('/etc/salt/master')
 
     event = salt.utils.event.get_event(
