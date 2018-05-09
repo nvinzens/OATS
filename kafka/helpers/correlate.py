@@ -59,14 +59,14 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
 
     if cache[cache_id][error]['counter'] == n_of_events:
         if use_oats_case:
-            __update_db_case(current_case, cache[cache_id][error]['counter'], error, event_name)
+            __update_db_case(current_case, cache[cache_id][error]['counter'], event_name, event_name)
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type=sensor_type, event_name=event_name, severity=severity,
                                      case=current_case)
     else:
         if use_oats_case:
 
-            __update_db_case(current_case, cache[cache_id][error]['counter'], error, alternative_event_name)
+            __update_db_case(current_case, cache[cache_id][error]['counter'], event_name, alternative_event_name)
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type=sensor_type, event_name=alternative_event_name, severity=severity,
@@ -98,7 +98,7 @@ def compress(data, host, timestamp, severity, error, sensor_type,
     time.sleep(correlate_for)
 
     if use_oats_case:
-        __update_db_case(current_case, cache[cache_id][error]['counter'], error, event_name)
+        __update_db_case(current_case, cache[cache_id][error]['counter'], event_name, event_name)
     EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                  type=sensor_type, event_name=event_name, severity=severity,
                                  case=current_case)
@@ -112,9 +112,9 @@ def __init_cache(error, cache_id, count_for=10):
     cache[cache_id][error]['counter'] = 1
 
 
-def __update_db_case(current_case, counter, error, identifier):
+def __update_db_case(current_case, counter, event_name, identifier):
     oatspsql.update_case(current_case,
                               solution='Time passed. {0} event counter is {1}. Sending {0}:'
-                                       '{2} event to salt master'.format(error, counter, identifier))
+                                       '{2} event to salt master'.format(event_name, counter, identifier))
 
 
