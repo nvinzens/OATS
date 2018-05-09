@@ -33,7 +33,7 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--event_name', help='the event name used by oats', required=True)
     parser.add_argument('-cf', '--correlation-function',
                         help='optional: the function to use for correlating', required=False)
-    parser.add_argument('-ct', '--correlation-time',
+    parser.add_argument('-ct', '--correlation-time', type=int,
                         help='optional: the amount of time to correlate for', required=False)
     args = vars(parser.parse_args())
     consume_kafka(args['topic'], args['event_name'])
