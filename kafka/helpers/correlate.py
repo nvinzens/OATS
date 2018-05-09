@@ -83,6 +83,7 @@ def aggregate(data, host, timestamp, severity, error, type,
 
 def compress(data, host, timestamp, severity, error,
               event_name, use_oats_case=False):
+    pass
 
 
 
