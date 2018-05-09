@@ -12,15 +12,16 @@ def consume_kafka(topic, event_name, correlation_function=None, correlation_time
     for msg in consumer:
         print (msg)
         host, timestamp, data = utils.extract_record_data(msg)
+        sensor_type = 'streaming-telemetry'
         if correlation_function is None:
             EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                         type='streaming-telemetry',
+                                         type=sensor_type,
                                          event_name=event_name,
                                          severity=4)
         else:
             target = 'correlate.' + correlation_function
             thread = Thread(target=eval(target),
-                            args=(data, host, timestamp, 6, 'KAFKA_STREAMS_EVENT', type, event_name),
+                            args=(data, host, timestamp, 6, 'KAFKA_STREAMS_EVENT', sensor_type, event_name),
                             kwargs={'correlate_for': correlation_time, 'use_oats_case': True})
             thread.daemon = True
             thread.start()
