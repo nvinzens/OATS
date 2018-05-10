@@ -126,7 +126,7 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     # TODO: clear iface counters
     flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
     flow_host = flow_data['AgentID']
-    flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data, 7)
+    flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
 
     eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
