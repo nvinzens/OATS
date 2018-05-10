@@ -2,8 +2,8 @@ from kafka import KafkaConsumer
 import json
 from oats import oatsdbhelpers
 from threading import Thread
-from helpers import oats_correlate
-from helpers import utils
+from oats_kafka_helpers import oats_correlate
+from oats_kafka_helpers import utils
 
 
 def __get_ospf_change_reason(yang_message):

@@ -1,8 +1,8 @@
 from kafka import KafkaConsumer
-from helpers import EventProcessor
-from helpers import utils
+from oats_kafka_helpers import EventProcessor
+from oats_kafka_helpers import utils
 from threading import Thread
-from helpers import oats_correlate
+from oats_kafka_helpers import oats_correlate
 
 
 consumer = KafkaConsumer('out-discards-events')

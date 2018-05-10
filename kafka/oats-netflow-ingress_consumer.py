@@ -1,6 +1,6 @@
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
-from helpers import EventProcessor
+from oats_kafka_helpers import EventProcessor
 import json
 
 consumer = KafkaConsumer('oats-netflow-ingress')
