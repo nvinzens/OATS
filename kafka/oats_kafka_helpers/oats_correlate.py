@@ -48,8 +48,7 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
         return
     lock.release()
     if use_oats_case:
-        current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
-                                                                  ' correlate.aggregate().')
+        current_case = __create_db_case(error, host, 'aggregate')
         oatspsql.update_case(current_case,
                              solution='Waiting for {0} seconds to aggregate events.'
                                       ' Required amount of events: {1}'.format(correlate_for, n_of_events))
@@ -89,8 +88,7 @@ def compress(data, host, timestamp, severity, error, sensor_type,
         return
     lock.release()
     if use_oats_case:
-        current_case = oatspsql.create_case(error, host, solution='Case started in kafka event consumer:'
-                                                                  ' correlate.compress().')
+        current_case = __create_db_case(error, host, 'compress')
         oatspsql.update_case(current_case,
                              solution='Waiting for {0} seconds to compress events.'.format(correlate_for))
 
@@ -114,6 +112,11 @@ def __init_cache(error, cache_id, count_for=10):
 
 def __update_db_case(current_case, counter, event_name, identifier):
     oatspsql.update_case(current_case,
-                              solution='Time passed. {0} event counter is {1}. Sending {0}:'
-                                       '{2} event to salt master'.format(event_name, counter, identifier))
+                         solution='Time passed: {0} event counter is {1}. Sending {0}:'
+                                  '{2} event to salt master'.format(event_name, counter, identifier))
+
+
+def __create_db_case(error, host, function_name):
+    return oatspsql.create_case(error, host,
+                                solution='Case started in kafka event consumer: correlate.' + function_name)
 
