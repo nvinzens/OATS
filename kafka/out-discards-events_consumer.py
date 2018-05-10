@@ -1,8 +1,8 @@
 from kafka import KafkaConsumer
-from helpers import EventProcessor
-from helpers import utils
+from oats_kafka_helpers import EventProcessor
+from oats_kafka_helpers import utils
 from threading import Thread
-from helpers import correlate
+from oats_kafka_helpers import oats_correlate
 
 
 consumer = KafkaConsumer('out-discards-events')
@@ -16,7 +16,7 @@ for msg in consumer:
                                  severity=4)
     '''
 
-    thread = Thread(target=correlate.compress,
+    thread = Thread(target=oats_correlate.compress,
                     args=(data, host, timestamp, 6, "OUT_DISCARDS_EXCEEDED", 'syslog', "out_discard_event",
                           10, True))
     thread.daemon = True

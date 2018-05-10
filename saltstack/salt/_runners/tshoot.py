@@ -27,7 +27,7 @@ def ifdown(host, yang_message, error, tag, current_case=None):
     interface = oatsdbhelpers.get_interface(error, yang_message)
     comment = 'Interface down status on host ' + host + ' detected. '
     if current_case is None or current_case == 'None':
-        current_case = oatspsql.create_case(error, host, solution='Case created in salt: tshoot.ifdown().')
+        current_case = oatspsql.create_case(error, host, solution='Case created in salt: `tshoot.ifdown`.')
     interface_neighbor = oatsnb.get_interface_neighbor(host, interface, case=current_case)
 
     neighbors = oatsnb.get_neighbors(interface_neighbor, case=current_case)
@@ -41,21 +41,21 @@ def ifdown(host, yang_message, error, tag, current_case=None):
         success = oatssalthelpers.ping(host, interface_neighbor, check_connectivity=True, case=current_case)
         if success:
             success = True
-            comment += ('Config for Interface '
-                       + interface + ' automatically changed from down to up')
+            comment += ('Config for Interface `'
+                       + interface + '` automatically changed from down to up')
             # TODO: remove, only useful for debugging
             oatssalthelpers.post_slack(comment, case=current_case)
             oatspsql.close_case(current_case)
         else:
             oatspsql.update_case(current_case, solution=error + 'could not get resolved. Technician needed.', status=oatspsql.Status.ONHOLD.value)
-            comment = ('Could not fix down status of ' + interface + ' on host'
+            comment = ('Could not fix down status of `' + interface + '` on host'
                        + host + ' .')
             oatssalthelpers.post_slack(comment, case=current_case)
     if not device_up:
         # TODO: powercycle, check power consumation
         success = False
         oatspsql.update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=oatspsql.Status.ONHOLD.value)
-        comment += 'Interface ' + interface + ' on host '+ host + ' down. Neighbor ' + interface_neighbor + ' is down.'
+        comment += 'Interface `' + interface + '` on host '+ host + ' down. Neighbor ' + interface_neighbor + ' is down.'
         oatssalthelpers.post_slack(comment, case=current_case)
         comment += ' Could not restore connectivity - Slack Message sent.'
 
@@ -87,7 +87,7 @@ def ospf_nbr_down(host, yang_message, error, tag, process_number, current_case):
     pool = ThreadPool(processes=1)
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
     if current_case is None or current_case == 'None':
-        current_case = oatspsql.create_case(error, host, solution='Case created in salt: tshoot.ospf_nbr_down().')
+        current_case = oatspsql.create_case(error, host, solution='Case created in salt: `tshoot.ospf_nbr_down`.')
     interface = oatsdbhelpers.get_interface(error, yang_message)
     interface_neighbor = oatsnb.get_interface_neighbor(host, interface, case=current_case)
     n_of_neighbors = len(oatsnb.get_ospf_neighbors(interface_neighbor, case=current_case))
@@ -118,16 +118,20 @@ def ospf_nbr_down(host, yang_message, error, tag, process_number, current_case):
     return ret
 
 
-def out_discards_exceeded(data, host, timestamp, current_case=None):
+def out_discards_exceeded(data, host, timestamp, current_case):
     if current_case is None or current_case == 'None':
-        current_case = oatspsql.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: tshoot.out_discards_exceeded().')
+        current_case = oatspsql.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: `tshoot.out_discards_exceeded`.')
 
     # TODO: determine source of traffic (async)
     # TODO: clear iface counters
-    flow = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)
+    flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
+    flow_host = flow_data['AgentID']
+    flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
+
     eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
-    comment = "Discarded pakets on host {0} on egress interface {1} exceeds threshhold. Time of Event: {2}".format(host, data['name'], eventTime)
-    comment += "\nSource flow: " + str(flow)
+    comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
+              "Source port of traffic: {2}".format(flow_host, data['name'], flow_source_port)
+
     ret = oatssalthelpers.post_slack(comment, case=current_case)
     return ret
 

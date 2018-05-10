@@ -1,5 +1,5 @@
 from kafka import KafkaConsumer
-from helpers import EventProcessor
+from oats_kafka_helpers import EventProcessor
 import json
 
 def __get_interface_status(yang_message):

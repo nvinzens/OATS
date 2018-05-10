@@ -1,0 +1,23 @@
+hosts:
+  - host: 10.20.1.22
+    port: 999
+    username: user
+    password: pw
+  - host: 10.20.1.21
+    port: 1000
+    username: user2
+    password: pw2
+
+subscriptions:
+  - subscription:
+      xpath: /if:interfaces-state/interface/statistics/out-discards
+      period: 1000
+      kafka_publish_topic: interfaces-out-discards
+      kafka_streams_eval: false
+
+  - subscription:
+     xpath: /if:interfaces-state/interface/statistics/in-discards
+     period: 100
+     kafka_publish_topic: interfaces-in-dicards
+     kafka_streams_eval: false
+

@@ -32,8 +32,8 @@ def post_slack(message, case=None):
 
 
 def __load_api_key(filepath):
-    file = open(filepath)
-    masterconf = yaml.load(file)
+    f = open(filepath)
+    masterconf = yaml.load(f)
     return masterconf['slack']['api_key']
 
 
@@ -75,7 +75,7 @@ def if_noshutdown(host, interface, case=None):
     template_source = 'interface ' + interface + '\n  no shutdown\nend'
     config = {'template_name': template_name, 'template_source': template_source}
     if case is not None:
-        oatspsql.update_case(case, solution='Trying to apply no shutdown to interface {0} on host {1}.'.format(interface, host))
+        oatspsql.update_case(case, solution='Trying to apply no shutdown to interface `{0}` on host {1}.'.format(interface, host))
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
@@ -94,7 +94,7 @@ def if_shutdown(host, interface, case=None):
     template_source = 'interface {0}\n  shutdown\nend'.format(interface)
     config = {'template_name': template_name,'template_source': template_source}
     if case is not None:
-        oatspsql.update_case(case, solution='Trying to apply shutdown to interface {0} on host {1}.'.format(interface, host))
+        oatspsql.update_case(case, solution='Trying to apply shutdown to interface `{0}` on host {1}.'.format(interface, host))
     return __salt__['salt.execute'](host, 'net.load_template', kwarg=config)
 
 
@@ -177,7 +177,7 @@ def count_event(tag, error, amount, wait=10, case=None):
     counter = 0
     timeout = time.time() + wait
     if case is not None:
-        oatspsql.update_case(case, solution='Waiting for {0} {1} events.'.format(amount, error))
+        oatspsql.update_case(case, solution='Waiting for {0} `{1}` events.'.format(amount, error))
     while time.time() < timeout:
         if event.get_event(wait=3, tag=tag):
             counter += 1
@@ -197,14 +197,21 @@ def wait_for_event(tag, wait=10, case=None):
         opts=opts)
     data = event.get_event(wait=wait, tag=tag)
     if case is not None:
-        oatspsql.update_case(case, solution='Waiting for {0} event...'.format(tag))
+        oatspsql.update_case(case, solution='Waiting for `{0}` event...'.format(tag))
     if data:
         if case is not None:
-            oatspsql.update_case(case, solution='Received {0} event: Wait was successful.'.format(tag))
+            oatspsql.update_case(case, solution='Received `{0}` event: Wait was successful.'.format(tag))
         return data
     if case is not None:
-        oatspsql.update_case(case, solution='Wait timeout: did not receive {0} event. Troubleshooting failed.'.format(tag))
+        oatspsql.update_case(case, solution='Wait timeout: did not receive `{0}` event. Troubleshooting failed.'.format(tag))
     return False
+
+
+def get_netflow_data_from_type_field(netflow_data, type_field):
+    for flow_list in netflow_data:
+        for flow_dict in flow_list:
+            if flow_dict['I'] == type_field:
+                return flow_dict['V']
 
 
 def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, threshold=1000, timeout=3):
