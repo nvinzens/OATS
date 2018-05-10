@@ -112,11 +112,11 @@ def __init_cache(error, cache_id, count_for=10):
 
 def __update_db_case(current_case, counter, event_name):
     oatspsql.update_case(current_case,
-                         solution='Time passed: `{0}` event counter is {1}. Sending {0}'
+                         solution='Time passed: `{0}` event counter is {1}. Sending `{0}`'
                                   ' event to salt master'.format(event_name, counter))
 
 
 def __create_db_case(error, host, function_name):
     return oatspsql.create_case(error, host,
-                                solution='Case started in kafka event consumer: correlate.' + function_name)
+                                solution='Case started in kafka event consumer: `correlate.' + function_name + '`')
 
