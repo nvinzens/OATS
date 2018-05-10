@@ -34,7 +34,7 @@ telemetry/*.pyc
 
 kafka/*.pyc
 
-kafka/helpers/*.pyc
+kafka/oats_kafka_helpers/*.pyc
 
 saltstack/database/oatsnb/tests/__pycache__/
 
