@@ -30,8 +30,8 @@ for msg in consumer:
 
     # only start aggregation once the dead timer is expired
     if salt_id == 'dead_timer_expired':
-        event_name = 'syslog/*/' + event_error + salt_id
-        alt_event_name = 'syslog/*/' + event_error + 'interface_down'
+        event_name = 'syslog/*/' + event_error + '/' + salt_id
+        alt_event_name = 'syslog/*/' + event_error + '/' + 'interface_down'
         n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess)
 
         thread = Thread(target=oats_correlate.aggregate,
