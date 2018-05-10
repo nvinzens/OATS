@@ -17,7 +17,7 @@ for msg in consumer:
     for list in netflow_data['DataSets']:
         for dict in list:
             if dict['I'] == 1:
-                if dict['V'] > 1000:
+                if dict['V'] > 10000:
                     print ("Packets in detected flow: " + str(dict['V']))
                     # delay the flow for a bit to make sure it arrives later than the event it is needed in
                     thread = Thread(target=EventProcessor.process_event,
