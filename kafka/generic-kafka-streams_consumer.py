@@ -3,7 +3,7 @@ import argparse
 from helpers import EventProcessor
 from helpers import utils
 from threading import Thread
-from helpers.oats_correlate import Correlate
+from helpers import oats_correlate
 
 
 def consume_kafka(topic, event_name, correlation_function=None, correlation_time=None):
@@ -20,8 +20,8 @@ def consume_kafka(topic, event_name, correlation_function=None, correlation_time
                                          severity=4)
         else:
             # load function by name
-            target = getattr(Correlate, correlation_function)
-            thread = Thread(target=target,
+
+            thread = Thread(target=eval(correlation_function),
                             args=(data, host, timestamp, 6, 'KAFKA_STREAMS_EVENT', sensor_type, event_name),
                             kwargs={'correlate_for': correlation_time, 'use_oats_case': True})
             thread.daemon = True
