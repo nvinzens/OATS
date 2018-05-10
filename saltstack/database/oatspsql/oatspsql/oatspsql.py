@@ -85,16 +85,16 @@ def update_case(case_id, solution, status=None, test=False):
         try:
             cur.execute("""UPDATE cases SET "status" = %s, "last_updated" = %s WHERE case_nr = %s::varchar;""",
                         (str(status), v1, str(case_id)))
-            print('\nCase updated successfully\n')
+            print('\nCase with State updated successfully\n')
         except Exception, e:
-            print('Error in update_case without solution: ' + str(e))
+            print('Error in update_case with state1: ' + str(e))
     else:
         try:
             cur.execute("""UPDATE cases SET "last_updated" = %s WHERE case_nr = %s::varchar;""",
                         (v1, str(case_id)))
-            print('\nCase updated successfully\n')
+            print('\nCase without State updated successfully\n')
         except Exception, e:
-            print('Error in update_case without solution: ' + str(e))
+            print('Error in update_case without state: ' + str(e))
     close_connection(conn, cur)
     conn = connect_to_db()
     cur = create_cursor(conn)
@@ -102,6 +102,7 @@ def update_case(case_id, solution, status=None, test=False):
     sol = '{' + str(solution) + '}'
     try:
         cur.execute(sql, (sol, case_id))
+        print('\nAdditional solution step to case added successfully\n')
     except Exception, e:
         print('Error in update_case with solution: ' + str(e))
     close_connection(conn, cur)

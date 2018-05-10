@@ -46,3 +46,5 @@ telemetry/TelemetrySubscription.pyc
 
 saltstack/database/oatspsql/tests/__pycache__/
 
+oats_api/flask/
+
