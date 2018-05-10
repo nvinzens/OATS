@@ -22,7 +22,7 @@ for msg in consumer:
                     # delay the flow for a bit to make sure it arrives later than the event it is needed in
                     thread = Thread(target=EventProcessor.process_event,
                                     args=(netflow_data, host, timestamp, 'netflow', event_name, severity),
-                                    kwargs={'start_tshoot': True, 'db_write': False, 'delay': 13})
+                                    kwargs={'start_tshoot': True, 'db_write': False, 'delay': 5})
                     thread.daemon = True
                     thread.start()
                     
