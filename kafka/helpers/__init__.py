@@ -1,1 +1,2 @@
-import oats_correlate
+from .oats_correlate import compress
+from .oats_correlate import aggregate
