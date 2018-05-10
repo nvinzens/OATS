@@ -30,10 +30,13 @@ class OATSConfig:
             period = self.__get_publish_period(raw_sub)
             kafka_publish_topic = self.__get_kafka_topic(raw_sub)
             evaluate = self.__get_kafka_eval(raw_sub)
-            event_thresh_data = self.__get_event_thresh_data(raw_sub)
-            jar_location = self.__get_jar_location(raw_sub)
-            sub = OATSTelemetrySubscription(xpath, period, kafka_publish_topic, evaluate,
-            jar_location, event_thresh_data)
+            if evaluate:
+                event_thresh_data = self.__get_event_thresh_data(raw_sub)
+                jar_location = self.__get_jar_location(raw_sub)
+                sub = OATSTelemetrySubscription(xpath, period, kafka_publish_topic, evaluate,
+                jar_location, event_thresh_data)
+            else:
+                sub = OATSTelemetrySubscription(xpath, period, kafka_publish_topic, evaluate)
             tel_subs.append(sub)
         return tel_subs
 

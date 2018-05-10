@@ -5,7 +5,7 @@ from OATSConfig import OATSConfig
 
 
 # setup
-FILE = 'test_config.yaml'
+FILE = 'min_config.yaml'
 
 
 def test_get_host_configs():
@@ -39,33 +39,24 @@ def test_get_telemetry_subscriptions():
 
     first_xpath = '/if:interfaces-state/interface/statistics/out-discards'
     first_period = 1000
-    first_thresh_value = 100000
-    first_thresh_operator = 'greater_than'
-    first_thresh_name_xpath = '/name'
-    first_correlate = True
-    first_correlate_function = 'compress'
-    first_correlate_for = 10
+    first_kafka_publish_topic = 'interfaces-out-discards'
+    first_kafka_streams_eval = False
 
-    second_xpath = '/if:interfaces-state/interface/statistics/out-discards'
+
+    second_xpath = '/if:interfaces-state/interface/statistics/in-discards'
     second_period = 100
-    second_thresh_value = 5
-    second_thresh_operator = 'smaller_than'
-    second_thresh_name_xpath = '/test'
+    second_kafka_publish_topic = 'interfaces-in-dicards'
+    second_kafka_streams_eval = False
 
     assert first_xpath == subscriptions[0].xpath
     assert first_period == subscriptions[0].period
-    assert first_thresh_value == subscriptions[0].event_threshold
-    assert first_thresh_operator == subscriptions[0].operator
-    assert first_thresh_name_xpath == subscriptions[0].name_xpath
-    assert first_correlate == subscriptions[0].correlate_event
-    assert first_correlate_function == subscriptions[0].correlate_function
-    assert first_correlate_for == subscriptions[0].correlate_for
+    assert first_kafka_publish_topic == subscriptions[0].kafka_publish_topic
+    assert first_kafka_streams_eval == subscriptions[0].kafka_streams_eval
 
     assert second_xpath == subscriptions[1].xpath
     assert second_period == subscriptions[1].period
-    assert second_thresh_value == subscriptions[1].event_threshold
-    assert second_thresh_operator == subscriptions[1].operator
-    assert second_thresh_name_xpath == subscriptions[1].name_xpath
+    assert second_kafka_publish_topic == subscriptions[1].kafka_publish_topic
+    assert second_kafka_streams_eval == subscriptions[1].kafka_streams_eval
 
 
 
