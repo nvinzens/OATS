@@ -35,8 +35,8 @@ for msg in consumer:
                         thread.start()
                         break
 
-            else:
-                continue
+                else:
+                    continue
                     
 
 
