@@ -1,0 +1,30 @@
+hosts:
+  - host: 10.20.1.22
+    port: 999
+    username: user
+    password: pw
+  - host: 10.20.1.21
+    port: 1000
+    username: user2
+    password: pw2
+
+subscriptions:
+  - subscription:
+      xpath: /if:interfaces-state/interface/statistics/out-discards
+      period: 1000
+      kafka_publish_topic: interfaces-out-discards
+      kafka_streams_eval: true
+      kafka_streams_jar_location: /home/nvinzens/Desktop/OATS/streaming_clients/oats-generic-kafka-streams/classes/artifacts/oats_generic_kafka_streams_jar/oats-generic-kafka-streams.jar
+      event_threshold_data:
+        - operator: greater_than
+          kafka_event_topic: out-discards-events
+          data_xpaths:
+          - root_xpath: /notification/push-update/datastore-contents-xml/interfaces-state/interface
+            name_xpath: /name
+            data_xpath: /statistics/out-discards
+      event: streaming-telemetry/*/out-discard-event
+      correlate_event: true
+      correlate:
+         - function: compress
+           correlation_time: 10
+

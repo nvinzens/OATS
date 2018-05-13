@@ -5,7 +5,7 @@ from OATSConfig import OATSConfig
 
 
 # setup
-FILE = 'max_config.yaml'
+FILE = 'test_configs/max_config.yaml'
 
 
 def test_get_host_configs():

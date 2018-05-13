@@ -49,25 +49,18 @@ class OATSTelemetrySubscription:
                     return data[key]
         raise ValueError("Missing subscription config element <kafka_event_topic> under <event_threshold_data>")
 
-    def __get_event(self, event_data):
-        for data in event_data:
-            for key in data:
-                if key == 'event':
-                    return data[key]
-        raise ValueError("Missing subscription config element <event>. Needs to be provided when either "
-                         "<kafka_streams_eval> oder <correlate_event> are set to true")
-
     def __get_correlation_data(self, correlate_data):
         correlate_func = None
         correlate_for = None
-
         for data in correlate_data:
-            correlate_func = data['function']
-            correlate_for = data['correlation_time']
-        if correlate_for is None:
-            raise ValueError("Missing subscription config element <correlation_time> under <correlate>")
-        if correlate_func is None:
-            raise ValueError("Missing subscription config element <function> under <correlate>")
+            try:
+                correlate_func = data['function']
+            except KeyError:
+                raise ValueError("Missing subscription config element <function> under <correlate>")
+            try:
+                correlate_for = data['correlation_time']
+            except KeyError:
+                raise ValueError("Missing subscription config element <correlation_time> under <correlate>")
         return correlate_func, correlate_for
 
     def __get_data_xpaths(self, event_data):
@@ -99,3 +92,4 @@ class OATSTelemetrySubscription:
             for key in data:
                 if key == 'kafka_streams_jar_location':
                     return data[key]
+        raise ValueError("Missing subscription config element <kafka_streams_jar_location>")

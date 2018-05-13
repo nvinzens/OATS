@@ -15,19 +15,22 @@ class OATSConfig:
            raise IOError("Could not read OATS configuration file. Missing file at " + yaml_file_name)
 
     def get_host_configs(self):
-        raw_hosts = self.__get_raw_hosts()
         host_configs = []
-        for host_config in raw_hosts:
-            try:
+        try:
+            raw_hosts = self.__get_raw_hosts()
+
+            for host_config in raw_hosts:
                 hostname = self.__get_host(host_config)
                 port = self.__get_port(host_config)
                 username = self.__get_username(host_config)
                 password = self.__get_password(host_config)
                 host = OATSHost(hostname, port, username, password)
                 host_configs.append(host)
-            except Exception:
-                raise ValueError("Exception while reading host configuration."
-                                 " Check the config file for errors/missing fields for the host(s).")
+        except ValueError as e:
+            raise e
+        except Exception:
+            raise ValueError("Exception while reading host configuration."
+                             " Check the config file for errors/missing fields for the host(s).")
         return host_configs
 
     def get_telemetry_subscriptions(self):
@@ -59,7 +62,7 @@ class OATSConfig:
 
         except ValueError as e:
             raise e
-        except Exception:
+        except Exception as e:
             raise ValueError("Exception while reading subscriptions configuraton."
                                  " Check the config file for errors/missing fields for the subscription(s).")
         return tel_subs
@@ -72,48 +75,92 @@ class OATSConfig:
 
     def __get_raw_subs(self):
         subs = []
-        for sub in self.config['subscriptions']:
-            subs.append(sub)
+        try:
+            for sub in self.config['subscriptions']:
+                subs.append(sub)
+        except Exception:
+            raise ValueError("Missing <subscriptions> section in config. "
+                             "Please prodive atleast one valid subscriptions.")
         return subs
 
     def __get_host(self, host_config):
-        return host_config['host']
+        try:
+            return host_config['host']
+        except KeyError:
+            raise ValueError("Missing host config element <host>")
 
     def __get_port(self, host_config):
-        return host_config['port']
+        try:
+            return host_config['port']
+        except KeyError:
+            raise ValueError("Missing host config element <port>")
 
     def __get_username(self, host_config):
-        return host_config['username']
+        try:
+            return host_config['username']
+        except KeyError:
+            raise ValueError("Missing host config element <username>")
 
     def __get_password(self, host_config):
-        return host_config['password']
+        try:
+            return host_config['password']
+        except KeyError:
+            raise ValueError("Missing host config element <password>")
 
     def __get_correlation_data(self, subscription):
-        return subscription['subscription']['correlate']
+        try:
+            return subscription['subscription']['correlate']
+        except KeyError:
+            raise ValueError("Missing subscription config element <correlate>")
 
     def __get_event(self, subscription):
-        return subscription['subscription']['event']
+        try:
+            return subscription['subscription']['event']
+        except KeyError:
+            raise ValueError("Missing subscription config element <event>")
 
     def __get_correlate_event(self, subscription):
-        return subscription['subscription']['correlate_event']
+        try:
+            return subscription['subscription']['correlate_event']
+        except KeyError:
+            raise ValueError("Missing subscription config element <correlate_event>")
 
     def __get_kafka_topic(self, subscription):
-        return subscription['subscription']['kafka_publish_topic']
+        try:
+            return subscription['subscription']['kafka_publish_topic']
+        except KeyError:
+            raise ValueError("Missing subscription config element <kafka_publish_topic>")
 
     def __get_publish_period(self, subscription):
-        return subscription['subscription']['period']
+        try:
+            return subscription['subscription']['period']
+        except KeyError:
+            raise ValueError("Missing subscription config element <period>")
 
     def __get_xpath(self, subscription):
-        return subscription['subscription']['xpath']
+        try:
+            return subscription['subscription']['xpath']
+        except KeyError:
+            raise ValueError("Missing subscription config element <xpath>")
 
     def __get_kafka_eval(self, subscription):
-        return subscription['subscription']['kafka_streams_eval']
+        try:
+            return subscription['subscription']['kafka_streams_eval']
+        except KeyError:
+            raise ValueError("Missing subscription config element <kafka_streams_eval>")
 
     def __get_jar_location(self, subscription):
-        return subscription['subscription']['kafka_streams_jar_location']
+        try:
+            return subscription['subscription']['kafka_streams_jar_location']
+        except KeyError:
+            raise ValueError("Missing subscription config element <kafka_streams_jar_location>")
 
     def __get_event_thresh_data(self, subscription):
-        return subscription['subscription']['event_threshold_data']
+        try:
+            return subscription['subscription']['event_threshold_data']
+        except KeyError:
+            raise ValueError("Missing subscription config element <event_threshold_data>")
+
 
 
 

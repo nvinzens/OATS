@@ -1,0 +1,12 @@
+hosts:
+  - host: 10.20.1.22
+    port: 999
+    username: user
+    password: pw
+  - host: 10.20.1.21
+    port: 1000
+    username: user2
+    password: pw2
+
+subscriptions:
+
