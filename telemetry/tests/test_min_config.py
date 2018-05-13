@@ -41,22 +41,26 @@ def test_get_telemetry_subscriptions():
     first_period = 1000
     first_kafka_publish_topic = 'interfaces-out-discards'
     first_kafka_streams_eval = False
+    first_correlate_event = False
 
 
     second_xpath = '/if:interfaces-state/interface/statistics/in-discards'
     second_period = 100
     second_kafka_publish_topic = 'interfaces-in-dicards'
     second_kafka_streams_eval = False
+    second_correlate_event = False
 
     assert first_xpath == subscriptions[0].xpath
     assert first_period == subscriptions[0].period
     assert first_kafka_publish_topic == subscriptions[0].kafka_publish_topic
     assert first_kafka_streams_eval == subscriptions[0].kafka_streams_eval
+    assert first_correlate_event == subscriptions[0].correlate_event
 
     assert second_xpath == subscriptions[1].xpath
     assert second_period == subscriptions[1].period
     assert second_kafka_publish_topic == subscriptions[1].kafka_publish_topic
     assert second_kafka_streams_eval == subscriptions[1].kafka_streams_eval
+    assert second_correlate_event == subscriptions[1].correlate_event
 
 
 

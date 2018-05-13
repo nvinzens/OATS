@@ -42,7 +42,7 @@ def test_get_telemetry_subscriptions():
     first_thresh_value = 100000
     first_thresh_operator = 'greater_than'
     first_thresh_name_xpath = '/name'
-    first_correlate = True
+    first_correlate_event = True
     first_correlate_function = 'compress'
     first_correlate_for = 10
 
@@ -51,13 +51,20 @@ def test_get_telemetry_subscriptions():
     second_thresh_value = 5
     second_thresh_operator = 'smaller_than'
     second_thresh_name_xpath = '/test'
+    second_correlate_event = False
+
+    third_xpath = '/if:interfaces-state/interface/statistics/in-discards'
+    third_kafka_streams_eval = False
+    third_correlate_event = True
+    third_correlate_function = 'aggregate'
+    third_correlate_for = 5
 
     assert first_xpath == subscriptions[0].xpath
     assert first_period == subscriptions[0].period
     assert first_thresh_value == subscriptions[0].event_threshold
     assert first_thresh_operator == subscriptions[0].operator
     assert first_thresh_name_xpath == subscriptions[0].name_xpath
-    assert first_correlate == subscriptions[0].correlate_event
+    assert first_correlate_event == subscriptions[0].correlate_event
     assert first_correlate_function == subscriptions[0].correlate_function
     assert first_correlate_for == subscriptions[0].correlate_for
 
@@ -66,7 +73,13 @@ def test_get_telemetry_subscriptions():
     assert second_thresh_value == subscriptions[1].event_threshold
     assert second_thresh_operator == subscriptions[1].operator
     assert second_thresh_name_xpath == subscriptions[1].name_xpath
+    assert second_correlate_event == subscriptions[1].correlate_event
 
+    assert third_xpath == subscriptions[2].xpath
+    assert third_kafka_streams_eval == subscriptions[2].kafka_streams_eval
+    assert third_correlate_event == subscriptions[2].correlate_event
+    assert third_correlate_function == subscriptions[2].correlate_function
+    assert third_correlate_for == subscriptions[2].correlate_for
 
 
 

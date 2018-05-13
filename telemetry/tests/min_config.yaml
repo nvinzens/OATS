@@ -14,10 +14,12 @@ subscriptions:
       period: 1000
       kafka_publish_topic: interfaces-out-discards
       kafka_streams_eval: false
+      correlate_event: false
 
   - subscription:
      xpath: /if:interfaces-state/interface/statistics/in-discards
      period: 100
      kafka_publish_topic: interfaces-in-dicards
      kafka_streams_eval: false
+     correlate_event: false
 
