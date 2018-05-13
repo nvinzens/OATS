@@ -207,6 +207,13 @@ def wait_for_event(tag, wait=10, case=None):
     return False
 
 
+def get_netflow_data_from_type_field(netflow_data, type_field):
+    for flow_list in netflow_data:
+        for flow_dict in flow_list:
+            if flow_dict['I'] == type_field:
+                return flow_dict['V']
+
+
 def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, threshold=1000, timeout=3):
     consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
     partition = TopicPartition(topic, partition)

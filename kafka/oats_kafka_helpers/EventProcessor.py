@@ -3,10 +3,11 @@ from __future__ import with_statement
 from oatsinflux import oatsinflux
 import salt.utils.event
 import salt.client
+import time
 
 
 def process_event(data, host, timestamp, type, event_name, severity, case=None,
-                  start_tshoot=True, db_write=True):
+                  start_tshoot=True, db_write=True, delay=0):
     '''
     Sends all the given data to the salt event bus.
     The data is used by different workflows in the salt system.
@@ -21,6 +22,8 @@ def process_event(data, host, timestamp, type, event_name, severity, case=None,
     :return: None
     '''
     if start_tshoot:
+        if delay:
+            time.sleep(delay)
         caller = salt.client.Caller()
         caller.sminion.functions['event.send'](
             event_name,

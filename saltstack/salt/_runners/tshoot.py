@@ -124,10 +124,14 @@ def out_discards_exceeded(data, host, timestamp, current_case):
 
     # TODO: determine source of traffic (async)
     # TODO: clear iface counters
-    flow = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)
+    flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
+    flow_host = flow_data['AgentID']
+    flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
+
     eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
-    comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. Time of Event: {2}".format(host, data['name'], eventTime)
-    comment += "\nSource flow: " + str(flow)
+    comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
+              "Source port of traffic: {2}".format(flow_host, data['name'], flow_source_port)
+
     ret = oatssalthelpers.post_slack(comment, case=current_case)
     return ret
 
