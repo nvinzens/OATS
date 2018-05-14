@@ -57,7 +57,7 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
 
     milli = data["message_details"]["milliseconds"]
     millis = milli + '000000'
-    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.localtime(timestamp))
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.gmtime(timestamp))
 
     metrics['fields']['severity'] = severity
     metrics['fields']['error'] = data['error']
@@ -142,7 +142,7 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['event_name'] = str(event_name)
 
     nano = '.000000000'
-    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+nano, time.localtime(timestamp))
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+nano, time.gmtime(timestamp))
     metrics['fields']['severity'] = severity
     for netflow in data["DataSets"][0]:
         metrics['fields'][netflow["I"]] = netflow["V"]
@@ -170,9 +170,10 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     #milli = timestamp[-4:-1]
     #epoch = (time_format - datetime(1970, 1, 1)).total_seconds()
     #millis = '.' + milli + '000000'
-    milli = timestamp[-3:]
+    time_string = str(timestamp)
+    milli = time_string[-3:]
     millis = '.' + milli + '000000'
-    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.localtime(timestamp))
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.gmtime(timestamp))
     metrics['fields']['severity'] = severity
     metrics['fields']['key'] = data['name']
     metrics['fields']['value'] = data['value']
