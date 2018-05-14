@@ -172,7 +172,8 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     millis = '.' + milli + '000000'
     metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.localtime(epoch))
     metrics['fields']['severity'] = severity
-    metrics['fields'][data['name']] = data['value']
+    metrics['fields']['key'] = data['name']
+    metrics['fields']['value'] = data['value']
 
     try:
         success = client.write_points([metrics])
