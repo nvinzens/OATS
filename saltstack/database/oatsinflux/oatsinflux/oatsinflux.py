@@ -48,7 +48,7 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
 
     success = False
     metrics = {}
-    metrics['measurement'] = "oats_timeseries_data"
+    metrics['measurement'] = "oats_timeseries_syslog"
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
@@ -113,7 +113,7 @@ def __write_api(host, timestamp, type, event_name, severity, data, client):
 
     success = False
     metrics = {}
-    metrics['measurement'] = "oats_timeseries_data"
+    metrics['measurement'] = "oats_timeseries_api"
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
@@ -134,7 +134,7 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
 
     success = False
     metrics = {}
-    metrics['measurement'] = "oats_timeseries_data"
+    metrics['measurement'] = "oats_timeseries_netflow"
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
@@ -159,7 +159,7 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
 
     success = False
     metrics = {}
-    metrics['measurement'] = "oats_timeseries_data"
+    metrics['measurement'] = "oats_timeseries_streaming"
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
@@ -180,6 +180,17 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
         print (err.args)
 
     return success
+
+
+def get_type_data(type, timestamp, event_name, timeframe, db_name=None):
+    results = []
+    if not db_name:
+        db_name = 'timedb'
+    client = connect_influx_client(dbname=db_name)
+    rs = client.query("SELECT * from oats_timeseries_data")
+    results = list(rs.get_points(tags={"event_name": str(event_name)}))
+
+    return results
 
 
 def __write(measurement, host, interface, region, value, time=None, db=None, client=None):
