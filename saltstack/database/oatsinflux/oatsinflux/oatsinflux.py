@@ -166,11 +166,13 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     metrics['tags']['type'] = str(type)
     metrics['tags']['event_name'] = str(event_name)
 
-    time_format = datetime.strptime(str(timestamp), "%Y-%m-%dT%H:%M:%S.%fZ")
-    milli = timestamp[-4:-1]
-    epoch = (time_format - datetime(1970, 1, 1)).total_seconds()
+    #time_format = datetime.strptime(str(timestamp), "%Y-%m-%dT%H:%M:%S.%fZ")
+    #milli = timestamp[-4:-1]
+    #epoch = (time_format - datetime(1970, 1, 1)).total_seconds()
+    #millis = '.' + milli + '000000'
+    milli = timestamp[-3:]
     millis = '.' + milli + '000000'
-    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.localtime(epoch))
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.localtime(timestamp))
     metrics['fields']['severity'] = severity
     metrics['fields']['key'] = data['name']
     metrics['fields']['value'] = data['value']
