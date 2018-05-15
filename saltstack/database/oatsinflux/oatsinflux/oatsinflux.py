@@ -2,6 +2,7 @@
 from influxdb import InfluxDBClient
 import time
 from datetime import datetime
+import json
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
@@ -172,15 +173,14 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     epoch = timestamp / 1000
     metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.gmtime(epoch))
     metrics['fields']['severity'] = severity
-    metrics['fields']['key'] = data['name']
-    metrics['fields']['value'] = data['value']
+    data_json = json.loads(data)
+    metrics['fields']['key'] = data_json['name']
+    metrics['fields']['value'] = data_json['value']
 
     try:
         success = client.write_points([metrics])
-    finally:
-        print '\n'
-        #except AttributeError as err:
-        #    print (err.args)
+    except AttributeError as err:
+        print (err.args)
 
     return success
 
