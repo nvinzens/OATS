@@ -177,21 +177,39 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
 
     try:
         success = client.write_points([metrics])
-    except AttributeError as err:
-        print (err.args)
+    finally:
+        print '\n'
+        #except AttributeError as err:
+        #    print (err.args)
 
     return success
 
 
 def get_type_data(type, timestamp, event_name, timeframe, db_name=None):
-    results = []
+    return_data = []
+    measurement = None
     if not db_name:
         db_name = 'timedb'
+    if type == 'syslog':
+        measurement = 'oats_timeseries_syslog'
+    elif type == 'api':
+        measurement = 'oats_timeseries_api'
+    elif type == 'netflow':
+        measurement = 'oats_timeseries_netflow'
+    elif type == 'streaming-telemetry':
+        measurement = 'oats_timeseries_streamin'
+    else:
+        raise ValueError('Invalid Event Type')
     client = connect_influx_client(dbname=db_name)
-    rs = client.query("SELECT * from oats_timeseries_data")
+    sql_query = "SELECT * from " + measurement
+    rs = client.query(sql_query)
     results = list(rs.get_points(tags={"event_name": str(event_name)}))
 
-    return results
+    for r in range(len(results)):
+        if results[r]['time'] > 10:
+            print True
+
+    return return_data
 
 
 def __write(measurement, host, interface, region, value, time=None, db=None, client=None):
