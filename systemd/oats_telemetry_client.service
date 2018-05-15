@@ -1,0 +1,11 @@
+[Unit]
+Description=oats telemetry-client that starts various needed scripts based on the oats config
+After=oats.target
+PartOf=oats.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/OATS/telemetry/telemetry_client.py
+
+[Install]
+WantedBy=oats.target

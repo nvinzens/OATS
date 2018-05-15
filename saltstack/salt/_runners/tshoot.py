@@ -123,7 +123,6 @@ def out_discards_exceeded(data, host, timestamp, current_case):
         current_case = oatspsql.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: `tshoot.out_discards_exceeded`.')
 
     # TODO: determine source of traffic (async)
-    # TODO: clear iface counters
     flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
     flow_host = flow_data['AgentID']
     flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)

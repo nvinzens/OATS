@@ -6,7 +6,6 @@ from threading import Thread
 import oats_kafka_helpers
 
 
-
 def consume_kafka(topic, event_name, correlation_function=None, correlation_time=None):
     consumer = KafkaConsumer(topic)
     print ("Started kafka consumer for topic {0} and event_name {1}".format(topic, event_name))

@@ -1,0 +1,11 @@
+[Unit]
+Description=kafka consumer for ingress netflow data produced by oats-netflow_consumer
+After=oats.target
+PartOf=oats.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/OATS/kafka/oats-netflow-ingress_consumer.py
+
+[Install]
+WantedBy=oats.target
