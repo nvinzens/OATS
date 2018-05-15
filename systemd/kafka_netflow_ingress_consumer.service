@@ -1,0 +1,11 @@
+[Unit]
+Description=kafka consumer for netflow data produced by vflow
+After=oats.target
+PartOf=oats.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/OATS/kafka/oats-netflow_consumer.py
+
+[Install]
+WantedBy=oats.target

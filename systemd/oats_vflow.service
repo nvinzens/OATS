@@ -1,0 +1,11 @@
+[Unit]
+Description=starts vflow which is needed for oats netflow
+After=oats.target
+PartOf=oats.target
+
+[Service]
+Type=simple
+ExecStart=service vflow start
+
+[Install]
+WantedBy=oats.target
