@@ -23,7 +23,7 @@ def connect_influx_client(host=None, port=None, user=None, password=None, dbname
     return client
 
 
-def write_event(host, timestamp, type, event_name, severity, data, db=None, client=None):
+def write_event(host, timestamp, sensor_type, event_name, severity, data, db=None, client=None):
 
     if not db:
         db = 'timedb'
@@ -31,21 +31,21 @@ def write_event(host, timestamp, type, event_name, severity, data, db=None, clie
         client = connect_influx_client(host=None, port=None, user=None, password=None, dbname=db)
 
     try:
-        if type == 'syslog':
-            __write_syslog(host, timestamp, type, event_name, severity, data, client)
-        elif type == 'api':
-            __write_api(host, timestamp, type, event_name, severity, data, client)
-        elif type == 'netflow':
-            __write_netflow(host, timestamp, type, event_name, severity, data, client)
-        elif type == 'streaming-telemetry':
-            __write_stream(host, timestamp, type, event_name, severity, data, client)
+        if sensor_type == 'syslog':
+            __write_syslog(host, timestamp, sensor_type, event_name, severity, data, client)
+        elif sensor_type == 'api':
+            __write_api(host, timestamp, sensor_type, event_name, severity, data, client)
+        elif sensor_type == 'netflow':
+            __write_netflow(host, timestamp, sensor_type, event_name, severity, data, client)
+        elif sensor_type == 'streaming-telemetry':
+            __write_stream(host, timestamp, sensor_type, event_name, severity, data, client)
         else:
             raise ValueError('Invalid Event Type')
     except Exception as error:
         print('Caught this error: ' + repr(error))
 
 
-def __write_syslog(host, timestamp, type, event_name, severity, data, client):
+def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, client):
 
     success = False
     metrics = {}
@@ -53,7 +53,7 @@ def __write_syslog(host, timestamp, type, event_name, severity, data, client):
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
-    metrics['tags']['type'] = str(type)
+    metrics['tags']['type'] = str(sensor_type)
     metrics['tags']['event_name'] = str(event_name)
 
     milli = data["message_details"]["milliseconds"]
@@ -110,7 +110,7 @@ def __get_syslog_neighbor(yang_message):
             return ''
 
 
-def __write_api(host, timestamp, type, event_name, severity, data, client):
+def __write_api(host, timestamp, sensor_type, event_name, severity, data, client):
 
     success = False
     metrics = {}
@@ -118,7 +118,7 @@ def __write_api(host, timestamp, type, event_name, severity, data, client):
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
-    metrics['tags']['type'] = str(type)
+    metrics['tags']['type'] = str(sensor_type)
     metrics['tags']['event_name'] = str(event_name)
     metrics['time'] = timestamp
     metrics['fields']['severity'] = severity
@@ -131,7 +131,7 @@ def __write_api(host, timestamp, type, event_name, severity, data, client):
     return success
 
 
-def __write_netflow(host, timestamp, type, event_name, severity, data, client):
+def __write_netflow(host, timestamp, sensor_type, event_name, severity, data, client):
 
     success = False
     metrics = {}
@@ -139,7 +139,7 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
-    metrics['tags']['type'] = str(type)
+    metrics['tags']['type'] = str(sensor_type)
     metrics['tags']['event_name'] = str(event_name)
 
     nano = '.000000000'
@@ -156,7 +156,7 @@ def __write_netflow(host, timestamp, type, event_name, severity, data, client):
     return success
 
 
-def __write_stream(host, timestamp, type, event_name, severity, data, client):
+def __write_stream(host, timestamp, sensor_type, event_name, severity, data, client):
 
     success = False
     metrics = {}
@@ -164,7 +164,7 @@ def __write_stream(host, timestamp, type, event_name, severity, data, client):
     metrics['tags'] = {}
     metrics['fields'] = {}
     metrics['tags']['host'] = str(host)
-    metrics['tags']['type'] = str(type)
+    metrics['tags']['type'] = str(sensor_type)
     metrics['tags']['event_name'] = str(event_name)
 
     time_string = str(timestamp)
