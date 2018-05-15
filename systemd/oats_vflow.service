@@ -5,7 +5,7 @@ PartOf=oats.target
 
 [Service]
 Type=simple
-ExecStart=service vflow start
+ExecStart=/etc/init.d/vflow start
 
 [Install]
 WantedBy=oats.target
