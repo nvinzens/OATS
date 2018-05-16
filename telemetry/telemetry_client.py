@@ -75,14 +75,14 @@ def __start_kafka_streams(subscription):
 
     if subscription.correlate_event:
         kconsumer_process = Process(target=subprocess.call, args=(['python',
-                                                                   '../kafka/generic-kafka-streams_consumer.py',
+                                                                   '/home/OATS/kafka/generic-kafka-streams_consumer.py',
                                                                    '-t', subscription.kafka_event_topic,
                                                                    '-e', subscription.event,
                                                                    '-cf', subscription.correlate_function,
                                                                    '-ct', str(subscription.correlate_for)],))
     else:
         kconsumer_process = Process(target=subprocess.call, args=(['python',
-                                                                   '../kafka/generic-kafka-streams_consumer.py',
+                                                                   '/home/OATS/kafka/generic-kafka-streams_consumer.py',
                                                                    '-t', subscription.kafka_event_topic,
                                                                    '-e', subscription.event],))
     kconsumer_process.start()
