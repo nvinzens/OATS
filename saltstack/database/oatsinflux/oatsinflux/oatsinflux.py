@@ -208,20 +208,19 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, db_name=None):
         measurement = 'oats_timeseries_streamin'
     else:
         raise ValueError('Invalid Event Type')
+
     client = connect_influx_client(dbname=db_name)
-    sql_query = "SELECT * from " + measurement
+
+    timestamp = str(timestamp)
+    if len(timestamp) == 13:
+        timestamp = timestamp + 'ms'
+    elif len(timestamp) == 10:
+        timestamp = timestamp + 's'
+    time_after = timestamp + ' + ' + str(timeframe) + 's'
+    time_before = timestamp + ' - ' + str(timeframe) + 's'
+    sql_query = "SELECT * from " + measurement + " WHERE time > " + time_before + " AND time < " + time_after
     rs = client.query(sql_query)
     results = list(rs.get_points(tags={"event_name": str(event_name)}))
-    timestamp = str(timestamp)
-    if len(timestamp) > 23:
-        cut = len(timestamp) - 23
-        timestamp = timestamp[:-cut] + 'Z'
-    time_format = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
-    time_before = time_format - datetime.timedelta(seconds=timeframe)
-    time_after = time_format + datetime.timedelta(seconds=timeframe)
-    for r in range(len(results)):
-        if results[r]['time'] > time_after or results[r]['time'] < time_before:
-            del results[r]
 
     return results
 
