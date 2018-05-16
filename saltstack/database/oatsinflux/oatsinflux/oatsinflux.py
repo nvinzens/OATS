@@ -73,9 +73,9 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
         metrics['fields'][str(k)] = str(v)
         if str(k) == 'oper_status' or str(k) == 'adjacency-state':
             if str(v) == 'UP' or str(v) == 'up':
-                metrics['fields']['state_id'] = 1
-            else:
                 metrics['fields']['state_id'] = 0
+            else:
+                metrics['fields']['state_id'] = 1
     try:
         success = client.write_points([metrics])
     except AttributeError as err:
