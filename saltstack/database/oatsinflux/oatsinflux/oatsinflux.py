@@ -1,7 +1,7 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
 import time
-from datetime import datetime
+import datetime
 import json
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
@@ -195,7 +195,6 @@ def __write_stream(host, timestamp, sensor_type, event_name, severity, data, cli
 
 
 def get_type_data(sensor_type, timestamp, event_name, timeframe, db_name=None):
-    return_data = []
     measurement = None
     if not db_name:
         db_name = 'timedb'
@@ -213,12 +212,18 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, db_name=None):
     sql_query = "SELECT * from " + measurement
     rs = client.query(sql_query)
     results = list(rs.get_points(tags={"event_name": str(event_name)}))
-
+    timestamp = str(timestamp)
+    if len(timestamp) > 23:
+        cut = len(timestamp) - 23
+        timestamp = timestamp[:-cut] + 'Z'
+    time_format = datetime.datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
+    time_before = time_format - datetime.timedelta(seconds=timeframe)
+    time_after = time_format + datetime.timedelta(seconds=timeframe)
     for r in range(len(results)):
-        if results[r]['time'] > 10:
-            print True
+        if results[r]['time'] > time_after or results[r]['time'] < time_before:
+            del results[r]
 
-    return return_data
+    return results
 
 
 def __write(measurement, host, interface, region, value, time=None, db=None, client=None):
