@@ -2,7 +2,6 @@ from kafka import KafkaConsumer
 import argparse
 from oats_kafka_helpers import EventProcessor
 from oats_kafka_helpers import utils
-from oatsinflux import oatsinflux
 from threading import Thread
 import oats_kafka_helpers
 
@@ -22,7 +21,6 @@ def consume_kafka(topic, event_name, correlation_function=None, correlation_time
                                          severity=severity)
         else:
             severity = 3
-            oatsinflux.write_event(host, timestamp, type, event_name, severity, data)
             # load correlation function by name
             func = getattr(oats_kafka_helpers, correlation_function)
             thread = Thread(target=func,

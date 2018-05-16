@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import with_statement
 from oatspsql import oatspsql
+from oatsinflux import oatsinflux
 from expiringdict import ExpiringDict #pip install expiringdict
 import time
 import threading
@@ -74,6 +75,7 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
 
 def compress(data, host, timestamp, severity, error, sensor_type,
              event_name, correlate_for=10, use_oats_case=False):
+    oatsinflux.write_event(host, timestamp, type, event_name, severity, data)
     cache_id = 'compress' + event_name
     lock = threading.Lock()
     lock.acquire()
