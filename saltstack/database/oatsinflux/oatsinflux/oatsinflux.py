@@ -71,11 +71,16 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
     state_msgs = __get_state_msg(data_nested)
     for k,v in state_msgs.items():
         metrics['fields'][str(k)] = str(v)
-        if str(k) == 'oper_status' or str(k) == 'adjacency-state':
+        if str(k) == 'oper_status':
             if str(v) == 'UP' or str(v) == 'up':
-                metrics['fields']['state_id'] = 0
+                metrics['fields']['if_state_id'] = 0
             else:
-                metrics['fields']['state_id'] = 1
+                metrics['fields']['if_state_id'] = 1
+        elif str(k) == 'adjacency-state':
+            if str(v) == 'UP' or str(v) == 'up':
+                metrics['fields']['ospf_state_id'] = 0
+            else:
+                metrics['fields']['ospf_state_id'] = 1
     try:
         success = client.write_points([metrics])
     except AttributeError as err:
