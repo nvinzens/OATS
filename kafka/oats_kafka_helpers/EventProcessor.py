@@ -7,7 +7,7 @@ import time
 
 
 def process_event(data, host, timestamp, type, event_name, severity, case=None,
-                  start_tshoot=True, db_write=True, delay=0):
+                  start_tshoot=True, influx_write=True, delay=0):
     '''
     Sends all the given data to the salt event bus.
     The data is used by different workflows in the salt system.
@@ -37,5 +37,5 @@ def process_event(data, host, timestamp, type, event_name, severity, case=None,
         )
 
      # write all events to influx
-    if db_write:
+    if influx_write:
         oatsinflux.write_event(host, timestamp, type, event_name, severity, data)
