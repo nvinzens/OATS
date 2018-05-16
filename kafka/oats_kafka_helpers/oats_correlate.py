@@ -35,7 +35,7 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
     eg. 'dead_timer_expired' will execute tshoot.ospf_nbr_down
     :return: None
     '''
-    oatsinflux.write_event(host, timestamp, type, event_name, severity, data)
+    oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
     cache_id = 'aggregate' + event_name
     lock = threading.Lock()
     lock.acquire()
@@ -76,7 +76,7 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
 
 def compress(data, host, timestamp, severity, error, sensor_type,
              event_name, correlate_for=10, use_oats_case=False):
-    oatsinflux.write_event(host, timestamp, type, event_name, severity, data)
+    oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
     cache_id = 'compress' + event_name
     lock = threading.Lock()
     lock.acquire()
