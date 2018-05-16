@@ -71,7 +71,11 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
     state_msgs = __get_state_msg(data_nested)
     for k,v in state_msgs.items():
         metrics['fields'][str(k)] = str(v)
-        
+        if str(k) == 'oper_status' or str(k) == 'adjacency-state':
+            if str(v) == 'UP' or str(v) == 'up':
+                metrics['fields']['state_id'] = 1
+            else:
+                metrics['fields']['state_id'] = 0
     try:
         success = client.write_points([metrics])
     except AttributeError as err:
@@ -185,18 +189,18 @@ def __write_stream(host, timestamp, sensor_type, event_name, severity, data, cli
     return success
 
 
-def get_type_data(type, timestamp, event_name, timeframe, db_name=None):
+def get_type_data(sensor_type, timestamp, event_name, timeframe, db_name=None):
     return_data = []
     measurement = None
     if not db_name:
         db_name = 'timedb'
-    if type == 'syslog':
+    if sensor_type == 'syslog':
         measurement = 'oats_timeseries_syslog'
-    elif type == 'api':
+    elif sensor_type == 'api':
         measurement = 'oats_timeseries_api'
-    elif type == 'netflow':
+    elif sensor_type == 'netflow':
         measurement = 'oats_timeseries_netflow'
-    elif type == 'streaming-telemetry':
+    elif sensor_type == 'streaming-telemetry':
         measurement = 'oats_timeseries_streamin'
     else:
         raise ValueError('Invalid Event Type')
