@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import with_statement
 from oatspsql import oatspsql
+from oatsinflux import oatsinflux
 from expiringdict import ExpiringDict #pip install expiringdict
 import time
 import threading
@@ -34,6 +35,7 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
     eg. 'dead_timer_expired' will execute tshoot.ospf_nbr_down
     :return: None
     '''
+    oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
     cache_id = 'aggregate' + event_name
     lock = threading.Lock()
     lock.acquire()
@@ -61,7 +63,7 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
             __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type=sensor_type, event_name=event_name, severity=severity,
-                                     case=current_case)
+                                     case=current_case, influx_write=False)
     else:
         if use_oats_case:
 
@@ -69,11 +71,12 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      type=sensor_type, event_name=alternative_event_name, severity=severity,
-                                     case=current_case)
+                                     case=current_case, influx_write=False)
 
 
 def compress(data, host, timestamp, severity, error, sensor_type,
              event_name, correlate_for=10, use_oats_case=False):
+    oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
     cache_id = 'compress' + event_name
     lock = threading.Lock()
     lock.acquire()
@@ -99,7 +102,7 @@ def compress(data, host, timestamp, severity, error, sensor_type,
         __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
     EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                  type=sensor_type, event_name=event_name, severity=severity,
-                                 case=current_case)
+                                 case=current_case, influx_write=False)
 
 
 def __init_cache(error, cache_id, count_for=10):
