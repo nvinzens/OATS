@@ -1,0 +1,11 @@
+[Unit]
+Description=oats api for inserting events into oats
+After=oats.target
+PartOf=oats.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python /home/OATS/oats_api/app.py
+
+[Install]
+WantedBy=oats.target
