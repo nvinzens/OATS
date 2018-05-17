@@ -112,7 +112,7 @@ for msg in consumer:
                     producer.send('oats-netflow-ingress', netflow_data)
                 if dict['V'] == 1:
                     producer.send('oats-netflow-egress', netflow_data)
-    EventProcessor.process_event(data=netflow_data, host=host, timestamp=timestamp, type=type, event_name=event_name,
+    EventProcessor.process_event(data=netflow_data, host=host, timestamp=timestamp, sensor_type=type, event_name=event_name,
                                  severity=severity, start_tshoot=False)
 
 

@@ -6,7 +6,7 @@ import salt.client
 import time
 
 
-def process_event(data, host, timestamp, type, event_name, severity, case=None,
+def process_event(data, host, timestamp, sensor_type, event_name, severity, case=None,
                   start_tshoot=True, influx_write=True, delay=0):
     '''
     Sends all the given data to the salt event bus.
@@ -30,7 +30,7 @@ def process_event(data, host, timestamp, type, event_name, severity, case=None,
             {'data': data,
              'host': host,
              'timestamp': timestamp,
-             'type': type,
+             'type': sensor_type,
              'severity': severity,
              'case': case
              }
@@ -38,4 +38,4 @@ def process_event(data, host, timestamp, type, event_name, severity, case=None,
 
      # write all events to influx
     if influx_write:
-        oatsinflux.write_event(host, timestamp, type, event_name, severity, data)
+        oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
