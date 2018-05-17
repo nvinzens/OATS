@@ -25,7 +25,7 @@ for msg in consumer:
     event_name = 'syslog/*/' + error + '/' + opt_arg
 
     EventProcessor.process_event(data=event_msg, host=host, timestamp=timestamp,
-                                 type='syslog', event_name=event_name, severity=severity)
+                                 sensor_type='syslog', event_name=event_name, severity=severity)
 
 
 

@@ -1,5 +1,8 @@
 #!flask/bin/python
 from flask import Flask, jsonify, abort, make_response, request
+import time
+from kafka import KafkaProducer
+import json
 
 app = Flask(__name__)
 
@@ -16,20 +19,23 @@ events = [
 ]
 
 
-@app.route('/oats/api/events', methods=['POST'])
+@app.route('/oats/api/event', methods=['POST'])
 def create_event():
     if not request.json or not 'host' in request.json:
         abort(400)
     event = {
-        'id': events[-1]['id'] + 1,
-        'type': 'API',
-        'event_name': 'API/' + request.json.get('event_name', "unknown"),
-        'host': request.json['host'],
-        'timestamp': request.json.get('timestamp', "now"),
-        'severity': 1,
+        'type': request.json.get('type', 'api'),
+        'event_name': 'API/' + request.json.get('event_name', 'default_api_event'),
+        'host': request.json.get('host', 'no host provided'),
+        'timestamp': request.json.get('timestamp', int(time.time())),
+        'severity': request.json.get('severity', 7),
+        'data': request.json.get('payload', {'data': 'no data provided'})
     }
     events.append(event)
-    #TODO: Add Kafka produce
+    # TODO: Add Kafka produce
+    producer = KafkaProducer(bootstrap_servers='localhost:9092')
+    producer.send('oats-api', json.dumps(event))
+    producer.flush()
     return jsonify({'event': event}), 201
 
 

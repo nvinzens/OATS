@@ -16,7 +16,7 @@ def consume_kafka(topic, event_name, correlation_function=None, correlation_time
         if correlation_function is None:
             severity = 5
             EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                         type=sensor_type,
+                                         sensor_type=sensor_type,
                                          event_name=event_name,
                                          severity=severity)
         else:
