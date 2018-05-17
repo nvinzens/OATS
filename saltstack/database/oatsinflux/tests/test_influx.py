@@ -3,6 +3,7 @@ from influxdb import InfluxDBClient
 from oatsinflux import oatsinflux
 import datetime
 import pytest
+import time
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
@@ -84,9 +85,11 @@ def test_write_with_time():
 
 
 def test_event_exception():
+    data = {"data": "test"}
     with pytest.raises(Exception) as excinfo:
-        function_that_raises_exception()
-    assert str(excinfo.value) == 'some info'
+        oatsinflux.write_event(host='test', timestamp=int(time.time()), sensor_type='test', event_name='test',
+                               severity=1, data=data)
+    assert str(excinfo.value) == 'Invalid Event Type'
 
 
 def test_syslog():
@@ -94,6 +97,22 @@ def test_syslog():
 
 
 def test_syslog_helpers():
+    data = {
+        "yang_message":{
+            "interface":{
+                "GigabitEthernet2.35":{
+                    "neighbor":{
+                        "172.16.56.5":{
+                            "state":{
+                                "adjacency-state":"DOWN"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     return True
 
 

@@ -111,7 +111,7 @@ def __get_syslog_interface(yang_message):
 
 def __get_syslog_neighbor(yang_message):
     for k, v in sorted(yang_message.items()):
-        if k == 'interface':
+        if k == 'neighbor':
             return v.keys()
         if v:
             return __get_syslog_neighbor(v)
