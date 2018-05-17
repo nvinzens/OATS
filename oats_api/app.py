@@ -29,10 +29,10 @@ def create_event():
         'host': request.json.get('host', 'no host provided'),
         'timestamp': request.json.get('timestamp', int(time.time())),
         'severity': request.json.get('severity', 7),
-        'data': request.json.get('payload', {'data': 'no data provided'})
+        'data': request.json.get('payload', 'no data provided')
     }
     events.append(event)
-    
+
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     producer.send('oats-api', json.dumps(event))
     producer.flush()
