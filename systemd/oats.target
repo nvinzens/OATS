@@ -3,5 +3,5 @@ Description=Starts all relevant scripts and services for OATS
 Requires=oats-napalm-logs.service oats-client.service kafka_syslog_ifchanged_consumer.service
 Requires=kafka_syslog_ospf_nbr_down_consumer.service kafka_syslog_ospf_nbr_up_consumer.service
 Requires=kafka_netflow_consumer.service kafka_netflow_ingress_consumer.service
-Requires=oats_telemetry_client.service oats_vflow.service
+Requires=oats_telemetry.service oats_vflow.service
 

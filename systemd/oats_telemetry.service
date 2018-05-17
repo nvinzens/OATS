@@ -5,7 +5,7 @@ PartOf=oats.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /home/OATS/telemetry/telemetry_client.py
+ExecStart=/usr/bin/python /home/OATS/telemetry/oats_telemetry.py
 
 [Install]
 WantedBy=oats.target

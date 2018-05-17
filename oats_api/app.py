@@ -29,7 +29,7 @@ def create_event():
         'severity': 1,
     }
     events.append(event)
-    #TODO: Add Kafka produce
+    # TODO: Add Kafka produce
     return jsonify({'event': event}), 201
 
 
