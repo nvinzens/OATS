@@ -126,7 +126,7 @@ def test_syslog():
     cl = oatsinflux.connect_influx_client(dbname=db)
     cl.create_database(db)
     success = oatsinflux.__write_syslog(host='test', timestamp=int(time.time()), sensor_type='test', event_name='test',
-                               severity=1, data=data)
+                               severity=1, data=data, client=cl)
     cl.drop_database(db)
     cl.close()
     assert success is True
@@ -142,12 +142,48 @@ def test_syslog_helpers():
 
 
 def test_netflow():
-    assert True
+    db = 'test'
+    data = {"AgentID":"10.20.1.22","Header":{"Version":9,"Count":3,"SysUpTime":169636000,"UNIXSecs":1525209942,
+            "SeqNum":9688,"SrcID":16777217},"DataSets":[[{"I":58,"V":22},
+            {"I":56,"V":"00:19:99:b3:92:bd"},{"I":80,"V":"00:19:99:b3:93:df"},{"I":8,"V":"192.168.1.10"},
+            {"I":12,"V":"192.168.1.11"},{"I":7,"V":0},{"I":11,"V":0},{"I":6,"V":"0x00"},{"I":10,"V":10},
+            {"I":14,"V":0},{"I":61,"V":0},{"I":1,"V":989527440},{"I":2,"V":725460},{"I":152,"V":1525209888587},
+            {"I":153,"V":1525209926587},{"I":352,"V":1002585720},{"I":5,"V":0},{"I":4,"V":17}],[{"I":58,"V":22},
+            {"I":56,"V":"00:19:99:b3:92:bd"},{"I":80,"V":"00:19:99:b3:93:df"},{"I":8,"V":"192.168.1.10"},
+            {"I":12,"V":"192.168.1.11"},{"I":7,"V":35464},{"I":11,"V":5201},{"I":6,"V":"0x00"},{"I":10,"V":10},
+            {"I":14,"V":0},{"I":61,"V":0},{"I":1,"V":217638046},{"I":2,"V":145093},{"I":152,"V":1525209888587},
+            {"I":153,"V":1525209926587},{"I":352,"V":220249720},{"I":5,"V":0},{"I":4,"V":17}]]}
+    cl = oatsinflux.connect_influx_client(dbname=db)
+    cl.create_database(db)
+    timestamp = int(time.time()) * 1000
+    success = oatsinflux.__write_stream(host='test', timestamp=timestamp, sensor_type='test', event_name='test',
+                                        severity=1, data=data, client=cl)
+    cl.drop_database(db)
+    cl.close()
+    assert success is True
 
 
 def test_stream():
-    assert True
+    db = 'test'
+    data = '{"name":"GigabitEthernet1/0/1","value":3383114216}'
+    cl = oatsinflux.connect_influx_client(dbname=db)
+    cl.create_database(db)
+    timestamp = int(time.time()) * 1000
+    success = oatsinflux.__write_stream(host='test', timestamp=timestamp, sensor_type='test', event_name='test',
+                                        severity=1, data=data, client=cl)
+    cl.drop_database(db)
+    cl.close()
+    assert success is True
 
 
 def test_api():
-    assert True
+    data = 0
+    db = 'test'
+    cl = oatsinflux.connect_influx_client(dbname=db)
+    cl.create_database(db)
+    timestamp = int(time.time())
+    success = oatsinflux.__write_stream(host='test', timestamp=timestamp, sensor_type='test', event_name='test',
+                                        severity=1, data=data, client=cl)
+    cl.drop_database(db)
+    cl.close()
+    assert success is True
