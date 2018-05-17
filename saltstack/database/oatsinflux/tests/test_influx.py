@@ -2,6 +2,7 @@
 from influxdb import InfluxDBClient
 from oatsinflux import oatsinflux
 import datetime
+import pytest
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
@@ -82,8 +83,10 @@ def test_write_with_time():
     assert success is True
 
 
-def test_event():
-    return True
+def test_event_exception():
+    with pytest.raises(Exception) as excinfo:
+        function_that_raises_exception()
+    assert str(excinfo.value) == 'some info'
 
 
 def test_syslog():
