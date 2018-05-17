@@ -24,4 +24,5 @@ for msg in consumer:
     data = api_msg['data']
 
     EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                 sensor_type=sensor_type, event_name=event_name, severity=severity)
+                                 sensor_type=sensor_type, event_name=event_name, severity=severity,
+                                 start_tshoot=False)
