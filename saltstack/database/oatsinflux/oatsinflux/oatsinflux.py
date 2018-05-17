@@ -129,7 +129,8 @@ def __write_api(host, timestamp, sensor_type, event_name, severity, data, client
     metrics['tags']['host'] = str(host)
     metrics['tags']['type'] = str(sensor_type)
     metrics['tags']['event_name'] = str(event_name)
-    metrics['time'] = timestamp
+    nano = '.000000000'
+    metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S' + nano, time.gmtime(timestamp))
     metrics['fields']['severity'] = severity
 
     try:
