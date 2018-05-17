@@ -61,12 +61,17 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
     metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S'+millis, time.gmtime(timestamp))
 
     metrics['fields']['severity'] = severity
-    metrics['fields']['error'] = data['error']
+    error = data['error']
+    metrics['fields']['error'] = error
     metrics['fields']['os'] = data['os']
 
     data_nested = data["yang_message"]
-    metrics['fields']['interface'] = __get_syslog_interface(data_nested)[0]
-    metrics['fields']['neighbor'] = __get_syslog_neighbor(data_nested)[0]
+
+    if str(error) == 'OSPF_NEIGHBOR_UP' or str(error) == 'OSPF_NEIGHBOR_DOWN':
+        metrics['fields']['interface'] = __get_syslog_interface(data_nested)[0]
+        metrics['fields']['neighbor'] = __get_syslog_neighbor(data_nested)[0]
+    elif str(error) == 'INTERFACE_CHANGED':
+        metrics['fields']['interface'] = __get_syslog_interface(data_nested)[0]
 
     state_msgs = __get_state_msg(data_nested)
     for k,v in state_msgs.items():

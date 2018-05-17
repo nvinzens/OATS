@@ -126,7 +126,7 @@ def test_syslog():
     cl = oatsinflux.connect_influx_client(dbname=db)
     cl.create_database(db)
     success = oatsinflux.__write_syslog(host='test', timestamp=int(time.time()), sensor_type='test', event_name='test',
-                               severity=1, data=data, client=cl)
+                                        severity=1, data=data, client=cl)
     cl.drop_database(db)
     cl.close()
     assert success is True
@@ -156,7 +156,7 @@ def test_netflow():
     cl = oatsinflux.connect_influx_client(dbname=db)
     cl.create_database(db)
     timestamp = int(time.time()) * 1000
-    success = oatsinflux.__write_stream(host='test', timestamp=timestamp, sensor_type='test', event_name='test',
+    success = oatsinflux.__write_netflow(host='test', timestamp=timestamp, sensor_type='test', event_name='test',
                                         severity=1, data=data, client=cl)
     cl.drop_database(db)
     cl.close()
@@ -182,7 +182,7 @@ def test_api():
     cl = oatsinflux.connect_influx_client(dbname=db)
     cl.create_database(db)
     timestamp = int(time.time())
-    success = oatsinflux.__write_stream(host='test', timestamp=timestamp, sensor_type='test', event_name='test',
+    success = oatsinflux.__write_api(host='test', timestamp=timestamp, sensor_type='test', event_name='test',
                                         severity=1, data=data, client=cl)
     cl.drop_database(db)
     cl.close()
