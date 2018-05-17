@@ -80,3 +80,27 @@ def test_write_with_time():
     cl.close()
 
     assert success is True
+
+
+def test_event():
+    return True
+
+
+def test_syslog():
+    return True
+
+
+def test_syslog_helpers():
+    return True
+
+
+def test_netflow():
+    return True
+
+
+def test_stream():
+    return True
+
+
+def test_api():
+    return True
