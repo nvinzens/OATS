@@ -32,7 +32,7 @@ def create_event():
         'data': request.json.get('payload', {'data': 'no data provided'})
     }
     events.append(event)
-    # TODO: Add Kafka produce
+    
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     producer.send('oats-api', json.dumps(event))
     producer.flush()
@@ -67,6 +67,6 @@ def not_found(error):
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='10.20.1.10')
+    app.run(debug=True, host='10.20.1.10', port=5002)
 
 
