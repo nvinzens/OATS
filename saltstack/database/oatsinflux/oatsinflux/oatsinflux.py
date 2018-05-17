@@ -132,7 +132,7 @@ def __write_api(host, timestamp, sensor_type, event_name, severity, data, client
     nano = '.000000000'
     metrics['time'] = time.strftime('%Y-%m-%d %H:%M:%S' + nano, time.gmtime(timestamp))
     metrics['fields']['severity'] = severity
-    metrics['fields']['data'] = data['data']
+    metrics['fields']['data'] = data
 
     try:
         success = client.write_points([metrics])
