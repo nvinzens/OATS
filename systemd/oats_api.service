@@ -5,7 +5,7 @@ PartOf=oats.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python /home/OATS/oats_api/app.py
+ExecStart=/usr/bin/python /usr/local/bin/oats/oats-api/app.py
 
 [Install]
 WantedBy=oats.target

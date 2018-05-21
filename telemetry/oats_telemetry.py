@@ -4,7 +4,7 @@ from OATSConfig import OATSConfig
 from multiprocessing import Process
 
 
-YAML_FILE = '/home/OATS/config.yaml'
+YAML_FILE = '/etc/oats/config.yaml'
 
 
 if __name__ == '__main__':
