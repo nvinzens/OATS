@@ -89,8 +89,8 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
                 metrics['fields']['ospf_state_id'] = 1
     try:
         success = client.write_points([metrics])
-    except AttributeError as err:
-        print (err.args)
+    except (AttributeError, exceptions.InfluxDBClientError) as err:
+        print ("Caught exception in oatsinflux.write_syslog" + err.args)
 
     return success
 
@@ -142,8 +142,8 @@ def __write_api(host, timestamp, sensor_type, event_name, severity, data, client
 
     try:
         success = client.write_points([metrics])
-    except AttributeError as err:
-        print (err.args)
+    except (AttributeError, exceptions.InfluxDBClientError) as err:
+        print ("Caught exception in oatsinflux.write_api " + err.args)
 
     return success
 
@@ -167,8 +167,8 @@ def __write_netflow(host, timestamp, sensor_type, event_name, severity, data, cl
 
     try:
         success = client.write_points([metrics])
-    except AttributeError as err:
-        print err.args
+    except (AttributeError, exceptions.InfluxDBClientError) as err:
+        print ("Caught exception in oatsinflux.write_netflow " + err.args)
 
     return success
 
@@ -196,8 +196,8 @@ def __write_stream(host, timestamp, sensor_type, event_name, severity, data, cli
 
     try:
         success = client.write_points([metrics])
-    except AttributeError as err:
-        print (err.args)
+    except (AttributeError, exceptions.InfluxDBClientError) as err:
+        print ("Caught exception in oatsinflux.write_stream " + err.args)
 
     return success
 
@@ -230,7 +230,7 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_n
     try:
         rs = client.query(sql_query)
     except exceptions.InfluxDBClientError, e:
-        print "Exception caught on get Type data query: " + e 
+        print "Exception caught on get Type data query: " + e
 
     if host:
         results = list(rs.get_points(tags={"event_name": str(event_name), "host": str(host)}))
