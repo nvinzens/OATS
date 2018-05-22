@@ -131,7 +131,7 @@ def out_discards_exceeded(data, host, timestamp, current_case):
 
     src_flow = None
     while src_flow is None:
-        flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 15, host=host)
+        flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 30, host=host)
         src_flow = oatssalthelpers.get_src_flow(flows)
         time.sleep(1)
     src_flow_port = src_flow['7']
