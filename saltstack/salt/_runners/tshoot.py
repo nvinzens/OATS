@@ -128,9 +128,12 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     #flow_host = flow_data['AgentID']
     #flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
     # src_port = 7, in_bytes = 1
-    time.sleep(10)
-    flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 10, host=host)
-    src_flow = oatssalthelpers.get_src_flow(flows)
+
+    src_flow = None
+    while src_flow is None:
+        flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 5, host=host)
+        src_flow = oatssalthelpers.get_src_flow(flows)
+        time.sleep(1)
     src_flow_port = src_flow['7']
 
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
