@@ -1,5 +1,6 @@
 from oats import oatsdbhelpers
 from oatspsql import oatspsql
+from oatsinflux import oatsinflux
 from oatsnb import oatsnb
 import oatssalthelpers
 from multiprocessing.pool import ThreadPool
@@ -123,11 +124,12 @@ def out_discards_exceeded(data, host, timestamp, current_case):
         current_case = oatspsql.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: `tshoot.out_discards_exceeded`.')
 
     # TODO: determine source of traffic (async)
-    flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
-    flow_host = flow_data['AgentID']
-    flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
+    #flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
+    #flow_host = flow_data['AgentID']
+    #flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
+    flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/high_traffic', 10)
+    raise Exception(flows)
 
-    eventTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(timestamp))
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
               "Source port of traffic: {2}".format(flow_host, data['name'], flow_source_port)
 
