@@ -1,5 +1,6 @@
 #!/usr/bin/env python2.7
 from influxdb import InfluxDBClient
+from influxdb import exceptions
 import time
 import datetime
 import json
@@ -216,8 +217,8 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_n
     else:
         raise ValueError('Invalid Event Type')
 
-    client = connect_influx_client(dbname=db_name)
-
+    client = connect_influx_client(dbname=db_name) 
+    
     timestamp = str(timestamp)
     if len(timestamp) == 13:
         timestamp = timestamp + 'ms'
@@ -226,10 +227,14 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_n
     time_after = timestamp + ' + ' + str(timeframe) + 's'
     time_before = timestamp + ' - ' + str(timeframe) + 's'
     sql_query = "SELECT * from " + measurement + " WHERE time > " + time_before + " AND time < " + time_after
-    rs = client.query(sql_query)
+    try:
+        rs = client.query(sql_query)
+    except exceptions.InfluxDBClientError, e:
+        print "Exception caught on get Type data query: " + e 
+
     if host:
         results = list(rs.get_points(tags={"event_name": str(event_name), "host": str(host)}))
-    else:    
+    else:
         results = list(rs.get_points(tags={"event_name": str(event_name)}))
 
     return results
