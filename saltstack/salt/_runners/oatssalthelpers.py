@@ -238,8 +238,8 @@ def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, t
             return flows
 
 
-def get_src_flow(flows):
+def get_src_flow(flows, threshold, direction):
     for flow in flows:
-        if flow['1'] > 800 and flow['61'] == 1 and not flow['7'] == 0:
+        if flow['1'] > threshold and flow['61'] == direction and not flow['7'] == 0:
             return flow
 
