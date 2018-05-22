@@ -55,8 +55,9 @@ echo "setting up oats systemd files..."
 cp -r ./systemd/. /lib/systemd/system
 systemctl daemon-reload
 
-echo "setting up oats salt configuration..."
-cp -r ./saltstack/etc/. /etc/salt
+# do not overwrite slack key
+#echo "setting up oats salt configuration..."
+#cp -r ./saltstack/etc/. /etc/salt
 
 echo "installing napalm-logs ios profiles..."
 cp -r ./napalm/logs/ios/. /usr/local/lib/python2.7/dist-packages/napalm_logs/config/ios/

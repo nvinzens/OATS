@@ -237,3 +237,9 @@ def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, t
         if msg.offset == last_offset - 1 or time.time() > timeout:
             return flows
 
+
+def get_src_flow(flows, threshold, direction):
+    for flow in flows:
+        if flow['1'] > threshold and flow['61'] == direction and not flow['7'] == 0:
+            return flow
+

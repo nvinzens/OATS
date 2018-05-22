@@ -105,6 +105,10 @@ for msg in consumer:
     event_name = 'netflow/*/data'
     severity = 0
 
+    EventProcessor.process_event(data=netflow_data, host=host, timestamp=timestamp, sensor_type=type,
+                                 event_name=event_name,
+                                 severity=severity, start_tshoot=False)
+    '''
     for list in netflow_data['DataSets']:
         for dict in list:
             if dict['I'] == 61:
@@ -112,7 +116,7 @@ for msg in consumer:
                     producer.send('oats-netflow-ingress', netflow_data)
                 if dict['V'] == 1:
                     producer.send('oats-netflow-egress', netflow_data)
-    EventProcessor.process_event(data=netflow_data, host=host, timestamp=timestamp, sensor_type=type, event_name=event_name,
-                                 severity=severity, start_tshoot=False)
+    '''
+
 
 
