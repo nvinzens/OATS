@@ -127,6 +127,7 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     #flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
     #flow_host = flow_data['AgentID']
     #flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
+    time.sleep(10)
     flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/high_traffic', 10)
     raise Exception(flows)
 
