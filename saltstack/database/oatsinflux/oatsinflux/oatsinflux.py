@@ -201,7 +201,7 @@ def __write_stream(host, timestamp, sensor_type, event_name, severity, data, cli
     return success
 
 
-def get_type_data(sensor_type, timestamp, event_name, timeframe, db_name=None):
+def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_name=None):
     measurement = None
     if not db_name:
         db_name = 'timedb'
@@ -227,7 +227,10 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, db_name=None):
     time_before = timestamp + ' - ' + str(timeframe) + 's'
     sql_query = "SELECT * from " + measurement + " WHERE time > " + time_before + " AND time < " + time_after
     rs = client.query(sql_query)
-    results = list(rs.get_points(tags={"event_name": str(event_name)}))
+    if host:
+        results = list(rs.get_points(tags={"event_name": str(event_name), "host": str(host)}))
+    else:    
+        results = list(rs.get_points(tags={"event_name": str(event_name)}))
 
     return results
 
