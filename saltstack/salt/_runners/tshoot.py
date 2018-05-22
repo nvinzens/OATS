@@ -130,15 +130,17 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     # src_port = 7, in_bytes = 1
 
     src_flow = None
+    src_flow_port = None
     # timeout while loop after 20secs
     timeout = time.time() + 20
-    while src_flow is None:
+    while src_flow is None and src_flow_port is None:
         flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 30, host=host)
         src_flow = oatssalthelpers.get_src_flow(flows, 1500, 1)
         time.sleep(1)
         if time.time() > timeout:
             src_flow_port = 0
-    src_flow_port = src_flow['7']
+    if src_flow_port is None:
+        src_flow_port = src_flow['7']
 
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
               "Source port of traffic: {2}.\n".format(host, data['name'], src_flow_port)
