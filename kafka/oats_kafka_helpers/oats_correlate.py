@@ -100,7 +100,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     if not 'event_names' in locals():
         event_names = []
     current_case = None
-    if cache is None or cache_id not in cache or event_name not in cache[cache_id]:
+    if cache is None or cache_id not in cache or host+event_name not in cache[cache_id]:
         # first thread initializes and populates dict
         __init_cache(host+event_name, cache_id, correlate_for)
         event_names.append(host+event_name)
