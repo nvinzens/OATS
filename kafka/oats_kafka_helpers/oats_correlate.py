@@ -94,7 +94,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     :return:
     '''
     oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
-    cache_id = 'aggregate_distinct' + event_name
+    cache_id = 'aggregate_distinct' + error
     lock = threading.Lock()
     lock.acquire()
     if not 'event_names' in locals():
@@ -178,7 +178,7 @@ def __init_cache(error, cache_id, count_for=10, host=None, additional_events=Non
     global cache
     if not cache:
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
-    if not cache_id in cache:
+    if cache_id not in cache:
         cache[cache_id] = {}
     if additional_events is not None:
         for event in additional_events:
