@@ -100,9 +100,10 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     if not 'event_names' in locals():
         event_names = []
     current_case = None
+
     if cache is None or cache_id not in cache or host+event_name not in cache[cache_id]:
         # first thread initializes and populates dict
-        __init_cache(host+event_name, cache_id, correlate_for)
+        __init_cache(host+event_name, cache_id, correlate_for, distinct_events.keys())
         event_names.append(host+event_name)
     else:
         # later threads increment counter
@@ -173,12 +174,16 @@ def compress(data, host, timestamp, severity, error, sensor_type,
                                  case=current_case, influx_write=False)
 
 
-def __init_cache(error, cache_id, count_for=10):
+def __init_cache(error, cache_id, count_for=10, host=None, additional_events=None):
     global cache
     if not cache:
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
     if not cache_id in cache:
         cache[cache_id] = {}
+    if additional_events is not None:
+        for event in additional_events:
+            cache[cache_id][host+event] = {}
+            cache[cache_id][host+event]['counter'] = 0
     cache[cache_id][error] = {}
     cache[cache_id][error]['counter'] = 1
 
