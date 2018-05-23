@@ -18,6 +18,8 @@ reactor:
     - /srv/saltstack/reactor/ifdown_workflow.sls
   - 'streaming-telemetry/*/out-discard-event':
     - /srv/saltstack/reactor/out_discards_exceeded_workflow.sls
+  - 'syslog/*/INTERFACE_CHANGED/port_flap':
+    - /srv/saltstack/reactor/port_flap_workflow.sls
 
 slack:
   api_key: xoxp-262145928167-261944878470-261988872518-7e7aae3dc3e8361f9ef04dca36ea6317

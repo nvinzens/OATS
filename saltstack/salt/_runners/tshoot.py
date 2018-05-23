@@ -161,6 +161,44 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     return ret
 
 
+def port_flap(host, yang_message, error, tag, current_case=None):
+
+    conf = 'No changes'
+    success = False
+    interface = oatsdbhelpers.get_interface(error, yang_message)
+    comment = 'Port Flapping on  ' + host + ' detected. '
+    if current_case is None or current_case == 'None':
+        current_case = oatspsql.create_case(error, host, solution='Case created in salt: `tshoot.port_flap`.')
+    interface_neighbor = oatsnb.get_interface_neighbor(host, interface, case=current_case)
+
+    #neighbors = oatsnb.get_neighbors(interface_neighbor, case=current_case)
+    #device_up = oatssalthelpers.check_device_connectivity(neighbors, interface_neighbor, case=current_case)
+
+    oatssalthelpers.if_shutdown(host, interface, case=current_case)
+    conf = oatssalthelpers.if_noshutdown(host, interface, case=current_case)
+    success = oatssalthelpers.ping(host, interface_neighbor, check_connectivity=True, case=current_case)
+    if success:
+        success = True
+        comment += ('Resolved Port Flapping on Interface`' + interface + '`.')
+        oatssalthelpers.post_slack(comment, case=current_case)
+        oatspsql.close_case(current_case)
+    else:
+        oatspsql.update_case(current_case, solution='Port flapping could not get resolved. Technician needed.', status=oatspsql.Status.ONHOLD.value)
+        comment = ('Could not fix port flapping status of `' + interface + '` on host'
+                    + host + ' .')
+        oatssalthelpers.post_slack(comment, case=current_case)
+        success = False
+        oatspsql.update_case(current_case, solution ='Device ' + interface_neighbor + ' is unreachable. Technician needed.', status=oatspsql.Status.ONHOLD.value)
+        oatssalthelpers.post_slack(comment, case=current_case)
+
+    return {
+        'error': error,
+        'tag': tag,
+        'comment': comment,
+        'changes': conf,
+        'success': success
+    }
+
 
 
 
