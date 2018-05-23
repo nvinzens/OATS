@@ -130,22 +130,24 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     # src_port = 7, in_bytes = 1
 
     src_flow = None
-    src_flow_port = None
+    src_flow_port = 0
     # timeout while loop after 20secs
     timeout = time.time() + 60
-    while src_flow is None and src_flow_port is None:
+    while src_flow is None:
         flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 30, host=host)
-        src_flow = oatssalthelpers.get_src_flow(flows, 1500, 1)
+        src_flow = oatssalthelpers.get_src_flow(flows, 1500, 0)
         time.sleep(1)
         if time.time() > timeout:
-            src_flow_port = 0
-    if src_flow_port is None:
+            break
+
+    if src_flow_port is 0:
         src_flow_port = src_flow['7']
 
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
-              "Source port of traffic: {2}.\n".format(host, data['name'], src_flow_port)
+              "Source port of traffic: `{2}`.\n".format(host, data['name'], src_flow_port)
     if src_flow_port == 0:
-        comment += 'Could not determine source of traffic, port is set as 0 because of a cisco-ios bug.'
+        comment += 'Could not determine source of traffic, possible DDoS attack detected,' \
+                   ' because traffic source port is `port 0`.'
 
     ret = oatssalthelpers.post_slack(comment, case=current_case)
     return ret
