@@ -120,9 +120,9 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     # wait for additional events
     time.sleep(correlate_for)
     success = True
-    for event in distinct_events:
-        print (event_name, cache[cache_id][event_name], distinct_events[event_name])
-        if not cache[cache_id][event_name] >= distinct_events[event_name]:
+    for event in event_names:
+        print (event_name, cache[cache_id][event], distinct_events[event])
+        if not cache[cache_id][event] >= distinct_events[event]:
             success = False
             break
     print success
