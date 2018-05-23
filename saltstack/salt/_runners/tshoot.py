@@ -146,10 +146,18 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
               "Source port of traffic: `{2}`.\n".format(host, data['name'], src_flow_port)
     if src_flow_port == 0:
-        comment += 'Could not determine source of traffic, possible DDoS attack detected,' \
+        comment += 'Could not determine source of traffic, possible DDoS attack detected' \
                    ' because traffic source port is `port 0`.'
 
-    ret = oatssalthelpers.post_slack(comment, case=current_case)
+    slack_status = oatssalthelpers.post_slack(comment, case=current_case)
+
+    ret = {
+        'error': 'OUT_DISCARDS',
+        'comment': comment,
+        'changes': 'conf',
+        'slack-post-status:': slack_status,
+        'success': bool(src_flow_port)
+    }
     return ret
 
 
