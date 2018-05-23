@@ -62,12 +62,6 @@ systemctl daemon-reload
 echo "installing napalm-logs ios profiles..."
 cp -r ./napalm/logs/ios/. /usr/local/lib/python2.7/dist-packages/napalm_logs/config/ios/
 
-echo "installing oatsinflux"
-pip install --upgrade saltstack/database/oatsinflux/.
-
-echo "installing oatspsql"
-pip install --upgrade saltstack/database/oatspsql/.
-
 echo "installing oats specific fork of ncclient"
 pip install --upgrade git+https://github.com/nvinzens/ncclient.git
 

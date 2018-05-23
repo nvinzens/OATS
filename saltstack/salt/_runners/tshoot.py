@@ -36,27 +36,14 @@ def ifdown(host, yang_message, error, tag, current_case=None):
 
     if device_up:
         # cycle affected interface
-        timeout = time.time() + 10
-        up_counter = 0
-        down_counter = 0
-        while True:
-            if oatssalthelpers.wait_for_event('syslog/*/INTERFACE_CHANGED/up', 3, ):
-                up_counter += 1
-            if oatssalthelpers.wait_for_event('syslog/*/INTERFACE_CHANGED/down', 3):
-                down_counter += 1
-            if time.time() > timeout:
-                break
-        if up_counter >= 2 and down_counter >= 2:
-            error = 'PORT_FLAPPING'
-            oatspsql.update_case(current_case, solution='Port Flapping detected. Trying to fix...')
         oatssalthelpers.if_shutdown(host, interface, case=current_case)
         conf = oatssalthelpers.if_noshutdown(host, interface, case=current_case)
         # check if cycle was successful
         success = oatssalthelpers.ping(host, interface_neighbor, check_connectivity=True, case=current_case)
         if success:
             success = True
-            comment += ('Problem on Interface `'
-                       + interface + '` automatically resolved.')
+            comment += ('Config for Interface `'
+                       + interface + '` automatically changed from down to up')
             # TODO: remove, only useful for debugging
             oatssalthelpers.post_slack(comment, case=current_case)
             oatspsql.close_case(current_case)

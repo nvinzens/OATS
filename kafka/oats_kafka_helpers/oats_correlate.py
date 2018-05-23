@@ -93,7 +93,7 @@ def compress(data, host, timestamp, severity, error, sensor_type,
     if use_oats_case:
         current_case = __create_db_case(error, host, 'compress')
         oatspsql.update_case(current_case,
-                             solution='Waiting for {0} seconds to compress `{1}` events.'.format(correlate_for, event_name))
+                             solution='Waiting for {0} seconds to compress {1} events.'.format(correlate_for, event_name))
 
     # compress events
     time.sleep(correlate_for)
