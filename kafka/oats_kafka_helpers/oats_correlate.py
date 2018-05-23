@@ -126,13 +126,13 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
             break
     if success:
         if use_oats_case:
-            __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
+            __update_db_case(current_case, cache[cache_id][host+event_name]['counter'], event_name)
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      sensor_type=sensor_type, event_name=aggregation_event_name, severity=severity,
                                      case=current_case, influx_write=False)
     else:
         if use_oats_case:
-            __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
+            __update_db_case(current_case, cache[cache_id][host+event_name]['counter'], event_name)
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      sensor_type=sensor_type, event_name=event_name, severity=severity,
