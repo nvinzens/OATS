@@ -102,12 +102,12 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     current_case = None
     if cache is None or cache_id not in cache or event_name not in cache[cache_id]:
         # first thread initializes and populates dict
-        __init_cache(event_name, cache_id, correlate_for)
-        event_names.append(event_name)
+        __init_cache(host+event_name, cache_id, correlate_for)
+        event_names.append(host+event_name)
     else:
         # later threads increment counter
-        cache[cache_id][event_name]['counter'] += 1
-        event_names.append(event_name)
+        cache[cache_id][host+event_name]['counter'] += 1
+        event_names.append(host+event_name)
         lock.release()
         return
     lock.release()
@@ -121,8 +121,8 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     time.sleep(correlate_for)
     success = True
     for event in event_names:
-        print (event_name, cache[cache_id][event], cache[cache_id][event]['counter'], distinct_events[event])
-        if not cache[cache_id][event]['counter'] >= distinct_events[event]:
+        print (event_name, cache[cache_id][host+event], cache[cache_id][host+event]['counter'], distinct_events[host+event])
+        if not cache[cache_id][host+event]['counter'] >= distinct_events[host+event]:
             success = False
             break
     print success
