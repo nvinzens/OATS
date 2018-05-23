@@ -21,7 +21,6 @@ def process_event(data, host, timestamp, sensor_type, event_name, severity, case
     :param case: the optional oatsdb case-id
     :return: None
     '''
-    print ('Sending ' + event_name)
     if start_tshoot:
         if delay:
             time.sleep(delay)

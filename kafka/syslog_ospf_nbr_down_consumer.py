@@ -34,7 +34,7 @@ for msg in consumer:
         alt_event_name = 'syslog/*/' + event_error + '/' + 'interface_down'
         n_of_required_events, root_host = utils.get_n_of_events_and_root_host(event_error, host, yang_mess)
 
-        thread = Thread(target=oats_correlate.aggregate,
+        thread = Thread(target=oats_correlate.aggregate_identical,
                         args=(event_msg, host, timestamp, severity, event_error, 'syslog', event_name,
                               n_of_required_events, alt_event_name, 10, True))
         thread.daemon = True

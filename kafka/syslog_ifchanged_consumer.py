@@ -28,7 +28,6 @@ for msg in consumer:
 
     port_flapping_events = { 'syslog/*/INTERFACE_CHANGED/down': 2, 'syslog/*/INTERFACE_CHANGED/up': 2}
 
-    print (error + ': ' + event_name)
     thread = Thread(target=oats_correlate.aggregate_distinct,
                     args=(event_msg, host, timestamp, severity, error, 'syslog', event_name,
                           port_flapping_events, 'syslog/*/INTERFACE_CHANGED/port_flap', 10, True))
