@@ -177,7 +177,7 @@ def __init_cache(error, cache_id, count_for=10):
     global cache
     if not cache:
         cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
-    if not cache[cache_id]:
+    if not cache_id in cache:
         cache[cache_id] = {}
     cache[cache_id][error] = {}
     cache[cache_id][error]['counter'] = 1
