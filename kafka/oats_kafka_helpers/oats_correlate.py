@@ -74,6 +74,73 @@ def aggregate(data, host, timestamp, severity, error, sensor_type,
                                      case=current_case, influx_write=False)
 
 
+def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
+                       event_name, distinct_events, aggregate_event_name=None,
+                       correlate_for=None, use_oats_case=False):
+    '''
+
+    :param data:
+    :param host:
+    :param timestamp:
+    :param severity:
+    :param error:
+    :param sensor_type:
+    :param event_name:
+    :param distinct_events: dict of the form { event_name: amount_of_events }
+    :param n_of_events:
+    :param alternative_event_name:
+    :param correlate_for:
+    :param use_oats_case:
+    :return:
+    '''
+    oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
+    cache_id = 'aggregate_distinct' + event_name
+    lock = threading.Lock()
+    lock.acquire()
+    if not 'events' in locals():
+        events = {}
+    current_case = None
+    if cache is None or cache_id not in cache or event_name not in cache[cache_id]:
+        # first thread initializes and populates dict
+        __init_cache(event_name, cache_id, correlate_for)
+
+        events[event_name] = distinct_events[event_name]
+    else:
+        # later threads increment counter
+        cache[cache_id][event_name]['counter'] += 1
+        events[event_name] = distinct_events[event_name]
+        lock.release()
+        return
+    lock.release()
+    if use_oats_case:
+        current_case = __create_db_case(error, host, 'aggregate')
+        oatspsql.update_case(current_case,
+                             solution='Waiting for {0} seconds to aggregate events.'
+                                      ' Required amount of events: {1}'.format(correlate_for, n_of_events))
+
+    # wait for additional events
+    time.sleep(correlate_for)
+    success = True
+    for event in events:
+        if not cache[cache_id][event_name] >= n_of_events:
+            success = False
+            break;
+    if success:
+        if use_oats_case:
+            __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
+        EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
+                                     sensor_type=sensor_type, event_name=event_name, severity=severity,
+                                     case=current_case, influx_write=False)
+    else:
+        if use_oats_case:
+
+            __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
+
+        EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
+                                     sensor_type=sensor_type, event_name=alternative_event_name, severity=severity,
+                                     case=current_case, influx_write=False)
+
+
 def compress(data, host, timestamp, severity, error, sensor_type,
              event_name, correlate_for=10, use_oats_case=False):
     oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)
@@ -107,7 +174,8 @@ def compress(data, host, timestamp, severity, error, sensor_type,
 
 def __init_cache(error, cache_id, count_for=10):
     global cache
-    cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
+    if not cache:
+        cache = ExpiringDict(max_len=CACHE_SIZE, max_age_seconds=count_for + 3)
     cache[cache_id] = {}
     cache[cache_id][error] = {}
     cache[cache_id][error]['counter'] = 1

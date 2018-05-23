@@ -1,5 +1,7 @@
 from kafka import KafkaConsumer
 from oats_kafka_helpers import EventProcessor
+from oats_kafka_helpers import oats_correlate
+from threading import Thread
 import json
 
 def __get_interface_status(yang_message):
@@ -24,8 +26,16 @@ for msg in consumer:
     opt_arg = __get_interface_status(yang_mess)
     event_name = 'syslog/*/' + error + '/' + opt_arg
 
-    EventProcessor.process_event(data=event_msg, host=host, timestamp=timestamp,
-                                 sensor_type='syslog', event_name=event_name, severity=severity)
+    port_flapping_events = { 'syslog/*/INTERFACE_CHANGED/down': 2, 'syslog/*/INTERFACE_CHANGED/up': 2}
+
+    thread = Thread(target=oats_correlate.aggregate,
+                    args=(event_msg, host, timestamp, severity, error, 'syslog', event_name,
+                          port_flapping_events, 'syslog/*/INTERFACE_CHANGED/port_flap', 10, True))
+    thread.daemon = True
+    thread.start()
+
+    #EventProcessor.process_event(data=event_msg, host=host, timestamp=timestamp,
+    #                             sensor_type='syslog', event_name=event_name, severity=severity)
 
 
 
