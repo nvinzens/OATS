@@ -135,7 +135,7 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     timeout = time.time() + 60
     while src_flow is None:
         flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 30, host=host)
-        src_flow = oatssalthelpers.get_src_flow(flows, 1500, 0)
+        src_flow = oatssalthelpers.get_src_flow(flows, 1500)
         time.sleep(1)
         if time.time() > timeout:
             break
