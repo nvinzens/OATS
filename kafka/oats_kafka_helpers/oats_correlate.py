@@ -97,39 +97,37 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     cache_id = 'aggregate_distinct' + event_name
     lock = threading.Lock()
     lock.acquire()
-    if not 'events' in locals():
-        events = {}
+
     current_case = None
     if cache is None or cache_id not in cache or event_name not in cache[cache_id]:
         # first thread initializes and populates dict
         __init_cache(event_name, cache_id, correlate_for)
 
-        events[event_name] = distinct_events[event_name]
     else:
         # later threads increment counter
         cache[cache_id][event_name]['counter'] += 1
-        events[event_name] = distinct_events[event_name]
         lock.release()
         return
     lock.release()
     if use_oats_case:
         current_case = __create_db_case(error, host, 'aggregate')
-        oatspsql.update_case(current_case,
-                             solution='Waiting for {0} seconds to aggregate events.'
-                                      ' Required amount of events: {1}'.format(correlate_for, n_of_events))
+        #oatspsql.update_case(current_case,
+        #                     solution='Waiting for {0} seconds to aggregate events.'
+        #                              ' Required amount of events: {1}'.format(correlate_for, n_of_events))
 
     # wait for additional events
     time.sleep(correlate_for)
     success = True
-    for event in events:
-        if not cache[cache_id][event_name] >= n_of_events:
+    for event in distinct_events:
+        print (event_name, cache[cache_id][event_name], distinct_events[event_name])
+        if not cache[cache_id][event_name] >= distinct_events[event_name]:
             success = False
-            break;
+            break
     if success:
         if use_oats_case:
             __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     sensor_type=sensor_type, event_name=event_name, severity=severity,
+                                     sensor_type=sensor_type, event_name=aggregate_event_name, severity=severity,
                                      case=current_case, influx_write=False)
     else:
         if use_oats_case:
@@ -137,7 +135,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
             __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
 
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
-                                     sensor_type=sensor_type, event_name=alternative_event_name, severity=severity,
+                                     sensor_type=sensor_type, event_name=event_name, severity=severity,
                                      case=current_case, influx_write=False)
 
 
