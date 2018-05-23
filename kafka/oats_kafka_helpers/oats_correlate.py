@@ -182,7 +182,7 @@ def __init_cache(error, cache_id, count_for=10, host=None, additional_events=Non
         cache[cache_id] = {}
     if additional_events is not None:
         for event in additional_events:
-            if not host+event in cache_id[cache_id]:
+            if not host+event in cache[cache_id]:
                 cache[cache_id][host+event] = {}
                 cache[cache_id][host+event]['counter'] = 0
     cache[cache_id][error] = {}
