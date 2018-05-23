@@ -122,7 +122,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     success = True
     for event in event_names:
         print (event_name, cache[cache_id][event], cache[cache_id][event]['counter'], distinct_events[event])
-        if not cache[cache_id][event]['counter'] >= distinct_events[event]:
+        if not cache[cache_id][event]['counter'] >= distinct_events[event[3:]]:
             success = False
             break
     print success
