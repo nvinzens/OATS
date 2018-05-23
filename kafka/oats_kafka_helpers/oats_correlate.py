@@ -115,7 +115,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     if use_oats_case:
         current_case = __create_db_case(error, host, 'aggregate')
         oatspsql.update_case(current_case,
-                             solution='Waiting for {0} seconds to aggregate distinct events.'.format(correlate_for, n_of_events))
+                             solution='Waiting for {0} seconds to aggregate distinct events.'.format(correlate_for))
 
     # wait for additional events
     time.sleep(correlate_for)
