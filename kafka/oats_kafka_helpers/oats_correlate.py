@@ -97,15 +97,17 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     cache_id = 'aggregate_distinct' + event_name
     lock = threading.Lock()
     lock.acquire()
-
+    if not 'event_names' in locals():
+        event_names = []
     current_case = None
     if cache is None or cache_id not in cache or event_name not in cache[cache_id]:
         # first thread initializes and populates dict
         __init_cache(event_name, cache_id, correlate_for)
-
+        event_names.append(event_name)
     else:
         # later threads increment counter
         cache[cache_id][event_name]['counter'] += 1
+        event_names.append(event_name)
         lock.release()
         return
     lock.release()
@@ -123,6 +125,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
         if not cache[cache_id][event_name] >= distinct_events[event_name]:
             success = False
             break
+    print success
     if success:
         #if use_oats_case:
             #__update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
