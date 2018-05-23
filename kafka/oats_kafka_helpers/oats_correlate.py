@@ -103,7 +103,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
 
     if cache is None or cache_id not in cache or host+event_name not in cache[cache_id]:
         # first thread initializes and populates dict
-        __init_cache(host+event_name, cache_id, correlate_for, distinct_events.keys())
+        __init_cache(host+event_name, cache_id, correlate_for,host=host, additional_events=distinct_events.keys())
         event_names.append(host+event_name)
     else:
         # later threads increment counter
