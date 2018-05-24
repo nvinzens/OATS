@@ -3,23 +3,30 @@ from flask import Flask, jsonify, abort, make_response, request
 import time
 from kafka import KafkaProducer
 import json
+from flasgger import Swagger, swag_from
 
 app = Flask(__name__)
+app.config['SWAGGER'] = {
+    'title': 'OATS Event API',
+    'uiversion': 2
+}
+swagger = Swagger(app)
 
 events = [
     {
-        'id': 1,
-        'type': u'API',
-        'event_name': u'API',
+        'type': u'api',
+        'event_name': u'default_api_event',
         'host': u'None',
-        'timestamp': u'Now',
+        'timestamp': 1527146905,
         'severity': 1,
+        'data': 0
 
     }
 ]
 
 
 @app.route('/oats/api/event', methods=['POST'])
+@swag_from('apidocs/post_events.yml')
 def create_event():
     if not request.json or not 'host' in request.json:
         abort(400)
@@ -29,7 +36,7 @@ def create_event():
         'host': request.json.get('host', 'no host provided'),
         'timestamp': request.json.get('timestamp', int(time.time())),
         'severity': request.json.get('severity', 7),
-        'data': request.json.get('payload', 'no data provided')
+        'data': request.json.get('data', 'no data provided')
     }
     events.append(event)
 
@@ -40,6 +47,7 @@ def create_event():
 
 
 @app.route('/oats/api/events', methods=['GET'])
+@swag_from('apidocs/get_events.yml')
 def get_events():
     return jsonify({'events': events})
 

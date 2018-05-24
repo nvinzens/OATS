@@ -1,0 +1,43 @@
+Endpoint to post a new event
+Endpoint to post a new event
+---
+tags:
+  - event
+parameters:
+  - name: body
+    in: body
+    required: true
+    schema:
+      id: event
+      required:
+        - type
+        - host
+      properties:
+        type:
+          type: string
+          description: The origin service of the error.
+          default: "API"
+        event_name:
+          type: string
+          description: The complete name of the event.
+          default: "default_api_event'"
+        host:
+          type: string
+          description: The affected host.
+          default: "None"
+        timestamp:
+          type: integer
+          description: Seconds since epoch.
+          default: 1527146905
+        severity:
+          type: integer
+          description: How severe is the error
+          default: 1
+        data:
+          type: integer
+          description: Is the api running?
+          default: 1
+responses:
+  200:
+    description: The event started
+
