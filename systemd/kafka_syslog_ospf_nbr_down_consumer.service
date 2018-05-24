@@ -1,6 +1,6 @@
 [Unit]
 Description=Kafka consumer for syslog ospf neighbor down events
-After=oats.target napalm-logs.service oats_telemetry.service
+After=oats.target napalm-logs.service
 PartOf=oats.target
 
 [Service]

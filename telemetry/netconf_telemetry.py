@@ -22,8 +22,8 @@ def callback_kafka_publish(notif, topic, host):
     # Publishes message to Kafka topic
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
-    logger.debug('Sending telemetry data from host {0} to kafka topic {1}'
-                 .format(host, topic))
+    logger.debug('Sending telemetry data from host {0} to kafka topic {1}: {2}'
+                 .format(host, topic, json_string))
     producer.send(topic, key=host, value=json_string)
     producer.flush()
 
@@ -60,7 +60,7 @@ def __create_subscriptions(subscription, host_config):
                 s = m.establish_subscription(callback_kafka_publish, errback, xpath=xpath,
                                              period=period, topic=topic, host=host_config.hostname)
 
-                logger.debug('Subscription result: {0}'.format(s.subscription_result))
+                logger.debug('Subscription result: {0}'.format(s))
             if not first:
                 time.sleep((period/100)-0.2)
             first = False

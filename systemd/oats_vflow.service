@@ -1,6 +1,6 @@
 [Unit]
 Description=starts vflow which is needed for oats netflow
-After=oats.target oats_telemetry.service
+After=oats.target
 PartOf=oats.target
 
 [Service]

@@ -1,5 +1,5 @@
 [Unit]
 Description=Starts all relevant scripts and services for OATS
-Requires=oats_api.service kafka_oats_api_consumer.service oats_telemetry.service
+Requires=oats_api.service kafka_oats_api_consumer.service
 
 

@@ -1,6 +1,6 @@
 [Unit]
 Description=kafka consumer for netflow data produced by vflow
-After=oats.target oats_telemetry.service
+After=oats.target
 PartOf=oats.target
 
 [Service]
