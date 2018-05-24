@@ -4,6 +4,9 @@ from oats_kafka_helpers import EventProcessor
 from oats_kafka_helpers import utils
 from threading import Thread
 import oats_kafka_helpers
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def consume_kafka(topic, event_name, correlation_function=None, correlation_time=None):
