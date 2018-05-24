@@ -6,7 +6,7 @@ logging:
   disable_existing_loggers: true
   # Configuring the default (root) logger is highly recommended
   root:
-    level: NOTSET
+    level: DEBUG
     handlers: [logfile]
   loggers:
     # Logging from my application
