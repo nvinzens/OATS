@@ -7,8 +7,14 @@ import time
 import threading
 import EventProcessor
 import logging
+import logging.config
+import yaml
 
-logger = logging.getLogger('oats.kafka')
+log_file = open('etc/oats/logging.yaml')
+log_conf = yaml.load(log_file)
+logging.config.dictConfig(log_conf['logging'])
+logger = logging.getLogger('oats.kafka.helpers')
+
 CACHE_SIZE = 1000
 
 # cache for recognizing if an event has occured in a given timeframe

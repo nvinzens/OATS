@@ -25,7 +25,11 @@ logging:
       handlers: [logfile]
       qualname: oats.kafka
       propagate: false
-    # Controlling logging of 3rd party libs
+    oats.kafka.helpers:
+      level: DEBUG
+      handlers: [logfile]
+      qualname: oats.kafka
+      propagate: false
     oats.api:
       level: DEBUG
       handlers: [logfile]
