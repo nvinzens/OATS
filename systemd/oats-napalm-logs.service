@@ -1,6 +1,6 @@
 [Unit]
 Description=napalm-logs service for normalizing syslog messages, part of OATS
-After=oats.target
+After=oats.target oats_telemetry.service
 Before=oatsclient.service
 PartOf=oats.target
 

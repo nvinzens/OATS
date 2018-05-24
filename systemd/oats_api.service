@@ -1,7 +1,7 @@
 [Unit]
 Description=oats api for inserting events into oats
 After=oats.target
-PartOf=oats.target
+PartOf=oats.target oats_telemetry.service
 
 [Service]
 Type=simple

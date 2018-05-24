@@ -1,6 +1,6 @@
 [Unit]
 Description=kafka consumer for ingress netflow data produced by oats-netflow_consumer
-After=oats.target
+After=oats.target oats_telemetry.service
 PartOf=oats.target
 
 [Service]
