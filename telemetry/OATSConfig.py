@@ -3,16 +3,19 @@ import errno
 import os
 from TelemetrySubscription import OATSTelemetrySubscription
 from Host import OATSHost
+import logging
+
+logger = logging.getLogger('oats')
+
 
 class OATSConfig:
 
-
     def __init__(self, yaml_file_name):
         try:
-            file = open(yaml_file_name)
-            self.config = yaml.load(file)
+            f = open(yaml_file_name)
+            self.config = yaml.load(f)
         except IOError:
-           raise IOError("Could not read OATS configuration file. Missing file at " + yaml_file_name)
+            raise IOError("Could not read OATS configuration file. Missing file at " + yaml_file_name)
 
     def get_host_configs(self):
         host_configs = []

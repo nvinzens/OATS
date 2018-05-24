@@ -4,6 +4,9 @@ from kafka import KafkaProducer
 import json
 import xmltodict
 from multiprocessing import Process
+import logging
+
+logger = logging.getLogger('oats')
 
 
 def errback(notif):
@@ -19,13 +22,15 @@ def callback_kafka_publish(notif, topic, host):
     # Publishes message to Kafka topic
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
+    logger.debug('Sending telemetry data from host {0} to kafka topic {1}: {2}'
+                 .format(host, topic, json_string))
     producer.send(topic, key=host, value=json_string)
     producer.flush()
-    #print (json_string)
 
 
 def process_host_config(host_config, config):
     subs = config.get_telemetry_subscriptions()
+    logger.debug('Processing config of host {0}'.format(host_config.hostname))
     for sub in subs:
         p = Process(target=__create_subscriptions, args=(sub, host_config))
         p.start()
@@ -33,6 +38,8 @@ def process_host_config(host_config, config):
 
 def __create_subscriptions(subscription, host_config):
     first = True
+    logger.debug('Open netconf session to host {0} on port {1}...'
+                 .format(host_config.hostname, host_config.port))
     with manager.connect(host=host_config.hostname,
                          port=host_config.port,
                          username=host_config.username,
@@ -48,10 +55,12 @@ def __create_subscriptions(subscription, host_config):
         topic = subscription.kafka_publish_topic
         while True:
             if first:
+                logger.debug('Establish telemetry subscription for model {0} on host {1}.'
+                             .format(xpath, host_config.hostname))
                 s = m.establish_subscription(callback_kafka_publish, errback, xpath=xpath,
                                              period=period, topic=topic, host=host_config.hostname)
 
-                print (s.subscription_result)
+                logger.debug('Subscription result: {0}'.format(s))
             if not first:
                 time.sleep((period/100)-0.2)
             first = False
