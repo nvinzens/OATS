@@ -59,6 +59,9 @@ systemctl daemon-reload
 #echo "setting up oats salt configuration..."
 #cp -r ./saltstack/etc/. /etc/salt
 
+echo "creating oats logs directory..."
+mkdir "/var/log/oats"
+
 echo "installing napalm-logs ios profiles..."
 cp -r ./napalm/logs/ios/. /usr/local/lib/python2.7/dist-packages/napalm_logs/config/ios/
 
