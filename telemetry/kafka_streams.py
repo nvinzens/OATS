@@ -2,7 +2,7 @@ import subprocess
 from multiprocessing import Process
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('oats')
 
 
 def start_kafka_streams(subscription):

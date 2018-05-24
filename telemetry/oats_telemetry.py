@@ -9,7 +9,7 @@ YAML_FILE = '/etc/oats/config.yaml'
 
 
 def main():
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger('oats')
     logger.setLevel(logging.DEBUG)
 
     fh = logging.FileHandler('/var/log/oats/logs')
