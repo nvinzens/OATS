@@ -32,7 +32,7 @@ def main():
     # start kafka streams clients and consumers
     for sub in subscriptions:
         if sub.kafka_streams_eval:
-            logger.info('Starting kafka streams for {0} YANG model...'.format(sub.xpath))
+            logger.info('Starting kafka streams for [{0}] YANG model...'.format(sub.xpath))
             kafka_streams.start_kafka_streams(sub)
 
     # establish telemetry subscriptions

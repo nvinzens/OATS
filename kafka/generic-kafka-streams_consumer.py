@@ -16,9 +16,9 @@ logger = logging.getLogger('oats.kafka')
 
 def consume_kafka(topic, event_name, correlation_function=None, correlation_time=None):
     consumer = KafkaConsumer(topic)
-    logger.info('Started kafka consumer for topic {0} and event_name {1}'.format(topic, event_name))
+    logger.info('Starting kafka consumer for topic [{0}].'.format(topic, event_name))
     for msg in consumer:
-        logger.debug('Got kafka streams event event from kafka topic {0}: {1}'.format(topic, msg))
+        logger.debug('Got kafka streams event event from kafka topic [{0}]: {1}'.format(topic, msg))
         host, timestamp, data = utils.extract_record_data(msg)
         sensor_type = 'streaming-telemetry'
         if correlation_function is None:
@@ -32,7 +32,7 @@ def consume_kafka(topic, event_name, correlation_function=None, correlation_time
             severity = 3
             # load correlation function by name
             func = getattr(oats_kafka_helpers, correlation_function)
-            logger.debug('Kafka streams event is marked for correlation using function {0}.'
+            logger.debug('Kafka streams event is marked for correlation using function [{0}].'
                          .format(correlation_function, correlation_time))
             thread = Thread(target=func,
                             args=(data, host, timestamp, severity, 'KAFKA_STREAMS_EVENT', sensor_type, event_name),

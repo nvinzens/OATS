@@ -31,6 +31,21 @@ logging:
       handlers: [logfile]
       qualname: oats.api
       propagate: false
+    oats.netbox:
+      level: DEBUG
+      handlers: [logfile]
+      qualname: oats.netbox
+      propagate: false
+    oats.influx:
+      level: DEBUG
+      handlers: [logfile]
+      qualname: oats.influx
+      propagate: false
+    oats.psql:
+      level: DEBUG
+      handlers: [logfile]
+      qualname: oats.psql
+      propagate: false
   handlers:
     logfile:
       class: logging.handlers.RotatingFileHandler
