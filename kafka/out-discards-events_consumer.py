@@ -3,8 +3,13 @@ from oats_kafka_helpers import utils
 from threading import Thread
 from oats_kafka_helpers import oats_correlate
 import logging
+import logging.config
+import yaml
 
-logger = logging.getLogger('oats')
+log_file = open('etc/oats/logging.yaml')
+log_conf = yaml.load(log_file)
+logging.config.dictConfig(log_conf['logging'])
+logger = logging.getLogger('oats.kafka')
 
 topic = 'out-discards-events'
 consumer = KafkaConsumer(topic)

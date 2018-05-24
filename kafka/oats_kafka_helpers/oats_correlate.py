@@ -8,7 +8,7 @@ import threading
 import EventProcessor
 import logging
 
-logger = logging.getLogger('oats')
+logger = logging.getLogger('oats.kafka')
 CACHE_SIZE = 1000
 
 # cache for recognizing if an event has occured in a given timeframe

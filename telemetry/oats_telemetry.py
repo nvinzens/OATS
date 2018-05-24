@@ -15,7 +15,7 @@ def main():
     log_file = open('etc/oats/logging.yaml')
     log_conf = yaml.load(log_file)
     logging.config.dictConfig(log_conf['logging'])
-    logger = logging.getLogger('oats')
+    logger = logging.getLogger('oats.main')
 
     logger.info('Starting oats telemetry client...')
 

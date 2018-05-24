@@ -3,8 +3,13 @@ from kafka import KafkaProducer
 from oats_kafka_helpers import EventProcessor
 import json
 import logging
+import logging.config
+import yaml
 
-logger = logging.getLogger('oats')
+log_file = open('etc/oats/logging.yaml')
+log_conf = yaml.load(log_file)
+logging.config.dictConfig(log_conf['logging'])
+logger = logging.getLogger('oats.kafka')
 
 field_types = {
     1: 'IN_BYTES',

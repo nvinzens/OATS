@@ -4,6 +4,13 @@ from oats_kafka_helpers import oats_correlate
 from threading import Thread
 import json
 import logging
+import logging.config
+import yaml
+
+log_file = open('etc/oats/logging.yaml')
+log_conf = yaml.load(log_file)
+logging.config.dictConfig(log_conf['logging'])
+logger = logging.getLogger('oats.kafka')
 
 def __get_interface_status(yang_message):
     for k, v in sorted(yang_message.items()):
@@ -14,8 +21,6 @@ def __get_interface_status(yang_message):
         else:
             return ''
 
-
-logger = logging.getLogger('oats')
 
 topic = 'INTERFACE_CHANGED'
 consumer = KafkaConsumer(topic)

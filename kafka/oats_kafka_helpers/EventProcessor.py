@@ -6,7 +6,7 @@ import salt.client
 import time
 import logging
 
-logger = logging.getLogger('oats')
+logger = logging.getLogger('oats.kafka')
 
 
 def process_event(data, host, timestamp, sensor_type, event_name, severity, case=None,
