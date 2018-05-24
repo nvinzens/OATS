@@ -2,25 +2,19 @@ import netconf_telemetry
 import kafka_streams
 from OATSConfig import OATSConfig
 from multiprocessing import Process
+import yaml
 import logging
 import logging.handlers
+import logging.config
 
 
 YAML_FILE = '/etc/oats/config.yaml'
 
 
 def main():
+    log_conf = yaml.load('etc/oats/logging.yaml')
+    logging.config.dictConfig(log_conf['logging'])
     logger = logging.getLogger('oats')
-    logger.setLevel(logging.DEBUG)
-
-    # limit logfile to 50MBytes
-    fh = logging.handlers.RotatingFileHandler('/var/log/oats/logs', maxBytes=52428800)
-    fh.setLevel(logging.DEBUG)
-
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fh.setFormatter(formatter)
-
-    logger.addHandler(fh)
 
     logger.info('Starting oats telemetry client...')
 

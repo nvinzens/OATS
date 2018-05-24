@@ -11,6 +11,8 @@ fi
 
 echo "setting up oats config..."
 cp config.yaml /etc/oats/config.yaml
+echo " setting up oats logging config..."
+cp logging.yaml /etc/oats/logging.yaml
 
 if [  ! -d "/etc/napalm" ]; then
     echo "creating /etc/napalm..."

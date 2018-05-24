@@ -1,0 +1,50 @@
+# Config for logging
+# ------------------
+# See http://docs.python.org/2.7/library/logging.config.html#configuration-dictionary-schema
+logging:
+  version: 1
+  disable_existing_loggers: true
+  # Configuring the default (root) logger is highly recommended
+  root:
+    level: !!python/name:logging.NOTSET
+    handlers: [logfile]
+  loggers:
+    # Logging from my application
+    oats.:
+      level: !!python/name:logging.DEBUG
+      handlers: [logfile]
+      qualname: oats
+      propagate: false
+    oats.telemetry:
+      level: !!python/name:logging.DEBUG
+      handlers: [logfile]
+      qualname: oats.telemetry
+      propagate: false
+    oats.kafka:
+      level: !!python/name:logging.DEBUG
+      handlers: [logfile]
+      qualname: oats.kafka
+      propagate: false
+    # Controlling logging of 3rd party libs
+    oats.api:
+      level: !!python/name:logging.DEBUG
+      handlers: [logfile]
+      qualname: oats.api
+      propagate: false
+    sqlalchemy.pool:
+      level: !!python/name:logging.WARN
+      handlers: [logfile]
+      qualname: sqlalchemy.pool
+      propagate: false
+  handlers:
+    logfile:
+      class: logging.handlers.RotatingFileHandler
+      filename: /var/log/oats/logs
+      formatter: simpleFormatter
+      level: !!python/name:logging.DEBUG
+      maxBytes: 2048
+  formatters:
+    simpleFormatter:
+      class: !!python/name:logging.Formatter
+      format: '%(name)s %(asctime)s %(levelname)s %(message)s'
+      datefmt: '%d/%m/%Y %H:%M:%S'
