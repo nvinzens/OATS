@@ -10,7 +10,7 @@ logging:
     handlers: [logfile]
   loggers:
     # Logging from my application
-    oats.:
+    oats:
       level: DEBUG
       handlers: [logfile]
       qualname: oats
