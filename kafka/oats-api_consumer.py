@@ -1,8 +1,13 @@
 from kafka import KafkaConsumer
 from oats_kafka_helpers import EventProcessor
 import json
+import logging
 
-consumer = KafkaConsumer('oats-api')
+logger = logging.getLogger('oats')
+
+topic = 'oats-api'
+consumer = KafkaConsumer(topic)
+logger.info('Starting Kafka consumer for topic [{0}]...'.format(topic))
 '''
 event = {
         'type': request.json.get('type', 'default_API'),
@@ -15,6 +20,7 @@ event = {
 '''
 
 for msg in consumer:
+    logger.debug('Got an event from [{0}]. Sending to influx...'.format(topic))
     api_msg = json.loads(msg.value)
     sensor_type = api_msg['type']
     event_name = api_msg['event_name']

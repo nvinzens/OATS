@@ -3,6 +3,7 @@ from oats_kafka_helpers import EventProcessor
 from oats_kafka_helpers import oats_correlate
 from threading import Thread
 import json
+import logging
 
 def __get_interface_status(yang_message):
     for k, v in sorted(yang_message.items()):
@@ -13,9 +14,16 @@ def __get_interface_status(yang_message):
         else:
             return ''
 
-consumer = KafkaConsumer('INTERFACE_CHANGED')
+
+logger = logging.getLogger('oats')
+
+topic = 'INTERFACE_CHANGED'
+consumer = KafkaConsumer(topic)
+logger.info('Starting Kafka consumer for topic [{0}]...'.format(topic))
 
 for msg in consumer:
+    logger.debug('Got an event from [{0}]. Marked for Correlation...'.format(topic))
+
     event_msg = json.loads(msg.value)
     yang_mess = event_msg['yang_message']
     host = event_msg['host']

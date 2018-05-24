@@ -4,6 +4,13 @@ from threading import Thread
 from oats_kafka_helpers import oats_correlate
 from oats_kafka_helpers import utils
 import json
+import logging
+
+logger = logging.getLogger('oats')
+
+topic = 'OSPF_NEIGHBOR_up'
+consumer = KafkaConsumer(topic)
+logger.info('Starting Kafka consumer for topic [{0}]...'.format(topic))
 
 
 def __get_interface_status(yang_message):
@@ -16,9 +23,9 @@ def __get_interface_status(yang_message):
             return ''
 
 
-consumer = KafkaConsumer('OSPF_NEIGHBOR_UP')
-
 for msg in consumer:
+    logger.debug('Got an event from [{0}]. Marked for Correlation...'.format(topic))
+
     event_msg = json.loads(msg.value)
     yang_mess = event_msg['yang_message']
     host = event_msg['host']

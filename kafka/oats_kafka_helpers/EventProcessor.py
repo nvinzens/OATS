@@ -4,6 +4,9 @@ from oatsinflux import oatsinflux
 import salt.utils.event
 import salt.client
 import time
+import logging
+
+logger = logging.getLogger('oats')
 
 
 def process_event(data, host, timestamp, sensor_type, event_name, severity, case=None,
@@ -22,6 +25,7 @@ def process_event(data, host, timestamp, sensor_type, event_name, severity, case
     :return: None
     '''
     if start_tshoot:
+        logger.debug('Sending {0} event to salt master...'.format(event_name))
         if delay:
             time.sleep(delay)
         caller = salt.client.Caller()
@@ -36,6 +40,6 @@ def process_event(data, host, timestamp, sensor_type, event_name, severity, case
              }
         )
 
-     # write all events to influx
+    # write all events to influx
     if influx_write:
         oatsinflux.write_event(host, timestamp, sensor_type, event_name, severity, data)

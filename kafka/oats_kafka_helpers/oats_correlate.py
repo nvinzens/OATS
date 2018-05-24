@@ -6,8 +6,9 @@ from expiringdict import ExpiringDict #pip install expiringdict
 import time
 import threading
 import EventProcessor
+import logging
 
-
+logger = logging.getLogger('oats')
 CACHE_SIZE = 1000
 
 # cache for recognizing if an event has occured in a given timeframe
@@ -42,8 +43,11 @@ def aggregate_identical(data, host, timestamp, severity, error, sensor_type,
     current_case = None
     if cache is None or cache_id not in cache or error not in cache[cache_id]:
         # first thread initializes and populates dict
+        logger.debug('Starting aggregation of [{0}] events'.format(event_name))
         __init_cache(error, cache_id, correlate_for)
     else:
+        logger.debug('Additional [{0}] event detected. Incrementing counter...'
+                     .format(event_name))
         # later threads increment counter
         cache[cache_id][error]['counter'] += 1
         lock.release()
@@ -57,10 +61,13 @@ def aggregate_identical(data, host, timestamp, severity, error, sensor_type,
 
     # wait for additional events
     time.sleep(correlate_for)
-
+    logger.debug('Aggregation finished. Event counter for event [{0}] is: {1}.'
+                 .format(event_name, cache[cache_id]['counter']))
     if cache[cache_id][error]['counter'] == n_of_events:
         if use_oats_case:
             __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
+        logger.debug('Aggregation successful.'
+                     .format(event_name))
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      sensor_type=sensor_type, event_name=event_name, severity=severity,
                                      case=current_case, influx_write=False)
@@ -68,7 +75,8 @@ def aggregate_identical(data, host, timestamp, severity, error, sensor_type,
         if use_oats_case:
 
             __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
-
+        logger.debug('Aggregation not successful.'
+                     .format(alternative_event_name))
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      sensor_type=sensor_type, event_name=alternative_event_name, severity=severity,
                                      case=current_case, influx_write=False)
@@ -102,10 +110,12 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     current_case = None
 
     if cache is None or cache_id not in cache or host+event_name not in cache[cache_id]:
+        logger.debug('Starting aggregation of distinct events...')
         # first thread initializes and populates dict
         __init_cache(host+event_name, cache_id, correlate_for,host=host, additional_events=distinct_events.keys())
         event_names.append(host+event_name)
     else:
+        logger.debug('Additional (distinct) event detected, incrementing counter...')
         # later threads increment counter
         cache[cache_id][host+event_name]['counter'] += 1
         event_names.append(host+event_name)
@@ -127,15 +137,19 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     if success:
         if use_oats_case:
             oatspsql.update_case(current_case,
-                                 solution='Aggregation successful: sending `{0)` event to salt master.'.format(aggregation_event_name))
+                                 solution='Aggregation successful: sending `{0)` event to salt master.'
+                                 .format(aggregation_event_name))
+        logger.debug('Aggregation successful.'
+                     .format(aggregation_event_name))
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      sensor_type=sensor_type, event_name=aggregation_event_name, severity=severity,
                                      case=current_case, influx_write=False)
     else:
         if use_oats_case:
             oatspsql.update_case(current_case,
-                                 solution='Aggregation not successful: sending `{0)` event to salt master.'.format(event_name))
-
+                                 solution='Aggregation not successful.: sending `{0)` event to salt master.'.format(event_name))
+        logger.debug('Aggregation not successful.'
+                     .format(event_name))
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
                                      sensor_type=sensor_type, event_name=event_name, severity=severity,
                                      case=current_case, influx_write=False)
@@ -150,6 +164,7 @@ def compress(data, host, timestamp, severity, error, sensor_type,
     current_case = None
     if cache is None or cache_id not in cache or error not in cache[cache_id]:
         # first thread initializes and populates dict
+        logger.debug('Starting compression of [{0}] events...'.format(event_name))
         __init_cache(error, cache_id, correlate_for)
     else:
         # later threads increment counter
@@ -164,7 +179,8 @@ def compress(data, host, timestamp, severity, error, sensor_type,
 
     # compress events
     time.sleep(correlate_for)
-
+    logger.debug('Compression finished, amount of compressed [{0}] events: {1}.'
+                 .format(event_name, cache[cache_id][error]['counter']))
     if use_oats_case:
         __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
     EventProcessor.process_event(data=data, host=host, timestamp=timestamp,

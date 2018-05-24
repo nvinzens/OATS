@@ -2,6 +2,9 @@ from kafka import KafkaConsumer
 from kafka import KafkaProducer
 from oats_kafka_helpers import EventProcessor
 import json
+import logging
+
+logger = logging.getLogger('oats')
 
 field_types = {
     1: 'IN_BYTES',
@@ -94,10 +97,14 @@ field_types = {
     352: 'COUNTER_LAYER2_BYTES'
 }
 
-consumer = KafkaConsumer('oats-netflow')
+topic = 'oats-netflow'
+consumer = KafkaConsumer(topic)
+logger.info('Starting Kafka consumer for topic [{0}]...'.format(topic))
+
 producer = KafkaProducer(bootstrap_servers='localhost:9092', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
 
 for msg in consumer:
+    logger.debug('Got an event from [{0}]. Sending to influx...'.format(topic))
     netflow_data = json.loads(msg.value)
     host = netflow_data['AgentID']
     timestamp = netflow_data['Header']['UNIXSecs']
