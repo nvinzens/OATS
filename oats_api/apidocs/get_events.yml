@@ -1,0 +1,26 @@
+Endpoint to get an example Event
+Endpoint to get an example Event
+---
+tags:
+  - event
+definitions:
+  Event:
+    properties:
+      type:
+        type: string
+      event_name:
+        type: string
+      host:
+        type: string
+      timestamp:
+        type: integer
+      severity:
+        type: integer
+      data:
+        type: integer
+    type: json
+  Color:
+    type: string
+responses:
+  200:
+    description: An example event
