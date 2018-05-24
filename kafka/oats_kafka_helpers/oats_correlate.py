@@ -143,7 +143,7 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     if success:
         if use_oats_case:
             oatspsql.update_case(current_case,
-                                 solution='Aggregation successful: sending `{0)` event to salt master.'
+                                 solution='Aggregation successful: sending `{0}` event to salt master.'
                                  .format(aggregation_event_name))
         logger.debug('Aggregation successful.'
                      .format(aggregation_event_name))
@@ -153,7 +153,8 @@ def aggregate_distinct(data, host, timestamp, severity, error, sensor_type,
     else:
         if use_oats_case:
             oatspsql.update_case(current_case,
-                                 solution='Aggregation not successful.: sending `{0)` event to salt master.'.format(event_name))
+                                 solution='Aggregation not successful: sending `{0}` event to salt master.'
+                                 .format(event_name))
         logger.debug('Aggregation not successful.'
                      .format(event_name))
         EventProcessor.process_event(data=data, host=host, timestamp=timestamp,
