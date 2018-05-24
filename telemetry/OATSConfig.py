@@ -3,9 +3,6 @@ import errno
 import os
 from TelemetrySubscription import OATSTelemetrySubscription
 from Host import OATSHost
-import logging
-
-logger = logging.getLogger('oats')
 
 
 class OATSConfig:

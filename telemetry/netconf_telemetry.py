@@ -6,7 +6,7 @@ import xmltodict
 from multiprocessing import Process
 import logging
 
-logger = logging.getLogger('oats')
+logger = logging.getLogger('oats.main')
 
 
 def errback(notif):
