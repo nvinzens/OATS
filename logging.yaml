@@ -31,11 +31,6 @@ logging:
       handlers: [logfile]
       qualname: oats.api
       propagate: false
-    sqlalchemy.pool:
-      level: !!python/name:logging.WARN
-      handlers: [logfile]
-      qualname: sqlalchemy.pool
-      propagate: false
   handlers:
     logfile:
       class: logging.handlers.RotatingFileHandler
