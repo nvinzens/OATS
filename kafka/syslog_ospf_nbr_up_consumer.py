@@ -8,7 +8,7 @@ import logging
 import logging.config
 import yaml
 
-log_file = open('etc/oats/logging.yaml')
+log_file = open('/etc/oats/logging.yaml')
 log_conf = yaml.load(log_file)
 logging.config.dictConfig(log_conf['logging'])
 logger = logging.getLogger('oats.kafka')
