@@ -68,7 +68,7 @@ def aggregate_identical(data, host, timestamp, severity, error, sensor_type,
     # wait for additional events
     time.sleep(correlate_for)
     logger.debug('Aggregation finished. Event counter for event [{0}] is: {1}.'
-                 .format(event_name, cache[cache_id]['counter']))
+                 .format(event_name, cache[cache_id][error]['counter']))
     if cache[cache_id][error]['counter'] == n_of_events:
         if use_oats_case:
             __update_db_case(current_case, cache[cache_id][error]['counter'], event_name)
