@@ -15,7 +15,7 @@ logger = logging.getLogger('oats.kafka.helpers')
 
 
 def process_event(data, host, timestamp, sensor_type, event_name, severity, case=None,
-                  start_tshoot=True, influx_write=True, delay=0):
+                  start_tshoot=True, influx_write=True):
     '''
     Sends all the given data to the salt event bus.
     The data is used by different workflows in the salt system.
@@ -31,19 +31,21 @@ def process_event(data, host, timestamp, sensor_type, event_name, severity, case
     '''
     if start_tshoot:
         logger.debug('Sending {0} event to salt master...'.format(event_name))
-        if delay:
-            time.sleep(delay)
         caller = salt.client.Caller()
-        caller.sminion.functions['event.send'](
-            event_name,
-            {'data': data,
-             'host': host,
-             'timestamp': timestamp,
-             'type': sensor_type,
-             'severity': severity,
-             'case': case
-             }
-        )
+        try:
+            caller.sminion.functions['event.send'](
+                event_name,
+                {'data': data,
+                 'host': host,
+                 'timestamp': timestamp,
+                 'type': sensor_type,
+                 'severity': severity,
+                 'case': case
+                 }
+            )
+        except Exception:
+            logger.debug('Exception while sending event to salt master. Salt master might be down.')
+
 
     # write all events to influx
     if influx_write:

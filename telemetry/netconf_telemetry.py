@@ -40,27 +40,31 @@ def __create_subscriptions(subscription, host_config):
     first = True
     logger.debug('Open netconf session to host {0} on port {1}...'
                  .format(host_config.hostname, host_config.port))
-    with manager.connect(host=host_config.hostname,
-                         port=host_config.port,
-                         username=host_config.username,
-                         password=host_config.password,
-                         allow_agent=False,
-                         look_for_keys=False,
-                         hostkey_verify=False,
-                         unknown_host_cb=True,
-                         timeout=100
-                         ) as m:
-        period = subscription.period
-        xpath = subscription.xpath
-        topic = subscription.kafka_publish_topic
-        while True:
-            if first:
-                logger.debug('Establish telemetry subscription for model [{0}] on host {1}.'
-                             .format(xpath, host_config.hostname))
-                s = m.establish_subscription(callback_kafka_publish, errback, xpath=xpath,
-                                             period=period, topic=topic, host=host_config.hostname)
+    try:
+        with manager.connect(host=host_config.hostname,
+                             port=host_config.port,
+                             username=host_config.username,
+                             password=host_config.password,
+                             allow_agent=False,
+                             look_for_keys=False,
+                             hostkey_verify=False,
+                             unknown_host_cb=True,
+                             timeout=100
+                             ) as m:
+            period = subscription.period
+            xpath = subscription.xpath
+            topic = subscription.kafka_publish_topic
+            while True:
+                if first:
+                    logger.debug('Establish telemetry subscription for model [{0}] on host {1}.'
+                                 .format(xpath, host_config.hostname))
+                    s = m.establish_subscription(callback_kafka_publish, errback, xpath=xpath,
+                                                 period=period, topic=topic, host=host_config.hostname)
 
-                logger.debug('Subscription result: {0}'.format(s.subscription_result))
-            if not first:
-                time.sleep((period/100)-0.2)
-            first = False
+                    logger.debug('Subscription result: {0}'.format(s.subscription_result))
+                if not first:
+                    time.sleep((period/100)-0.2)
+                first = False
+    except Exception:
+        logger.exception('Exception while trying to establish netconf subscription.')
+        exit(1)

@@ -25,7 +25,7 @@ def main():
         config = OATSConfig(YAML_FILE)
         subscriptions = config.get_telemetry_subscriptions()
         host_configs = config.get_host_configs()
-    except Exception as e:
+    except Exception:
         logger.exception('Exception while reading configuration file. Stopping oats telemetry...')
         exit(1)
 
@@ -33,7 +33,10 @@ def main():
     for sub in subscriptions:
         if sub.kafka_streams_eval:
             logger.info('Starting kafka streams for [{0}] YANG model...'.format(sub.xpath))
-            kafka_streams.start_kafka_streams(sub)
+            try:
+                kafka_streams.start_kafka_streams(sub)
+            except Exception:
+                logger.exception('Exception while starting kafka streams. Telemetry data will not be analyzed.')
 
     # establish telemetry subscriptions
     for host_config in host_configs:
