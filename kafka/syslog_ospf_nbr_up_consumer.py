@@ -13,7 +13,7 @@ log_conf = yaml.load(log_file)
 logging.config.dictConfig(log_conf['logging'])
 logger = logging.getLogger('oats.kafka')
 
-topic = 'OSPF_NEIGHBOR_up'
+topic = 'OSPF_NEIGHBOR_UP'
 consumer = KafkaConsumer(topic)
 logger.info('Starting Kafka consumer for topic [{0}]...'.format(topic))
 
