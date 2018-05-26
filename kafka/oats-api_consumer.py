@@ -5,6 +5,11 @@ import logging
 import logging.config
 import yaml
 
+'''
+Kafka consumer for consuming from the "oats-api" topic.
+The topic is meant to be used as an API to oats.
+'''
+
 log_file = open('/etc/oats/logging.yaml')
 log_conf = yaml.load(log_file)
 logging.config.dictConfig(log_conf['logging'])
@@ -13,16 +18,7 @@ logger = logging.getLogger('oats.kafka')
 topic = 'oats-api'
 consumer = KafkaConsumer(topic)
 logger.info('Starting Kafka consumer for topic [{0}]...'.format(topic))
-'''
-event = {
-        'type': request.json.get('type', 'default_API'),
-        'event_name': 'API/' + request.json.get('event_name', 'default_event'),
-        'host': request.json.get('host', 'no host provided'),
-        'timestamp': request.json.get('timestamp', datetime.datetime.utcnow()),
-        'severity': request.json.get('severity', 7),
-        'data': request.json.get('payload', {'data': 'no data provided'})
-    }
-'''
+
 
 for msg in consumer:
     logger.debug('Got an event from [{0}]. Sending to influx...'.format(topic))

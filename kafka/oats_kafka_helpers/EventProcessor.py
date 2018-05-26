@@ -3,8 +3,6 @@ from __future__ import with_statement
 from oatsinflux import oatsinflux
 import salt.utils.event
 import salt.client
-import time
-import logging
 import logging.config
 import yaml
 
@@ -17,16 +15,20 @@ logger = logging.getLogger('oats.kafka.helpers')
 def process_event(data, host, timestamp, sensor_type, event_name, severity, case=None,
                   start_tshoot=True, influx_write=True):
     '''
-    Sends all the given data to the salt event bus.
-    The data is used by different workflows in the salt system.
-    :param data: data for the workflow
-    :param host: the host from which the event originated
-    :param origin_ip: the hosts IP address
-    :param tag: the event tag
-    :param message_details: more data
-    :param error: the event
-    :param opt_arg: directly used in the final event-tag. decides which workflow is triggered
-    :param case: the optional oatsdb case-id
+    Takes all the given event data and sends it to the salt master if start_tshoot is set.
+    Will also write the data to influx if influx_write is set.
+    :param data: The data to append to the event. Is different for every sensor type.
+    :param host: The host from which the event originates from eg. "10.20.1.21".
+    :param timestamp: The timestamp of the event as given by the device.
+    :param sensor_type: The sensor which detected the event
+        eg. syslog, streaming-telemetry, netflow, oats-api.
+    :param event_name: the event name which decides which workflow gets executed in salt.
+        Check the salt master configuration for examples.
+    :param severity: The severity of the event, ranges from 0-7
+        with 0 indicating the worst kind of event (critical).
+    :param case: optional, the oats case ID.
+    :param start_tshoot: If set the function sends the event to the salt master
+    :param influx_write: If set the function sends the event to influx
     :return: None
     '''
     if start_tshoot:

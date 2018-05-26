@@ -15,6 +15,18 @@ logger = logging.getLogger('oats.kafka')
 
 
 def consume_kafka(topic, event_name, correlation_function=None, correlation_time=None):
+    '''
+    Generic kafka consumer that consumes messages from the given kafka topic
+    and propagates them to salt with the given event name.
+    If correlation_function and correlation time are set the message will instead
+    be correlated through the use of that function.
+    :param topic: the kafka topic to consume from.
+    :param event_name: the event_name to use (relevant for salt events)
+    :param correlation_function: the correlation function to use,
+        eg. aggregate_distinct, aggregate_identical, compress
+    :param correlation_time: the time to correlate for
+    :return: None
+    '''
     consumer = KafkaConsumer(topic)
     logger.info('Starting kafka consumer for topic [{0}].'.format(topic, event_name))
     for msg in consumer:

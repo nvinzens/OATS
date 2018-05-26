@@ -6,6 +6,15 @@ import logging
 import logging.config
 import yaml
 
+
+'''
+Kafka consumer for consuming from the "oats-netflow" topic.
+The messages in this topic are produced by netflow and propagated
+via vflow.
+The consumers only purpose is to take the data and pass it to
+influx in the defined state.
+'''
+
 log_file = open('/etc/oats/logging.yaml')
 log_conf = yaml.load(log_file)
 logging.config.dictConfig(log_conf['logging'])
@@ -120,15 +129,6 @@ for msg in consumer:
     EventProcessor.process_event(data=netflow_data, host=host, timestamp=timestamp, sensor_type=type,
                                  event_name=event_name,
                                  severity=severity, start_tshoot=False)
-    '''
-    for list in netflow_data['DataSets']:
-        for dict in list:
-            if dict['I'] == 61:
-                if dict['V'] == 0:
-                    producer.send('oats-netflow-ingress', netflow_data)
-                if dict['V'] == 1:
-                    producer.send('oats-netflow-egress', netflow_data)
-    '''
 
 
 

@@ -1,4 +1,3 @@
-from oats import oatsdbhelpers
 from oatspsql import oatspsql
 from oatsnb import oatsnb
 from kafka import KafkaConsumer
@@ -9,8 +8,6 @@ import salt.utils.event
 import yaml
 import json
 
-
-# TODO: add behaviour for calling methods without current_case id
 
 def post_slack(message, case=None):
     '''
@@ -188,6 +185,13 @@ def count_event(tag, error, amount, wait=10, case=None):
 
 
 def wait_for_event(tag, wait=10, case=None):
+    '''
+    Wait the given time for an event.
+    :param tag: the event tag to wait for.
+    :param wait: the amount of time to wait for.
+    :param case: the current oats case id.
+    :return: the event data if the wait was successful, False if not.
+    '''
     opts = salt.config.client_config('/etc/salt/master')
 
     event = salt.utils.event.get_event(
@@ -208,37 +212,29 @@ def wait_for_event(tag, wait=10, case=None):
 
 
 def get_netflow_data_from_type_field(netflow_data, type_field):
+    '''
+    Takes netflow data and returns the value in the given type_field.
+    :param netflow_data: the netflow data.
+    :param type_field: the type_field for which the value is wanted.
+    :return: the value stored in the netflow type_field.
+    '''
     for flow_list in netflow_data:
         for flow_dict in flow_list:
             if flow_dict['I'] == type_field:
                 return flow_dict['V']
 
 
-def consume_kafka_netflow(bootstrap_server, topic, partition, netflow_field=1, threshold=1000, timeout=3):
-    consumer = KafkaConsumer(bootstrap_servers=bootstrap_server)
-    partition = TopicPartition(topic, partition)
-    consumer.assign([partition])
-
-    tp = consumer.end_offsets([partition])
-    last_offset = -1
-    for key in tp:
-        last_offset = tp[key]
-    consumer.seek_to_beginning(partition)
-    flows = []
-    # kafka-python bug workaround
-    timeout = time.time() + timeout
-    for msg in consumer:
-        netflow_data = json.loads(msg.value)
-        for list in netflow_data['DataSets']:
-            for dict in list:
-                if dict['I'] == netflow_field:
-                    if dict['V'] > threshold:
-                        flows.append(msg)
-        if msg.offset == last_offset - 1 or time.time() > timeout:
-            return flows
-
-
 def get_src_flow(flows, threshold, direction=None):
+    '''
+    Takes a list of flows and returns the most relevant one
+    for the out_discards workflow.
+    :param flows: the list of flows.
+    :param threshold: the threshold of the amount of packets
+        in the flow, eg. 10000.
+    :param direction: the flow direction.
+    :return: the flow in which the amount of packets exceeds the threshold
+        and if given, the direction matches.
+    '''
     for flow in flows:
         if direction is None:
             if flow['1'] > threshold and not flow['7'] == 0:

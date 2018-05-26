@@ -13,15 +13,12 @@ def ifdown(host, yang_message, error, tag, current_case=None):
     Is triggered by the salt system once an INTERFACE_DOWN event arrives in the salt
     event bus. Will try to fix the error or send a notification if it is unable to
     do so.
-    :param host: The host from which the event originated
-    :param origin_ip: The hosts IP address
-    :param yang_message: Contains event specific data, eg. the affected Interface
-    :param error: The error, in this case INTERFACE_DOWN, INTERFACHE_CHANGED/down
-    :param tag: The tag used in the syslog message that triggered the event
-    :param interface: The affected Interface
-    :param current_case: Optional: the current case. Can be passed if the workflow has started
-    earlier (eg. in the client that processes the syslog messages).
-    :return: error, tag, a comment, configuration changes, success (bool)
+    :param host: the host that started this workflow.
+    :param yang_message: the yang data.
+    :param error: the events error.
+    :param tag: the events tag.
+    :param current_case: the current oats case id.
+    :return: error, tag, a comment, configuration changes, success (bool).
     '''
     conf = 'No changes'
     success = False
@@ -72,18 +69,15 @@ def ifdown(host, yang_message, error, tag, current_case=None):
 def ospf_nbr_down(host, yang_message, error, tag, process_number, current_case):
     '''
     Once this function is called it has already been determined that a specific OSPF
-    process needs to be restarted. Most of the data gathering happened in the napalm-logs
-    client. Will attempt to restart the ospf process on the affected device. Last step
+    process needs to be restarted. Most of the data gathering happened earlier.
+    Will attempt to restart the ospf process on the affected device. Last step
     is a check to see if all the neighbors triggered OSPF_NEIGHBOR_UP events.
-    :param host: The host from which the event originated
-    :param origin_ip: The hosts IP address
-    :param yang_message: Contains event specific data, eg. the affected Interface
-    :param error: The error: in this case OSPF_NEIGHBOR_DOWN
-    :param tag: The tag used in the syslog message that triggered the event
-    :param process_number: The OSPF process number
-    :param current_case: Optional: the current case. Can be passed if the workflow has started
-    earlier (eg. in the client that processes the syslog messages)
-    :return: error, tag, a comment, the changes to the config, success (bool)
+    :param host: the host that started this workflow.
+    :param yang_message: the yang data.
+    :param error: the events error.
+    :param tag: the events tag.
+    :param current_case: the current oats case id.
+    :return: error, tag, a comment, configuration changes, the slack post satus (bool), success (bool).
     '''
     pool = ThreadPool(processes=1)
     comment = 'OSPF neighbor down status on host {0} detected.'.format(host)
@@ -162,7 +156,15 @@ def out_discards_exceeded(data, host, timestamp, current_case):
 
 
 def port_flap(host, yang_message, error, tag, current_case=None):
-
+    '''
+    Workflow for fixing port flapping, similarly to the ifdown function.
+    :param host: the from which the event originated.
+    :param yang_message: the yang data.
+    :param error: the events error.
+    :param tag: the events tag.
+    :param current_case: the current oats case id.
+    :return: error, tag, comment, success (bool)
+    '''
     conf = 'No changes'
     success = False
     interface = oatsdbhelpers.get_interface(error, yang_message)
