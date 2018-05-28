@@ -6,6 +6,9 @@ from Host import OATSHost
 
 
 class OATSConfig:
+    '''
+    Reads the oats config file from the given location (default: /etc/oats/config.yaml.
+    '''
 
     def __init__(self, yaml_file_name):
         try:
@@ -15,6 +18,10 @@ class OATSConfig:
             raise IOError("Could not read OATS configuration file. Missing file at " + yaml_file_name)
 
     def get_host_configs(self):
+        '''
+        Returns the host configs as a list.
+        :return: the host configs (list)
+        '''
         host_configs = []
         try:
             raw_hosts = self.__get_raw_hosts()
@@ -34,6 +41,10 @@ class OATSConfig:
         return host_configs
 
     def get_telemetry_subscriptions(self):
+        '''
+        Returns the subscriptions as a list.
+        :return: the subscriptions (list)
+        '''
         tel_subs = []
         try:
             raw_subs = self.__get_raw_subs()
