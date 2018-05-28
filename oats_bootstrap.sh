@@ -71,13 +71,13 @@ echo "installing oats specific fork of ncclient"
 pip install --upgrade git+https://github.com/nvinzens/ncclient.git
 
 echo "installing oatspsql..."
-pip install /saltstack/database/oatspsql/.
+pip install saltstack/database/oatspsql/.
 
 echo "installing oatsinflux..."
-pip install /saltstack/database/oatsinflux/.
+pip install saltstack/database/oatsinflux/.
 
 echo "installing oatsnb"
-pip install /saltstack/database/oatsnb/.
+pip install saltstack/database/oatsnb/.
 
 echo "oats bootstrap done"
 
