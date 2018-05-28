@@ -6,15 +6,16 @@ import json
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
+
 def connect_influx_client(host=None, port=None, user=None, password=None, dbname=None):
     '''
     Connects to an influxdb through a client.
     :param host: IP Address of the InfluxDB host.
     :param port: Port number of the InfluxDB on the Host.
-    :param user: 
-    :param password:
-    :param dbname:
-    :return:
+    :param user: Username for InfluxDB
+    :param password: Password for the specified user.
+    :param dbname: Name of the specific Database on Influx.
+    :return: The client with which one can write or read on the Influx Database.
     '''
     if not host:
         host = 'localhost'
@@ -33,15 +34,15 @@ def connect_influx_client(host=None, port=None, user=None, password=None, dbname
 
 def write_event(host, timestamp, sensor_type, event_name, severity, data, db=None, client=None):
     '''
-
-    :param host:
-    :param timestamp:
-    :param sensor_type:
-    :param event_name:
-    :param severity:
-    :param data:
-    :param db:
-    :param client:
+    Public Function to write events onto Influx.
+    :param host: Event host
+    :param timestamp: Event timestamp
+    :param sensor_type: Event sensortype
+    :param event_name: Event name
+    :param severity: Event severity
+    :param data: Additional relevant data for the event, format varies between event types
+    :param db: Name of the influxdb
+    :param client: If a client is already present can use this one instead.
     :return:
     '''
     if not db:
@@ -66,15 +67,16 @@ def write_event(host, timestamp, sensor_type, event_name, severity, data, db=Non
 
 def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, client):
     '''
-
-    :param host:
-    :param timestamp:
-    :param sensor_type:
-    :param event_name:
-    :param severity:
-    :param data:
+    Private function to write a syslog event.
+    :param host: Event host
+    :param timestamp: Event timestamp
+    :param sensor_type: Event sensortype
+    :param event_name: Event name
+    :param severity: Event severity
+    :param data: Contains Information about the relevant interface and its state, both have to be extracted from
+    the data yang_message
     :param client:
-    :return:
+    :return: success True/False
     '''
     success = False
     metrics = {}
@@ -125,9 +127,9 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
 
 def __get_state_msg(yang_message):
     '''
-
-    :param yang_message:
-    :return:
+    Helper Function for syslog write to extract the state
+    :param yang_message: contains the relevant information
+    :return: the state if successful or nothing if no state could be found
     '''
     for k, v in sorted(yang_message.items()):
         if k == 'state':
@@ -140,9 +142,9 @@ def __get_state_msg(yang_message):
 
 def __get_syslog_interface(yang_message):
     '''
-
-    :param yang_message:
-    :return:
+    Helper Function for syslog write to extract the interface
+    :param yang_message: contains the relevant information
+    :return: the interface if successful or nothing if no state could be found
     '''
     for k, v in sorted(yang_message.items()):
         if k == 'interface':
@@ -155,9 +157,9 @@ def __get_syslog_interface(yang_message):
 
 def __get_syslog_neighbor(yang_message):
     '''
-
-    :param yang_message:
-    :return:
+    Helper Function for syslog write to extract the ip address of the neighbor
+    :param yang_message: contains the relevant information
+    :return: the ip address if successful or nothing if no state could be found
     '''
     for k, v in sorted(yang_message.items()):
         if k == 'neighbor':
@@ -170,15 +172,15 @@ def __get_syslog_neighbor(yang_message):
 
 def __write_api(host, timestamp, sensor_type, event_name, severity, data, client):
     '''
-
-    :param host:
-    :param timestamp:
-    :param sensor_type:
-    :param event_name:
-    :param severity:
-    :param data:
+    Private function to write an api event.
+    :param host: Event host
+    :param timestamp: Event timestamp
+    :param sensor_type: Event sensortype
+    :param event_name: Event name
+    :param severity: Event severity
+    :param data: 0/1 to specifiy if something is wrong or not
     :param client:
-    :return:
+    :return: success True/False
     '''
     success = False
     metrics = {}
@@ -203,15 +205,15 @@ def __write_api(host, timestamp, sensor_type, event_name, severity, data, client
 
 def __write_netflow(host, timestamp, sensor_type, event_name, severity, data, client):
     '''
-
-    :param host:
-    :param timestamp:
-    :param sensor_type:
-    :param event_name:
-    :param severity:
-    :param data:
+    Private function to write a netflow event.
+    :param host: Event host
+    :param timestamp: Event timestamp
+    :param sensor_type: Event sensortype
+    :param event_name: Event name
+    :param severity: Event severity
+    :param data: yang message with all attached netflow data
     :param client:
-    :return:
+    :return: success True/False
     '''
     success = False
     metrics = {}
@@ -238,15 +240,15 @@ def __write_netflow(host, timestamp, sensor_type, event_name, severity, data, cl
 
 def __write_stream(host, timestamp, sensor_type, event_name, severity, data, client):
     '''
-
-    :param host:
-    :param timestamp:
-    :param sensor_type:
-    :param event_name:
-    :param severity:
-    :param data:
+    Private function to write a streaming telemetry event.
+    :param host: Event host
+    :param timestamp: Event timestamp
+    :param sensor_type: Event sensortype
+    :param event_name: Event name
+    :param severity: Event severity
+    :param data: yang message with all attached netflow data
     :param client:
-    :return:
+    :return: success True/False
     '''
     success = False
     metrics = {}
@@ -277,14 +279,14 @@ def __write_stream(host, timestamp, sensor_type, event_name, severity, data, cli
 
 def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_name=None):
     '''
-
-    :param sensor_type:
-    :param timestamp:
-    :param event_name:
-    :param timeframe:
-    :param host:
-    :param db_name:
-    :return:
+    Function to read information from Influx
+    :param sensor_type: which type of information should be queried
+    :param timestamp: the relevant point in time
+    :param event_name: the specific name of the event
+    :param timeframe: amount of seconds before and after the timestamp, which are still relevant
+    :param host: name of the host
+    :param db_name: name of the influx database
+    :return: A list of dictionaries
     '''
     measurement = None
     if not db_name:
@@ -326,15 +328,15 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_n
 
 def __write(measurement, host, interface, region, value, time=None, db=None, client=None):
     '''
-
-    :param measurement:
-    :param host:
-    :param interface:
-    :param region:
-    :param value:
-    :param time:
-    :param db:
-    :param client:
+    A basic influx write function for testing and as a base for new functions
+    :param measurement: the type of information
+    :param host: the relevant host
+    :param interface: the host interface
+    :param region: the region where the host is located
+    :param value: the value which is to be entered into influx
+    :param time: the timestamp
+    :param db: name of the database
+    :param client: if it exists the client
     :return:
     '''
     if not db:
