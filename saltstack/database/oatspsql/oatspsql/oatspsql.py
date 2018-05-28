@@ -4,8 +4,8 @@ import random
 import string
 from enum import Enum
 import datetime
-import time
 
+#global int to define the length of the generated case id
 KEY_LEN = 12
 
 
@@ -17,7 +17,25 @@ class Status(Enum):
     DONE = 'resolved'
 
 
-def connect_to_db():
+def connect_to_db(db=None, user=None, host=None, pw=None):
+    """
+    Create a connection to the PostgrSQL database
+    :param db: specify the database name
+    :param user: spec. the db user
+    :param host: the ip address where the database is hosted
+    :param pw: the password of the user
+    :return: the connection
+    """
+    if not db:
+        db = 'casedb'
+    if not user:
+        user = 'netbox'
+    if not host:
+        host = 'localhost'
+    if not pw:
+        pw = 'oatsnetbox'
+
+    data_conn = "dbname='" + str(db) + "' user='" + str(user) + "' host='" + str(host) + "' password=" + str(pw) + "'"
     try:
         conn = psycopg2.connect("dbname='casedb' user='netbox' host='localhost' password='oatsnetbox'")
     except (Exception, psycopg2.DatabaseError) as error:
@@ -26,6 +44,11 @@ def connect_to_db():
 
 
 def create_cursor(conn):
+    """
+    Creates a cursor on the connected database
+    :param conn: the database connection
+    :return: the cursor
+    """
     try:
         cur = conn.cursor()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -38,15 +61,24 @@ def base_str():
 
 
 def key_gen():
-    '''
+    """
     Generates a key from random letters and numbers.
     :return: returns the generated key
-    '''
+    """
     keylist = [random.choice(base_str()) for i in range(KEY_LEN)]
     return ''.join(keylist)
 
 
-def create_case(error, host, solution=None, description=None, status=Status.NEW.value, test=False):
+def create_case(error, host, solution=None, description=None, status=Status.NEW.value):
+    """
+    Creates a new case on the database
+    :param error: The name of the error.
+    :param host: The hostname of the relevant device.
+    :param solution: A List of applied solutions
+    :param description: A desc. of the problem
+    :param status: Status of the troubleshooting progress
+    :return: the id of the newly created case
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
 
@@ -74,7 +106,14 @@ def create_case(error, host, solution=None, description=None, status=Status.NEW.
     return v1
 
 
-def update_case(case_id, solution, status=None, test=False):
+def update_case(case_id, solution, status=None):
+    """
+    Updates a case in the database
+    :param case_id: the id to find the specific case
+    :param solution: Additional applied solutions
+    :param status: THe new status of the progress of the troubleshooting process
+    :return: the id of the case
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
 
@@ -109,7 +148,12 @@ def update_case(case_id, solution, status=None, test=False):
     return case_id
 
 
-def close_case(case_id, solution=None, status=None, test=False):
+def close_case(case_id):
+    """
+    Puts the status of a case to resolved and updates the last updated time.
+    :param case_id: Id of the case in the database
+    :return: ID of the closed case
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
 
@@ -125,7 +169,13 @@ def close_case(case_id, solution=None, status=None, test=False):
     return case_id
 
 
-def take_case(case_id, technician, test=False):
+def take_case(case_id, technician):
+    """
+    Changes the status of the case and assigns a technician to it.
+    :param case_id: Id of the case in the database
+    :param technician: Name of the technician
+    :return: The Id of the updated case
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
 
@@ -142,7 +192,12 @@ def take_case(case_id, technician, test=False):
     return case_id
 
 
-def get_solutions_as_string(case_id, test=False):
+def get_solutions_as_string(case_id):
+    """
+    Function to get the list of applied solutions for a case
+    :param case_id: Id of the case in the database
+    :return: a list of solutions as string with inserted new lines.
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
     sol_string = []
@@ -160,6 +215,11 @@ def get_solutions_as_string(case_id, test=False):
 
 
 def delete_case(case_id):
+    """
+    Deletes a case from the database.
+    :param case_id: ID of the case in the database
+    :return: True if successful
+    """
     case_id = case_id
     conn = connect_to_db()
     cur = create_cursor(conn)
@@ -174,7 +234,11 @@ def delete_case(case_id):
     return exist
 
 
-def show_cases_of_last_day(test=False):
+def show_cases_of_last_day():
+    """
+    Function to get all caseids of cases from the last day
+    :return: List of caseids
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
     cases = []
@@ -190,7 +254,12 @@ def show_cases_of_last_day(test=False):
     return cases
 
 
-def numb_open_cases(status=None, test=False):
+def numb_open_cases(status=None):
+    """
+    Function the get the number of open cases.
+    :param status: If only a cases with a specific state should be returned.
+    :return: Number of open cases
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
     v1 = "Status"
@@ -211,7 +280,11 @@ def numb_open_cases(status=None, test=False):
     return amount
 
 
-def show_open_cases_nr(test=False):
+def show_open_cases_nr():
+    """
+    Function to get the case id of all still open cases
+    :return: List of case ids
+    """
     conn = connect_to_db()
     cur = create_cursor(conn)
     cases = []
@@ -230,6 +303,12 @@ def show_open_cases_nr(test=False):
 
 
 def close_connection(conn, cur):
+    """
+    Commits and closes the database connection, closes the cursor
+    :param conn: The database connection
+    :param cur: The cursor
+    :return:
+    """
     conn.commit()
     cur.close()
     conn.close()
