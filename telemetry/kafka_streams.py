@@ -6,6 +6,12 @@ logger = logging.getLogger('oats.main')
 
 
 def start_kafka_streams(subscription):
+    '''
+    Starts a generic kafka streams client (java) based on the oats config file.
+    :param TelemetrySubscription subscription: Contains the params that are passed
+        to the kafka streams client. See the class file for more information.
+    :return: None
+    '''
     logger.info('Start kafka streams proccess for consuming from kafka topic {0} and producing to {1}.'
                 .format(subscription.kafka_publish_topic, subscription.kafka_event_topic))
     try:

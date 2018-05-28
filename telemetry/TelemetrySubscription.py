@@ -1,9 +1,32 @@
 
 
 class OATSTelemetrySubscription:
+    '''
+    Contains all the subscription details specified in the OATS config file.
+    '''
 
     def __init__(self, xpath, period, kafka_publish_topic, kafka_streams_eval, correlate_event, correlate=None, event=None,
                  jar_location=None, event_threshold_data=None, ):
+        '''
+        :param xpath: the yang model to subscribe to as xpath.
+        :param period: the subscription period (eg. every 10 seconds).
+        :param kafka_publish_topic: the kafka topic to publish the messages to.
+        :param kafka_streams_eval: If set a kafka streams client will be started to analyze the data produced by this
+            subscription.
+        :param correlate_event: If set the event data produced will be correlated with the given function.
+        :param correlate: Contains the correlation data.
+        :param event: the event name to use.
+        :param correlate_function: the correlation function to use, eg. compress.
+        :param correlate_for: the amount of time to correlate for.
+        :param jar_location: the location of the java jar file which contains the kafka streams client.
+        :param event_threshold_data: contains the data used by the kafka streams client.
+        :param event_threshold: the threshold used by the kafka streams client to evaluate if an event has occured.
+        :param operator: the operator to use to evaluate the threshold, eg. greater_than, smaller_than etc.
+        :param kafka_event_topic: the topic to produce the kafka streams events to.
+        :param root_xpath: the xpath that leads to the data in the yang model.
+        :param name_xpath: the xpath from the root_xpath to the name of the evaluated statistic.
+        :param data_xpath: the xpath from the root_xpath to the value of the evaluated statistic.
+        '''
         self.xpath = xpath
         self.period = period
         self.kafka_publish_topic = kafka_publish_topic

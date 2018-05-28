@@ -8,6 +8,11 @@ import logging.handlers
 import logging.config
 
 
+'''
+OATS main thread that reads the oats config file and starts kafka streams clients
+and netconf telemetry subscriptions.
+'''
+
 YAML_FILE = '/etc/oats/config.yaml'
 
 
@@ -41,7 +46,7 @@ def main():
     # establish telemetry subscriptions
     for host_config in host_configs:
         logger.info("Starting netconf telemetry session(s) for host {0}...".format(host_config.hostname))
-        p = Process(target=netconf_telemetry.process_host_config, args=(host_config, config))
+        p = Process(target=netconf_telemetry.process_host_config, args=(host_config, subscriptions))
         p.start()
 
 

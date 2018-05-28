@@ -14,12 +14,20 @@ def errback(notif):
 
 
 def debug_callback(notif):
+    #Only used for debugging purposes.
     jsonString = json.dumps(xmltodict.parse(notif.xml), indent=2)
     print (jsonString)
 
 
 def callback_kafka_publish(notif, topic, host):
-    # Publishes message to Kafka topic
+    '''
+    Publishes the telemetry data to kafka.
+    :param notif: Contains the telemetry data as xml.
+    :param topic: the topic to produce the message to.
+    :param host: the host from which the telemetry data
+        is produced.
+    :return: None
+    '''
     producer = KafkaProducer(bootstrap_servers='localhost:9092')
     json_string = json.dumps(xmltodict.parse(notif.xml)).encode('utf-8')
     logger.debug('Sending telemetry data from host [{0}] to kafka topic [{1}].'
@@ -28,15 +36,31 @@ def callback_kafka_publish(notif, topic, host):
     producer.flush()
 
 
-def process_host_config(host_config, config):
-    subs = config.get_telemetry_subscriptions()
+def process_host_config(host_config, subscriptions):
+    '''
+    Processes the host config from the oats config file and starts a
+    telemetry subscription for each specified subscription.
+    :param host_config: Contains the the host information. See the class file (Host)
+        for more information.
+    :param config: Contains the whole oats config. See the class file (OATSConfig)
+        for more information
+    :return: None
+    '''
     logger.debug('Processing config of host {0}'.format(host_config.hostname))
-    for sub in subs:
+    for sub in subscriptions:
         p = Process(target=__create_subscriptions, args=(sub, host_config))
         p.start()
 
 
 def __create_subscriptions(subscription, host_config):
+    '''
+    Creates a subscription based on the subscription param to the host
+    specified on host_config. Meant to be run in parallel with other
+    subsscriptions.
+    :param subscription: Contains the subscription details.
+    :param host_config: Contains the host details.
+    :return: None
+    '''
     first = True
     logger.debug('Open netconf session to host {0} on port {1}...'
                  .format(host_config.hostname, host_config.port))
