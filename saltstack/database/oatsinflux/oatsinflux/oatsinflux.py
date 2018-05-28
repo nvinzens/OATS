@@ -2,13 +2,20 @@
 from influxdb import InfluxDBClient
 from influxdb import exceptions
 import time
-import datetime
 import json
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
 
-
 def connect_influx_client(host=None, port=None, user=None, password=None, dbname=None):
+    '''
+    Connects to an influxdb through a client.
+    :param host: IP Address of the InfluxDB host.
+    :param port: Port number of the InfluxDB on the Host.
+    :param user: 
+    :param password:
+    :param dbname:
+    :return:
+    '''
     if not host:
         host = 'localhost'
     if not port:
@@ -25,7 +32,18 @@ def connect_influx_client(host=None, port=None, user=None, password=None, dbname
 
 
 def write_event(host, timestamp, sensor_type, event_name, severity, data, db=None, client=None):
+    '''
 
+    :param host:
+    :param timestamp:
+    :param sensor_type:
+    :param event_name:
+    :param severity:
+    :param data:
+    :param db:
+    :param client:
+    :return:
+    '''
     if not db:
         db = 'timedb'
     if not client:
@@ -47,7 +65,17 @@ def write_event(host, timestamp, sensor_type, event_name, severity, data, db=Non
 
 
 def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, client):
+    '''
 
+    :param host:
+    :param timestamp:
+    :param sensor_type:
+    :param event_name:
+    :param severity:
+    :param data:
+    :param client:
+    :return:
+    '''
     success = False
     metrics = {}
     metrics['measurement'] = "oats_timeseries_syslog"
@@ -96,6 +124,11 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
 
 
 def __get_state_msg(yang_message):
+    '''
+
+    :param yang_message:
+    :return:
+    '''
     for k, v in sorted(yang_message.items()):
         if k == 'state':
             return v
@@ -106,6 +139,11 @@ def __get_state_msg(yang_message):
 
 
 def __get_syslog_interface(yang_message):
+    '''
+
+    :param yang_message:
+    :return:
+    '''
     for k, v in sorted(yang_message.items()):
         if k == 'interface':
             return v.keys()
@@ -116,6 +154,11 @@ def __get_syslog_interface(yang_message):
 
 
 def __get_syslog_neighbor(yang_message):
+    '''
+
+    :param yang_message:
+    :return:
+    '''
     for k, v in sorted(yang_message.items()):
         if k == 'neighbor':
             return v.keys()
@@ -126,7 +169,17 @@ def __get_syslog_neighbor(yang_message):
 
 
 def __write_api(host, timestamp, sensor_type, event_name, severity, data, client):
+    '''
 
+    :param host:
+    :param timestamp:
+    :param sensor_type:
+    :param event_name:
+    :param severity:
+    :param data:
+    :param client:
+    :return:
+    '''
     success = False
     metrics = {}
     metrics['measurement'] = "oats_timeseries_api"
@@ -149,7 +202,17 @@ def __write_api(host, timestamp, sensor_type, event_name, severity, data, client
 
 
 def __write_netflow(host, timestamp, sensor_type, event_name, severity, data, client):
+    '''
 
+    :param host:
+    :param timestamp:
+    :param sensor_type:
+    :param event_name:
+    :param severity:
+    :param data:
+    :param client:
+    :return:
+    '''
     success = False
     metrics = {}
     metrics['measurement'] = "oats_timeseries_netflow"
@@ -174,7 +237,17 @@ def __write_netflow(host, timestamp, sensor_type, event_name, severity, data, cl
 
 
 def __write_stream(host, timestamp, sensor_type, event_name, severity, data, client):
+    '''
 
+    :param host:
+    :param timestamp:
+    :param sensor_type:
+    :param event_name:
+    :param severity:
+    :param data:
+    :param client:
+    :return:
+    '''
     success = False
     metrics = {}
     metrics['measurement'] = "oats_timeseries_streaming"
@@ -203,6 +276,16 @@ def __write_stream(host, timestamp, sensor_type, event_name, severity, data, cli
 
 
 def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_name=None):
+    '''
+
+    :param sensor_type:
+    :param timestamp:
+    :param event_name:
+    :param timeframe:
+    :param host:
+    :param db_name:
+    :return:
+    '''
     measurement = None
     if not db_name:
         db_name = 'timedb'
@@ -242,7 +325,18 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_n
 
 
 def __write(measurement, host, interface, region, value, time=None, db=None, client=None):
+    '''
 
+    :param measurement:
+    :param host:
+    :param interface:
+    :param region:
+    :param value:
+    :param time:
+    :param db:
+    :param client:
+    :return:
+    '''
     if not db:
         db = 'timedb'
     if not client:
