@@ -20,6 +20,19 @@ def __get_times(timecol):
     return times
 
 
+def __influxwrite(dates, times, categories):
+    # TODO: write to db
+    for index in range(len(dates)):
+        print (dates[index], times[index], categories[index])
+
+def __get_hours(times):
+    hours = 0
+    for time in times:
+        hours += time
+    return hours
+
+
+
 def __get_categories(categorycol):
     categories = []
     for cell in categorycol:
@@ -33,7 +46,7 @@ def __get_categories(categorycol):
             categories.append(3)
         if cell.value == 'P':
             categories.append(4)
-    return categories   
+    return categories
 
 
 wb = xlrd.open_workbook('Zeiterfassung.xlsx')
@@ -42,14 +55,21 @@ n_sheet = wb.sheet_by_index(1)
 
 r_dates = __get_dates(r_sheet.col(0))
 r_times = __get_times(r_sheet.col(1))
+r_hours = __get_hours(r_times)
+print ("R hours: " + str(r_hours))
 r_categories = __get_categories(r_sheet.col(4))
 
 n_dates = __get_dates(n_sheet.col(0))
 n_times = __get_times(n_sheet.col(1))
+n_hours = __get_hours(n_times)
+print ("N Hours: " + str(n_hours))
 n_categories = __get_categories(n_sheet.col(4))
 
-print (len(r_dates), len(r_times), len(r_categories))
-#for index in range(len(r_dates)):
-    #print (r_dates[index])
-
+#print (len(n_dates), len(n_times), len(n_categories))
+print ("write r_data")
+#__influxwrite(r_dates, r_times, r_categories)
+print ("r_data done")
+print ("write n_data")
+#__influxwrite(n_dates, n_times, n_categories)
+print ("n_data_done")
 
