@@ -3,8 +3,16 @@ from influxdb import InfluxDBClient
 from influxdb import exceptions
 import time
 import json
+import yaml
+import logging.config
 
 # client = InfluxDBClient('localhost', 8086, 'root', 'root', 'example')
+
+log_file = open('/etc/oats/logging.yaml')
+log_conf = yaml.load(log_file)
+logging.config.dictConfig(log_conf['logging'])
+logger = logging.getLogger('oats.influx')
+logger.debug('Reading oats configuration from {0}...')
 
 
 def connect_influx_client(host=None, port=None, user=None, password=None, dbname=None):
@@ -28,6 +36,7 @@ def connect_influx_client(host=None, port=None, user=None, password=None, dbname
     if not dbname:
         dbname = 'example'
     client = InfluxDBClient(host, port, user, password, dbname)
+    logger.info('Connected to InfluxDB...')
 
     return client
 
@@ -49,6 +58,7 @@ def write_event(host, timestamp, sensor_type, event_name, severity, data, db=Non
         db = 'timedb'
     if not client:
         client = connect_influx_client(host=None, port=None, user=None, password=None, dbname=db)
+    logger.info('Writing influx event')
 
     try:
         if sensor_type == 'syslog':
@@ -120,8 +130,9 @@ def __write_syslog(host, timestamp, sensor_type, event_name, severity, data, cli
     try:
         success = client.write_points([metrics])
     except (AttributeError, exceptions.InfluxDBClientError) as err:
-        print ("Caught exception in oatsinflux.write_syslog" + err.args)
+        logger.exception('Exception in oatsinflux.write_syslog')
 
+    logger.debug('Writing influx syslog event {0} on host {1}'.format(event_name, host))
     return success
 
 
@@ -198,8 +209,9 @@ def __write_api(host, timestamp, sensor_type, event_name, severity, data, client
     try:
         success = client.write_points([metrics])
     except (AttributeError, exceptions.InfluxDBClientError) as err:
-        print ("Caught exception in oatsinflux.write_api " + err.args)
+        logger.exception('Exception in oatsinflux.write_api')
 
+    logger.debug('Writing influx api event {0} on host {1}'.format(event_name, host))
     return success
 
 
@@ -233,8 +245,9 @@ def __write_netflow(host, timestamp, sensor_type, event_name, severity, data, cl
     try:
         success = client.write_points([metrics])
     except (AttributeError, exceptions.InfluxDBClientError) as err:
-        print ("Caught exception in oatsinflux.write_netflow " + err.args)
+        logger.exception('Exception in oatsinflux.write_netflow')
 
+    logger.debug('Writing influx netflow event {0} on host {1}'.format(event_name, host))
     return success
 
 
@@ -272,7 +285,9 @@ def __write_stream(host, timestamp, sensor_type, event_name, severity, data, cli
     try:
         success = client.write_points([metrics])
     except (AttributeError, exceptions.InfluxDBClientError) as err:
-        print ("Caught exception in oatsinflux.write_stream " + err.args)
+        logger.exception('Exception in oatsinflux.write_netflow')
+
+    logger.debug('Writing influx streaming telemetry event {0} on host {1}'.format(event_name, host))
 
     return success
 
@@ -316,7 +331,10 @@ def get_type_data(sensor_type, timestamp, event_name, timeframe, host=None, db_n
     try:
         rs = client.query(sql_query)
     except str(exceptions.InfluxDBClientError), e:
-        print "Exception caught on get Type data query: " + e
+        logger.exception('Exception in Influx.get_type_data query')
+
+    logger.debug('Getting information from InfluxDB through oatsinflux.get_type_data event: {0} and sensor: {1}'
+                 .format(event_name, sensor_type))
 
     if host:
         results = list(rs.get_points(tags={"event_name": str(event_name), "host": str(host)}))

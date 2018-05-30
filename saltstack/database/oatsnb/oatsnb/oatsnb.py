@@ -1,7 +1,13 @@
 #!/usr/bin/env python2.7
 import pynetbox
 from oatspsql import oatspsql
+import yaml
+import logging.config
 
+log_file = open('/etc/oats/logging.yaml')
+log_conf = yaml.load(log_file)
+logging.config.dictConfig(log_conf['logging'])
+logger = logging.getLogger('oats.influx')
 
 def connect(url=None, token=None):
     '''

@@ -4,9 +4,16 @@ import random
 import string
 from enum import Enum
 import datetime
+import yaml
+import logging.config
 
 #global int to define the length of the generated case id
 KEY_LEN = 12
+
+log_file = open('/etc/oats/logging.yaml')
+log_conf = yaml.load(log_file)
+logging.config.dictConfig(log_conf['logging'])
+logger = logging.getLogger('oats.influx')
 
 
 class Status(Enum):
