@@ -1,5 +1,6 @@
 import xlrd
 from oatsinflux import oatsinflux
+import datetime
 
 
 def __get_dates(datecol):
@@ -30,9 +31,8 @@ def __influxwrite(name, dates, times, categories):
                 "tags": {
                     "name": name
                 },
-                "time": dates[index],
+                "time": dates[index] + datetime.timedelta(seconds=index),
                 "fields": {
-                    "index": index,
                     "hours": times[index],
                     "category": categories[index]
                 }
