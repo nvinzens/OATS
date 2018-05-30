@@ -28,4 +28,6 @@ requests-toolbelt==0.8.0
 salt==2017.7.5
 tornado==4.2.1
 u-msgpack-python==2.4.1
+xlrd==1.1.0
 xmltodict==0.11.0
+
