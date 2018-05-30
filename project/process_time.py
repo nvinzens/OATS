@@ -1,6 +1,5 @@
 import xlrd
-from influxdb import InfluxDBClient
-from influxdb import exceptions
+from oatsinflux import oatsinflux
 
 
 def __get_dates(datecol):
@@ -20,10 +19,32 @@ def __get_times(timecol):
     return times
 
 
-def __influxwrite(dates, times, categories):
-    # TODO: write to db
+def __influxwrite(name, dates, times, categories):
+    client = oatsinflux.connect_influx_client(dbname='timedb')
+    tablename = 'oats_proj_mgmt'
     for index in range(len(dates)):
         print (dates[index], times[index], categories[index])
+        point = [
+            {
+                "measurement": tablename,
+                "tags": {
+                    "name": name
+                },
+                "time": dates[index],
+                "fields": {
+                    "hours": times[index],
+                    "category": categories[index]
+                }
+            }
+        ]
+        try:
+            client.write_points(point)
+        except Exception as e:
+            print(str(e))
+
+    client.close()
+
+
 
 def __get_hours(times):
     hours = 0
@@ -60,6 +81,7 @@ print ("R hours: " + str(r_hours))
 r_categories = __get_categories(r_sheet.col(4))
 
 n_dates = __get_dates(n_sheet.col(0))
+
 n_times = __get_times(n_sheet.col(1))
 n_hours = __get_hours(n_times)
 print ("N Hours: " + str(n_hours))
@@ -67,9 +89,9 @@ n_categories = __get_categories(n_sheet.col(4))
 
 #print (len(n_dates), len(n_times), len(n_categories))
 print ("write r_data")
-#__influxwrite(r_dates, r_times, r_categories)
+__influxwrite("raphael", r_dates, r_times, r_categories)
 print ("r_data done")
 print ("write n_data")
-#__influxwrite(n_dates, n_times, n_categories)
+__influxwrite("nico", n_dates, n_times, n_categories)
 print ("n_data_done")
 
