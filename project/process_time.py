@@ -19,6 +19,30 @@ def __get_times(timecol):
           times.append(cell.value)
     return times
 
+def __get_avg_dates(start_date, end_date):
+    start_date = start_date - datetime.timedelta(days=1)
+    end_date = end_date + datetime.timedelta(days=1)
+    delta = end_date - start_date
+    dates = []
+    for index in range(delta.days):
+        dates.append(start_date + datetime.timedelta(days=index))
+    return dates
+
+
+def __get_avg_times(dates, times):
+    avg_times = []
+    avg = sum(times) / float(len(times))
+    for index in range(len(dates)):
+        avg_times.append(avg)
+    return avg_times
+
+def __get_avg_categories(dates):
+    categories = []
+    for index in range(len(dates)):
+        categories.append(-1)
+    return categories
+
+
 
 def __influxwrite(name, dates, times, categories):
     client = oatsinflux.connect_influx_client(dbname='timedb')
@@ -82,11 +106,17 @@ print ("R hours: " + str(r_hours))
 r_categories = __get_categories(r_sheet.col(4))
 
 n_dates = __get_dates(n_sheet.col(0))
-
 n_times = __get_times(n_sheet.col(1))
 n_hours = __get_hours(n_times)
 print ("N Hours: " + str(n_hours))
 n_categories = __get_categories(n_sheet.col(4))
+
+avg_dates = __get_avg_dates(n_dates[0], n_dates[-1])
+avg_categories = __get_avg_categories(avg_dates)
+n_avg_times = __get_avg_times(avg_dates, n_times)
+r_avg_times = __get_avg_times(avg_dates, r_times)
+
+
 
 #print (len(n_dates), len(n_times), len(n_categories))
 print ("write r_data")
@@ -95,4 +125,8 @@ print ("r_data done")
 print ("write n_data")
 __influxwrite("nico", n_dates, n_times, n_categories)
 print ("n_data_done")
+print("write n_avg data")
+__influxwrite("nico_avg", avg_dates, n_avg_times, avg_categories)
+print("write r_avg data")
+__influxwrite("raphael_avg", avg_dates, r_avg_times, avg_categories)
 
