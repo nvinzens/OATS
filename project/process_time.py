@@ -32,6 +32,7 @@ def __influxwrite(name, dates, times, categories):
                 },
                 "time": dates[index],
                 "fields": {
+                    "index": index,
                     "hours": times[index],
                     "category": categories[index]
                 }
