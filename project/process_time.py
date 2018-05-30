@@ -29,12 +29,12 @@ def __influxwrite(name, dates, times, categories):
             {
                 "measurement": tablename,
                 "tags": {
-                    "name": name
+                    "name": name,
+                    "category": categories[index]
                 },
                 "time": dates[index] + datetime.timedelta(seconds=index),
                 "fields": {
-                    "hours": times[index],
-                    "category": categories[index]
+                    "hours": times[index]
                 }
             }
         ]
