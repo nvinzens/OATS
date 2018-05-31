@@ -44,7 +44,7 @@ def __get_avg_categories(dates):
 
 
 
-def __influxwrite(name, dates, times, categories):
+def __influxwrite(name, dates, times, categories, milestones):
     client = oatsinflux.connect_influx_client(dbname='timedb')
     tablename = 'oats_proj_mgmt'
     for index in range(len(dates)):
@@ -54,7 +54,8 @@ def __influxwrite(name, dates, times, categories):
                 "measurement": tablename,
                 "tags": {
                     "name": name,
-                    "category": categories[index]
+                    "category": categories[index],
+                    "milestone": milestones[index]
                 },
                 "time": dates[index] + datetime.timedelta(seconds=index),
                 "fields": {
@@ -94,6 +95,13 @@ def __get_categories(categorycol):
             categories.append(4)
     return categories
 
+def __get_milestones(milestonecol):
+    milestones = []
+    for cell in milestonecol:
+        if len(str(cell.value)) > 0 and not len(str(cell.value)) > 7:
+            milestones.append(str(cell.value)[:3])
+    return milestones
+
 
 wb = xlrd.open_workbook('Zeiterfassung.xlsx')
 r_sheet = wb.sheet_by_index(0)
@@ -104,29 +112,33 @@ r_times = __get_times(r_sheet.col(1))
 r_hours = __get_hours(r_times)
 print ("R hours: " + str(r_hours))
 r_categories = __get_categories(r_sheet.col(4))
+r_milestones = __get_milestones(r_sheet.col(5))
 
 n_dates = __get_dates(n_sheet.col(0))
 n_times = __get_times(n_sheet.col(1))
 n_hours = __get_hours(n_times)
 print ("N Hours: " + str(n_hours))
 n_categories = __get_categories(n_sheet.col(4))
+n_milestones = __get_milestones(n_sheet.col(5))
 
 avg_dates = __get_avg_dates(n_dates[0], n_dates[-1])
 avg_categories = __get_avg_categories(avg_dates)
 n_avg_times = __get_avg_times(avg_dates, n_times)
 r_avg_times = __get_avg_times(avg_dates, r_times)
 
+print ("Total: " + str(n_hours  + r_hours))
+
 
 
 #print (len(n_dates), len(n_times), len(n_categories))
 print ("write r_data")
-__influxwrite("raphael", r_dates, r_times, r_categories)
+__influxwrite("raphael", r_dates, r_times, r_categories, r_milestones)
 print ("r_data done")
 print ("write n_data")
-__influxwrite("nico", n_dates, n_times, n_categories)
+__influxwrite("nico", n_dates, n_times, n_categories, r_milestones)
 print ("n_data_done")
 print("write n_avg data")
-__influxwrite("nico_avg", avg_dates, n_avg_times, avg_categories)
+__influxwrite("nico_avg", avg_dates, n_avg_times, avg_categories, n_milestones)
 print("write r_avg data")
-__influxwrite("raphael_avg", avg_dates, r_avg_times, avg_categories)
+__influxwrite("raphael_avg", avg_dates, r_avg_times, avg_categories, r_milestones)
 
