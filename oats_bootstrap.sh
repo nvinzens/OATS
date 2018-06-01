@@ -45,7 +45,7 @@ echo "copying napalm-logs client binaries to /usr/local/bin/oats"
 cp -r ./napalm/scripts/. /usr/local/bin/oats/napalm-logs
 
 echo "copying oats-api client to /usr/local/bin/oats"
-cp -r ./oats_api/ /usr/local/bin/oats/oats-api
+cp -r ./oats_api/. /usr/local/bin/oats/oats-api
 
 if [ ! -d "/usr/local/bin/oats/kafka-streams" ]; then
     echo "copying kafka-streams binaries to /usr/local/bin/oats"
