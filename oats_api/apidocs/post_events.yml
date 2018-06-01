@@ -33,7 +33,7 @@ parameters:
           type: integer
           description: How severe is the error
           default: 1
-        payload:
+        data:
           type: integer
           description: Is the api running?
           default: 1
