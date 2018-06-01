@@ -37,6 +37,6 @@ parameters:
           description: Is the api running?
           default: 1
 responses:
-  200:
+  201:
     description: The event started
 
