@@ -124,7 +124,6 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     # src_port = 7, in_bytes = 1
 
     src_flow = None
-    src_flow_port = 0
     # timeout while loop after 20secs
     timeout = time.time() + 60
     while src_flow is None:
@@ -133,13 +132,11 @@ def out_discards_exceeded(data, host, timestamp, current_case):
         time.sleep(1)
         if time.time() > timeout:
             break
-
-    if src_flow_port is 0:
-        src_flow_port = src_flow['7']
+    dst_flow_port = src_flow['11']
 
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
-              "Source port of traffic: `{2}`.\n".format(host, data['name'], src_flow_port)
-    if src_flow_port == 0:
+              "Destination port of traffic: `{2}`.\n".format(host, data['name'], dst_flow_port)
+    if dst_flow_port == 0:
         comment += 'Could not determine source of traffic, possible DDoS attack detected' \
                    ' because traffic source port is `port 0`.'
 
@@ -150,7 +147,7 @@ def out_discards_exceeded(data, host, timestamp, current_case):
         'comment': comment,
         'changes': 'conf',
         'slack-post-status:': slack_status,
-        'success': bool(src_flow_port)
+        'success': bool(dst_flow_port)
     }
     return ret
 
