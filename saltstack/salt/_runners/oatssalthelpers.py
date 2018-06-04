@@ -131,7 +131,7 @@ def ospf_noshutdown(minion, process_number, case=None):
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
-def apply_policy(minion, cir, interface, protocol, src_address, dst_address, dst_port):
+def apply_policy(minion, cir, interface, src_address, dst_address, dst_port):
     template_name = 'policy'
     policy = 'class-map match-all oats\n  match access-group 100\n\n' \
              'policy-map oats_throttle\n  class oats\n    police cir {0}\n' \
