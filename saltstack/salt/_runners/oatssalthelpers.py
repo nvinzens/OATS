@@ -144,7 +144,8 @@ def apply_policy(minion, cir, interface, protocol, src_address, dst_address, dst
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
 
 
-def remove_policy(minion, interface, src_address, dst_address, dst_port):
+def remove_policy(minion, interface, src_address, dst_address, dst_port, sleep=120):
+    time.sleep(120)
     template_name = 'policy'
     policy = 'no class-map match-all oats\n' \
              'no policy-map oats_throttle\n ' \

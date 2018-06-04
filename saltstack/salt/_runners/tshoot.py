@@ -143,9 +143,7 @@ def out_discards_exceeded(data, host, timestamp, current_case):
         else:
             minion = 'SW02'
         oatssalthelpers.apply_policy(minion, 8000, interface, src_ip_address, dst_ip_address, dst_flow_port)
-        thread = Thread(target=oatssalthelpers.remove_policy,
-                        args=(minion, src_ip_address, dst_ip_address, dst_flow_port))
-        thread.start()
+        oatssalthelpers.remove_policy(minion, interface, src_ip_address, dst_ip_address, dst_flow_port)
 
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
               "Destination port of traffic: `{2}`.\n".format(host, data['name'], dst_flow_port)
