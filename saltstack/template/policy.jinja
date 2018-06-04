@@ -1,9 +1,9 @@
-class-map match-all test
+class-map match-all oats
 match access-group 100
 
 
-policy-map test_ub
-class test
+policy-map oats_throttle
+class oats
  police cir {{ cir }}
   conform-action transmit
   exceed-action drop
@@ -11,7 +11,7 @@ class class-default
 
 
 interface {{ interface }}
-  service-policy input test_ub
+  service-policy input oats_throttle
 
 
 access-list 100 permit {{ protocol }} {{ src_address }} {{ src_bitmask }} {{ dst_address }} {{ dst_bitmask }} eq {{ dst_port }} log
