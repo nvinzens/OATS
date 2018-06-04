@@ -150,7 +150,7 @@ def remove_policy(minion, interface, src_address, dst_address, dst_port, sleep=1
     policy = 'no class-map match-all oats\n' \
              'no policy-map oats_throttle\n ' \
              'interface {0}\n  no service-policy input oats_throttle\n\n' \
-             'no access-list 100 permit {1} udp 0.0.0.0 {2} 0.0.0.0 eq {3} log\nend'\
+             'no access-list 100 permit udp {1} 0.0.0.0 {2} 0.0.0.0 eq {3} log\nend'\
         .format(interface, src_address, dst_address, dst_port)
     kwarg = {'template_name': template_name, 'template_source': policy}
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
