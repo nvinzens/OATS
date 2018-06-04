@@ -75,6 +75,20 @@ def get_vrf_ip(host):
     return vrfip
 
 
+def get_hostname(mngmt_ip):
+    nb = connect()
+    hostname = ''
+    try:
+        logger.debug('Trying to get for hostname for ip: {0}'.format(mngmt_ip))
+        all_devices = nb.dcim.devices.filter()
+        for d in all_devices:
+            if d.custom_fields["Salt"] == str(mngmt_ip):
+                hostname = d.display_name
+    except Exception as e:
+        logger.exception('Exception in oatsnb.get_hostname for ip: {0}'.format(mngmt_ip))
+    return hostname
+
+
 def get_interface_neighbor(host, interface, case=None):
     '''
     Function to return the neighbor of a device behind a certain interface
