@@ -138,7 +138,7 @@ def apply_policy(minion, cir, interface, src_address, dst_address, dst_port):
              '        conform-action transmit\n        exceed-action drop\n' \
              '  class class-default\n\n' \
              'interface {1}\n  service-policy output oats_throttle\n\n' \
-             'access-list 100 permit {2} udp 0.0.0.0 {3} 0.0.0.0 eq {4} log\nend'\
+             'access-list 100 permit udp {2} 0.0.0.0 {3} 0.0.0.0 eq {4} log\nend'\
         .format(cir, interface, src_address, dst_address, dst_port)
     kwarg = {'template_name': template_name, 'template_source': policy}
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
