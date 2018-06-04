@@ -137,7 +137,7 @@ def apply_policy(minion, cir, interface, src_address, dst_address, dst_port):
              'policy-map oats_throttle\n  class oats\n    police cir {0}\n' \
              '        conform-action transmit\n        exceed-action drop\n' \
              '  class class-default\n\n' \
-             'interface {1}\n  service-policy input oats_throttle\n\n' \
+             'interface {1}\n  service-policy output oats_throttle\n\n' \
              'access-list 100 permit udp {2} 0.0.0.0 {3} 0.0.0.0 eq {4} log\nend'\
         .format(cir, interface, src_address, dst_address, dst_port)
     kwarg = {'template_name': template_name, 'template_source': policy}
@@ -149,7 +149,7 @@ def remove_policy(minion, interface, src_address, dst_address, dst_port, sleep=1
     template_name = 'policy'
     policy = 'no class-map match-all oats\n' \
              'no policy-map oats_throttle\n ' \
-             'interface {0}\n  no service-policy input oats_throttle\n\n' \
+             'interface {0}\n  no service-policy output oats_throttle\n\n' \
              'no access-list 100 permit udp {1} 0.0.0.0 {2} 0.0.0.0 eq {3} log\nend'\
         .format(interface, src_address, dst_address, dst_port)
     kwarg = {'template_name': template_name, 'template_source': policy}
