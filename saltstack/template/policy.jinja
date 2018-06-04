@@ -1,0 +1,17 @@
+class-map match-all test
+match access-group 100
+
+
+policy-map test_ub
+class test
+ police cir {{ cir }}
+  conform-action transmit
+  exceed-action drop
+class class-default
+
+
+interface {{ interface }}
+  service-policy input test_ub
+
+
+access-list 100 permit {{ protocol }} {{ src_address }} {{ src_bitmask }} {{ dst_address }} {{ dst_bitmask }} eq {{ dst_port }} log

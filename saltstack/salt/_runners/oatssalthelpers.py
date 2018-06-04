@@ -131,6 +131,20 @@ def ospf_noshutdown(minion, process_number, case=None):
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
+def __load_policy_template(minion, template_path, interface, dst_port):
+    template_name = 'policy'
+    kwarg = {'template_name': template_name, 'template_path': template_path, 'interface': interface,
+             'port': dst_port, 'test': True}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
+
+
+def load_shutdown(minion, template_path, interface_name):
+    template_name = 'shut_interface'
+    kwarg = {'template_name': template_name, 'template_path': template_path, 'interface': interface_name ,'test': True}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
+
+
+
 def check_device_connectivity(neighbors, host, case=None):
     '''
     executes pings from neighbors to the host

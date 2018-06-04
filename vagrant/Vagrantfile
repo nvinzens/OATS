@@ -20,8 +20,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.host_name = "at.server"
     at_server.vm.network "private_network", ip: "#{net_ip}.10"
 
-
-
     # install pip & setuptools & git
     at_server.vm.provision "shell",
       inline: "sudo apt-get update"
