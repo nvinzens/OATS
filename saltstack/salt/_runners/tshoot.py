@@ -4,6 +4,7 @@ from oatsinflux import oatsinflux
 from oatsnb import oatsnb
 import oatssalthelpers
 from multiprocessing.pool import ThreadPool
+from threading import Thread
 import time
 
 
@@ -132,7 +133,19 @@ def out_discards_exceeded(data, host, timestamp, current_case):
         time.sleep(1)
         if time.time() > timeout:
             break
-    dst_flow_port = src_flow['11']
+    if src_flow is not None:
+        dst_flow_port = src_flow['11']
+        interface = data['name']
+        dst_ip_address = src_flow['8']
+        src_ip_address = src_flow['12']
+        if host == '10.20.1.21':
+            minion = 'SW01'
+        else:
+            minion = 'SW02'
+        oatssalthelpers.apply_policy(minion, 8000, interface, src_ip_address, dst_ip_address, dst_flow_port)
+        thread = Thread(target=oatssalthelpers.remove_policy,
+                        args=(minion, src_ip_address, dst_ip_address, dst_flow_port))
+        thread.start()
 
     comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
               "Destination port of traffic: `{2}`.\n".format(host, data['name'], dst_flow_port)

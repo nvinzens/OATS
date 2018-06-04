@@ -137,20 +137,20 @@ def apply_policy(minion, cir, interface, protocol, src_address, dst_address, dst
              'policy-map oats_throttle\n  class oats\n    police cir {0}\n' \
              '        conform-action transmit\n        exceed-action drop\n' \
              '  class class-default\n\n' \
-             'interface {1}\n  service-policy input oats_throttle\n\n' \
+             'interface {1}\n  service-policy output oats_throttle\n\n' \
              'access-list 100 permit {2} {3} 0.0.0.0 {4} 0.0.0.0 eq {5} log\nend'\
         .format(cir, interface, protocol, src_address, dst_address, dst_port)
     kwarg = {'template_name': template_name, 'template_source': policy}
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
 
 
-def remove_policy(minion, cir, interface, protocol, src_address, dst_address, dst_port):
+def remove_policy(minion, interface, src_address, dst_address, dst_port):
     template_name = 'policy'
     policy = 'no class-map match-all oats\n' \
              'no policy-map oats_throttle\n ' \
-             'interface {1}\n  no service-policy input oats_throttle\n\n' \
-             'no access-list 100 permit {2} {3} 0.0.0.0 {4} 0.0.0.0 eq {5} log\nend'\
-        .format(cir, interface, protocol, src_address, dst_address, dst_port)
+             'interface {0}\n  no service-policy output oats_throttle\n\n' \
+             'no access-list 100 permit {1} udp 0.0.0.0 {2} 0.0.0.0 eq {3} log\nend'\
+        .format(interface, src_address, dst_address, dst_port)
     kwarg = {'template_name': template_name, 'template_source': policy}
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
 
