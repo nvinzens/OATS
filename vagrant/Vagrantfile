@@ -20,19 +20,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.host_name = "at.server"
     at_server.vm.network "private_network", ip: "#{net_ip}.10"
 
-    #at_server.vm.synced_folder "saltstack", "/srv"
-    #at_server.vm.synced_folder "saltstack/reactor", "/etc/salt/reactor"
-    #at_server.vm.synced_folder "saltstack/template", "/etc/salt/template"
-    #at_server.vm.synced_folder "napalm", "/srv/napalm"
 
-    # install napalm dependencies
-    #at_server.vm.provision "shell",
-    #  inline: "sudo apt-get update && sudo apt-get install -y --force-yes libssl-dev libffi-dev python-dev python-cffi"
+
     # install pip & setuptools & git
     at_server.vm.provision "shell",
       inline: "sudo apt-get update"
     at_server.vm.provision "shell",
       inline: "sudo apt-get install -y python-pip python-dev build-essential"
+    at_server.vm.provision "shell",
+      inline: "sudo apt-get update && sudo apt-get install -y --force-yes libssl-dev libffi-dev python-dev python-cffi"
     at_server.vm.provision "shell",
       inline: "sudo pip install --upgrade pip==9.0.1"
     at_server.vm.provision "shell",
@@ -90,31 +86,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     #  inline: "mongoimport --db oatsdb --collection network --drop --file /srv/database/test_db/networkdata.json"
     #at_server.vm.provision "shell",
     #  inline: "mongoimport --db oatsdb --collection technician --drop --file /srv/database/test_db/technician.json"
-=begin
-      at_server.vm.provision :salt do |salt|
-        salt.master_config = "saltstack/etc/master"
-        salt.minion_config = "saltstack/etc/minion"
-
-        salt.master_key = "saltstack/keys/master_minion.pem"
-        salt.master_pub = "saltstack/keys/master_minion.pub"
-        salt.minion_key = "saltstack/keys/master_minion.pem"
-        salt.minion_pub = "saltstack/keys/master_minion.pub"
-
-        salt.seed_master = {
-                            "master" => "saltstack/keys/master_minion.pub"
-                           }
-
-        salt.install_type = "stable"
-        # salt.install_args = "develop" //use only for install_type=git
-        salt.verbose = true
-        salt.colorize = true
-        salt.install_master = true
-        salt.no_minion  = false
-        salt.bootstrap_options = "-P -c /tmp"
-
-        salt.run_highstate = true
-
-      end
-=end
     end
   end
