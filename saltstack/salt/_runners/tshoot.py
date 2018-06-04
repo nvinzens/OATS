@@ -136,8 +136,8 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     if src_flow is not None:
         dst_flow_port = src_flow['11']
         interface = data['name']
-        dst_ip_address = src_flow['8']
-        src_ip_address = src_flow['12']
+        src_ip_address = src_flow['8']
+        dst_ip_address = src_flow['12']
         if host == '10.20.1.21':
             minion = 'SW01'
         else:
