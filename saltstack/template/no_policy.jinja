@@ -1,0 +1,9 @@
+no class-map match-all test
+
+no policy-map test_ub
+
+interface {{ interface }}
+  no service-policy input test_ub
+
+
+no access-list 100 permit {{ protocol }} {{ src_address }} {{ src_bitmask }} {{ dst_address }} {{ dst_bitmask }} eq {{ dst_port }} log

@@ -4,6 +4,7 @@ from oatsinflux import oatsinflux
 from oatsnb import oatsnb
 import oatssalthelpers
 from multiprocessing.pool import ThreadPool
+from threading import Thread
 import time
 
 
@@ -126,17 +127,24 @@ def out_discards_exceeded(data, host, timestamp, current_case):
     src_flow = None
     # timeout while loop after 20secs
     timeout = time.time() + 60
+    comment = ''
     while src_flow is None:
         flows = oatsinflux.get_type_data('netflow', timestamp, 'netflow/*/data', 30, host=host)
         src_flow = oatssalthelpers.get_src_flow(flows, 15000)
         time.sleep(1)
         if time.time() > timeout:
             break
-    dst_flow_port = src_flow['11']
-
-    comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
+    if src_flow is not None:
+        dst_flow_port = src_flow['11']
+        interface = data['name']
+        src_ip_address = src_flow['8']
+        dst_ip_address = src_flow['12']
+        minion = oatsnb.get_hostname(host)
+        oatssalthelpers.apply_policy(minion, 8000, interface, src_ip_address, dst_ip_address, dst_flow_port)
+        oatssalthelpers.remove_policy(minion, interface, src_ip_address, dst_ip_address, dst_flow_port)
+        comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
               "Destination port of traffic: `{2}`.\n".format(host, data['name'], dst_flow_port)
-    if dst_flow_port == 0:
+    else:
         comment += 'Could not determine source of traffic, possible DDoS attack detected' \
                    ' because traffic source port is `port 0`.'
 

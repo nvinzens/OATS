@@ -131,6 +131,37 @@ def ospf_noshutdown(minion, process_number, case=None):
     return __salt__['salt.execute'](minion, 'net.load_template', kwarg=config)
 
 
+def apply_policy(minion, cir, interface, src_address, dst_address, dst_port):
+    template_name = 'policy'
+    policy = 'class-map match-all oats\n  match access-group 100\n\n' \
+             'policy-map oats_throttle\n  class oats\n    police cir {0}\n' \
+             '        conform-action transmit\n        exceed-action drop\n' \
+             '  class class-default\n\n' \
+             'interface {1}\n  service-policy output oats_throttle\n\n' \
+             'access-list 100 permit udp {2} 0.0.0.0 {3} 0.0.0.0 eq {4} log\nend'\
+        .format(cir, interface, src_address, dst_address, dst_port)
+    kwarg = {'template_name': template_name, 'template_source': policy}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
+
+
+def remove_policy(minion, interface, src_address, dst_address, dst_port, sleep=120):
+    time.sleep(120)
+    template_name = 'policy'
+    policy = 'no class-map match-all oats\n' \
+             'no policy-map oats_throttle\n ' \
+             'interface {0}\n  no service-policy output oats_throttle\n\n' \
+             'no access-list 100 permit udp {1} 0.0.0.0 {2} 0.0.0.0 eq {3} log\nend'\
+        .format(interface, src_address, dst_address, dst_port)
+    kwarg = {'template_name': template_name, 'template_source': policy}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
+
+
+def load_shutdown(minion, template_path, interface_name):
+    template_name = 'shut_interface'
+    kwarg = {'template_name': template_name, 'template_path': template_path, 'interface': interface_name ,'test': True}
+    return __salt__['salt.execute'](minion, 'net.load_template', kwarg=kwarg)
+
+
 def check_device_connectivity(neighbors, host, case=None):
     '''
     executes pings from neighbors to the host

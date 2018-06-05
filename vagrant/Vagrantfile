@@ -20,8 +20,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.host_name = "at.server"
     at_server.vm.network "private_network", ip: "#{net_ip}.10"
 
-
-
     # install pip & setuptools & git
     at_server.vm.provision "shell",
       inline: "sudo apt-get update"
@@ -54,9 +52,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     at_server.vm.provision "shell",
       inline: "sudo tar -xzf kafka_2.11-1.1.0.tgz"
     at_server.vm.provision "shell",
-      inline: "sudo ./kafka_2.11-1.1.0/bin/zookeeper-server-start.sh kafka_2.11-1.1.0/config/zookeeper.properties &"
+      inline: "sudo ./kafka_2.11-1.1.0/bin/zookeeper-server-start.sh -daemon kafka_2.11-1.1.0/config/zookeeper.properties"
     at_server.vm.provision "shell",
-      inline: "sudo ./kafka_2.11-1.1.0/bin/kafka-server-start.sh kafka_2.11-1.1.0/config/server.properties &"
+      inline: "sudo ./kafka_2.11-1.1.0/bin/kafka-server-start.sh -daemon kafka_2.11-1.1.0/config/server.properties"
     at_server.vm.provision "shell",
       inline: "sudo git clone https://github.com/nvinzens/OATS"
     at_server.vm.provision "shell",
