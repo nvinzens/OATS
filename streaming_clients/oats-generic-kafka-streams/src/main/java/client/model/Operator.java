@@ -6,7 +6,11 @@ public enum Operator {
     GREATER_THAN, SMALLER_THAN, EQUALS,
     GREATER_OR_EQUAL, SMALLER_OR_EQUAL;
 
-
+    /**
+     * Takes a string and returns an Operator
+     * @param code the code that identifies an Operator, eg. "greater_than"
+     * @return
+     */
     public static Operator getOperator(String code) {
 
         switch (code) {

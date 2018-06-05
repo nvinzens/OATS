@@ -9,43 +9,12 @@ public class OATSArgs {
     private static Operator operator;
     private static String rootXpath;
     private static String nameXpath;
-
-    public static void setInputTopic(String inputTopic) {
-        OATSArgs.inputTopic = inputTopic;
-    }
-
-    public static void setOutputTopic(String outputTopic) {
-        OATSArgs.outputTopic = outputTopic;
-    }
-
-    public static void setThreshold(long threshold) {
-        OATSArgs.threshold = threshold;
-    }
-
-    public static void setOperator(Operator operator) {
-        OATSArgs.operator = operator;
-    }
-
-    public static void setRootXpath(String rootXpath) {
-        OATSArgs.rootXpath = rootXpath;
-    }
-
-    public static void setNameXpath(String nameXpath) {
-        OATSArgs.nameXpath = nameXpath;
-    }
-
-    public static void setDataXpath(String dataXpath) {
-        OATSArgs.dataXpath = dataXpath;
-    }
-
-    public void setStatStateStore(String statStateStore) {
-        this.statStateStore = statStateStore;
-    }
-
     private static String dataXpath;
-
     private String statStateStore;
 
+    /**
+     * Contains the data with which the evaluation of the streaming telemetry data is done.
+     */
     public OATSArgs(String[] args) {
         try {
 

@@ -27,7 +27,9 @@ public class StatisticsDeserializer extends StdDeserializer<Statistics>  {
         super(vc);
     }
 
-
+    /**
+     * Takes data from the input topic and deserializes it into an object of the Statistics class.
+     */
     @Override
     public Statistics deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
         JsonNode statNode = jsonParser.getCodec().readTree(jsonParser);
