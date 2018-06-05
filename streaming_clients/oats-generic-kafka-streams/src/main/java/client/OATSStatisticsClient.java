@@ -31,7 +31,10 @@ import java.util.concurrent.CountDownLatch;
 
 public class OATSStatisticsClient {
 
-
+    /**
+     * Generic Kafka Streams main thread
+     * @param args contains the data needed to evaluate the given statistics, see class OATSArgs for more information
+     */
     public static void main(String[] args) throws Exception {
 
         OATSArgs arguments = new OATSArgs(args);

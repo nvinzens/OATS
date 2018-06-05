@@ -31,6 +31,12 @@ public class StatisticTransformer implements Transformer<String, Statistic, KeyV
     @Override
     public void close() { }
 
+    /**
+     * Takes the newest value from the kafka input topic and compares it to the previous value using the given operator.
+     * @param key identifies the values that should be compared to each other
+     * @param newStat the new statistics that is compared with the old statistic
+     * @return
+     */
     @Override
     public KeyValue<String, Statistic> transform(String key, Statistic newStat) {
         Statistic oldStat = statStore.get(key+newStat.getName());
