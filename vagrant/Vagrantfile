@@ -61,6 +61,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       inline: "cd /home/vagrant/OATS && sudo pip install -r requirements.txt"
     at_server.vm.provision "shell",
       inline: "cd /home/vagrant/OATS && sudo ./oats_bootstrap.sh"
+    at_server.vm.provision "shell",
+      inline: "chmod +x /home/vagrant/OATS/vagrant/influx_bootstrap.sh"
+    at_server.vm.provision "shell",
+      inline: "cd /home/vagrant/OATS/vagrant && sudo ./influx_bootstrap.sh"
+    at_server.vm.provision "shell",
+      inline: "chmod +x /home/vagrant/OATS/vagrant/postgresql_bootstrap.sh"
+    at_server.vm.provision "shell",
+      inline: "cd /home/vagrant/OATS/vagrant && sudo ./postgresql_bootstrap.sh"
+    at_server.vm.provision "shell",
+      inline: "chmod +x /home/vagrant/OATS/vagran/netbox_bootstrap.sht"
+    at_server.vm.provision "shell",
+      inline: "cd /home/vagrant/OATS/vagrant && sudo ./netbox_bootstrap.sh"
     #install napalm & napalm-logs
     #at_server.vm.provision "shell",
     #  inline: "sudo pip install napalm"

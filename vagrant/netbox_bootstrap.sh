@@ -16,11 +16,4 @@ sudo cp /home/vagrant/OATS/vagrant/configuration.py /opt/netbox/netbox/netbox
 
 cd /opt/netbox/netbox/ &&  sudo python manage.py migrate
 
-cat << EOF | sudo python /opt/netbox/netbox/manage.py createsuperuser
-admin
-admin@example.com
-vagrantoatsadmin
-vagrantoatsadmin
-EOF
-
 cd /opt/netbox/netbox/ &&  sudo python -y manage.py collectstatic --no-input
