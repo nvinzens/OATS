@@ -14,7 +14,7 @@ subscriptions:
       period: 1000
       kafka_publish_topic: interfaces-out-discards
       kafka_streams_eval: true
-      kafka_streams_jar_location: /home/OATS/streaming_clients/oats-generic-kafka-streams/classes/artifacts/oats_generic_kafka_streams_jar/oats-generic-kafka-streams.jar
+      kafka_streams_jar_location: /usr/local/bin/oats/oats-generic-kafka-streams.jar
       event_threshold_data:
         - value: 100000
           operator: greater_than
