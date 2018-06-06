@@ -1,8 +1,7 @@
 import yaml
-import errno
-import os
-from TelemetrySubscription import OATSTelemetrySubscription
-from Host import OATSHost
+
+from telemetry.model.Host import OATSHost
+from telemetry.model.TelemetrySubscription import OATSTelemetrySubscription
 
 
 class OATSConfig:

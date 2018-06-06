@@ -1,1 +1,1 @@
-from . import OATSConfig
+from telemetry.model import OATSConfig

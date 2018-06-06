@@ -1,12 +1,13 @@
-import netconf_telemetry
-import kafka_streams
-from OATSConfig import OATSConfig
-from multiprocessing import Process
-import yaml
 import logging
-import logging.handlers
 import logging.config
+import logging.handlers
+from multiprocessing import Process
 
+import yaml
+
+import kafka_streams
+import netconf_telemetry
+from telemetry.model.OATSConfig import OATSConfig
 
 '''
 OATS main thread that reads the oats config file and starts kafka streams clients
