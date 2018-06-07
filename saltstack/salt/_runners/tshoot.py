@@ -115,14 +115,19 @@ def ospf_nbr_down(host, yang_message, error, tag, process_number, current_case):
 
 
 def out_discards_exceeded(data, host, timestamp, current_case):
+    '''
+    Function that loads a policy onto a device affected by a high amount of discarded packets.
+    The policy throttles the traffic from one IP to another with a certain port number.
+    The source-, destination-IP and port number are gathered by evaluating netflow data.
+    After a certain amount of time the policy is removed again.
+    :param data: contains the affected interface and the value of discarded packets.
+    :param host: the affected host.
+    :param timestamp: the timestamp of the event.
+    :param current_case: the current oats case-id
+    :return: error, comment, changes, slack-post-status(bool), success(bool)
+    '''
     if current_case is None or current_case == 'None':
         current_case = oatspsql.create_case("OUT_DISCARDS_EXCEEDED", host, solution='Case created in salt: `tshoot.out_discards_exceeded`.')
-
-    # TODO: determine source of traffic (async)
-    #flow_data = oatssalthelpers.wait_for_event("netflow/*/high_traffic", 20, current_case)['data']['data']
-    #flow_host = flow_data['AgentID']
-    #flow_source_port = oatssalthelpers.get_netflow_data_from_type_field(flow_data['DataSets'], 7)
-    # src_port = 7, in_bytes = 1
 
     src_flow = None
     # timeout while loop after 20secs
@@ -139,11 +144,15 @@ def out_discards_exceeded(data, host, timestamp, current_case):
         interface = data['name']
         src_ip_address = src_flow['8']
         dst_ip_address = src_flow['12']
+        oatspsql.update_case(current_case,
+                             solution='Found responsible flow: src_ip = `{0}`, dst_ip = `{1}`, port_number = `{2}`'
+                             .format(src_ip_address, dst_ip_address, dst_flow_port))
         minion = oatsnb.get_hostname(host)
         oatssalthelpers.apply_policy(minion, 8000, interface, src_ip_address, dst_ip_address, dst_flow_port)
         oatssalthelpers.remove_policy(minion, interface, src_ip_address, dst_ip_address, dst_flow_port)
-        comment = "Discarded pakets on host {0} on egress interface `{1}` exceeds threshhold. " \
-              "Destination port of traffic: `{2}`.\n".format(host, data['name'], dst_flow_port)
+        comment = "Discarded packets on host {0} on egress interface `{1}` exceeded threshhold. " \
+                  "Destination port of traffic: `{2}`.\n".format(host, data['name'], dst_flow_port)
+        comment+= "Applied traffic throttlinc policy for 120 seconds.\n"
     else:
         comment += 'Could not determine source of traffic, possible DDoS attack detected' \
                    ' because traffic source port is `port 0`.'
